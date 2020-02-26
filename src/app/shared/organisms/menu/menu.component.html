@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="logo">
+      <h1>
+        LOGO
+      </h1>
+    </div>
+    <ul class="links">
+      <li class="nav-link" href="">home</li>
+      <li class="nav-link" href="">about</li>
+      <li class="nav-link" href="">test</li>
+    </ul>
+    <div class="auth">
+      <div *ngIf="auth.afAuth.authState | async as user; else showLogin">
+        <a class="nav-link" href="">hello {{user.displayName}}</a>
+        <button (click)="auth.logout()">logout</button>
+        <!-- <a class="nav-link" href="">Auth</a> -->
+      </div>
+      <ng-template #showLogin>
+              <button (click)="auth.login()">login</button>
+      </ng-template>
+    </div>
+  </div>
+</nav>
