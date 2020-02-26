@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FooterComponent } from './organisms/footer/footer.component';
+import { AuthService } from './auth.service';
+import { HomeComponent } from './templates/home/home.component';
 
 @NgModule({
-  declarations: [FooterComponent],
+  declarations: [HomeComponent],
   imports: [
     CommonModule
   ],
+  providers: [
+    AuthService
+  ],
   exports: [
-    FooterComponent
+    HomeComponent,
   ],
 
 })
