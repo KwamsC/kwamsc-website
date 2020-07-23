@@ -1,9 +1,10 @@
 .hero{
     display: grid;
-    grid-template-columns: 3fr 2fr;
+    // grid-template-columns: 3fr 2fr;
     height: 100vh;
 
-    .right{
-        background-color: lightcyan;
+    .kwamsc{
+       align-self: center;
+       justify-self: center;
     }
 }
