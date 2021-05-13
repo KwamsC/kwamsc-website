@@ -3,7 +3,7 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "dist/kwamsc",
+    "public": "kwamsc/build",
     "ignore": [
       "firebase.json",
       "**/.*",
