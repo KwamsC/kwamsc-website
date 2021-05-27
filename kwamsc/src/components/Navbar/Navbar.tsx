@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 // import Logo from './Logo';
+import './Navbar.css';
 import { MenuItems } from './MenuItems';
-import {Link} from 'react-router-dom';
-import { Row } from '../Layout';
-import {FaBars} from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { Row, FullWidthSection } from '../Layout';
+import { FaBars } from 'react-icons/fa';
 
 const Nav = styled(Row)`
     display: flex;
@@ -13,9 +14,17 @@ const Nav = styled(Row)`
     align-items: center;
 `;
 
-// const divStyle = {
-//     color: 'blue',
-// };
+
+const Header = styled(FullWidthSection)`
+  // padding: 1rem 2rem;
+  box-shadow: rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;
+  background-color: white;
+  z-index: 9999;
+  position: fixed;
+  width: 100%;
+`;
+
+
 const NavMenu = styled.div`
     display: flex;
     @media screen and (max-width: 768px){
@@ -60,22 +69,34 @@ const MenuBars = styled(FaBars)`
 `;
 
 const Navbar = () => {
+    const [navbar, setNavbar] = useState(false);
+
+    const changeBackground = () => {
+        if (window.scrollY >= 80) {
+            setNavbar(true)
+        } else {
+            setNavbar(false)
+        }
+    }
+    window.addEventListener('scroll', changeBackground)
     // const [clicked, setClick] = useState(false);
-    return (  
-        <Nav as="nav" sd={2} ed={12}  sm={2}  em={6}  ss={2}  es={6}>
-            <Logo to='/'>KWAMSC</Logo>
-            <MenuBars/>
-            {/* <div className='menu-icon' onClick={()=>setClick(!clicked)}>
+    return (
+        <Header className={navbar ? 'reveal' : 'hide'} as="header">
+            <Nav as="nav" sd={2} ed={12} sm={2} em={6} ss={2} es={6}>
+                <Logo to='/'>KWAMSC</Logo>
+                <MenuBars />
+                {/* <div className='menu-icon' onClick={()=>setClick(!clicked)}>
                 <i> {clicked? 'menu': 'menu-icon'}</i>
             </div>  */}
-            <NavMenu>
-            {MenuItems.map((item, index)=> {
-                return (
-                    <NavMenuLink to={item.url} key={index}>{item.title}</NavMenuLink>
-                )
-            })}
-            </NavMenu>
-        </Nav>
+                <NavMenu>
+                    {MenuItems.map((item, index) => {
+                        return (
+                            <NavMenuLink to={item.url} key={index}>{item.title}</NavMenuLink>
+                        )
+                    })}
+                </NavMenu>
+            </Nav>
+        </Header>
     )
 }
 

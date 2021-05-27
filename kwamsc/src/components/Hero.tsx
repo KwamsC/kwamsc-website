@@ -1,11 +1,12 @@
 import styled from 'styled-components/macro'
 import { MaxWidthSection, Row } from './Layout';
-import HeroImg from '../assets/hero-image.png';
+import HeroImg from '../assets/hero-image-3.png';
+import Button from './Button';
 
 const HeroSection = styled(MaxWidthSection)`
   padding: 4rem 0rem;
   /* height: 100vh; */
-  max-height: 1100px;
+  /* max-height: 1100px; */
   position: relative;
 `;
 
@@ -13,6 +14,7 @@ const HeroWrapper = styled(Row)`
   padding: 4rem 1rem;
   height: 100%;
   width: 100%;
+  max-width: 69ch;
   justify-content: center;
   align-items: normal;
   display: flex;
@@ -26,7 +28,7 @@ const Heroheading = styled.p`
     font-weight: 700;
     text-transform: uppercase;
     color: rgb(22, 28, 45);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 `;
 
 const HeroImage = styled.img`
@@ -38,36 +40,6 @@ const HeroImage = styled.img`
 const ButtonWrapper = styled.div`
     min-width: 0px;
     margin-top: 3rem;
-`;
-
-const HeroButton = styled.button`
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1.63px;
-    text-transform: uppercase;
-    padding: 23px 30px;
-    box-shadow: rgb(3 3 3 / 12%) 0px 32px 54px;
-    border-radius: 50rem;
-    display: inline-flex;
-    align-items: center;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    user-select: none;
-    transform: perspective(1px) translateZ(0px);
-    position: relative;
-    overflow: hidden;
-    border: none;
-    white-space: nowrap;
-    color: rgb(255, 255, 255);
-    background-color: rgb(73, 95, 239);
-    transition: all 0.4s ease-out 0s;
-    outline: none !important;
-    cursor: pointer;
-
-    :hover{
-        transform: translateY(-10px);
-        box-shadow: rgb(3 3 3 / 14%) 0px 32px 54px;
-    }
 `;
 
 const HeroTitle = styled.h2`
@@ -95,16 +67,16 @@ const HeroTitle = styled.h2`
 const Hero = () => {
     return (
         <HeroSection>
-            <HeroWrapper sd={1} ed={6}  sm={1}  em={3}  ss={1}  es={6}>
-                <Heroheading>Developer, Designer, Tutor, Photographer</Heroheading>
-                <HeroTitle>Crafting a digital future for you</HeroTitle>
+            <HeroWrapper sd={1} ed={6} sm={1} em={3} ss={1} es={6}>
+                <Heroheading>A Design-minded front-end software engineer</Heroheading>
+                <HeroTitle>Building beautiful interfaces &#38; experiences</HeroTitle>
                 <ButtonWrapper>
-                    <HeroButton>Hello</HeroButton>
+                    <Button label="My work" />
                 </ButtonWrapper>
-            </HeroWrapper>  
-            <HeroWrapper sd={7} ed={6}  sm={4}  em={3}  ss={1}  es={6}>
-                <HeroImage src={HeroImg}/>
-            </HeroWrapper>  
+            </HeroWrapper>
+            <HeroWrapper sd={7} ed={6} sm={4} em={3} ss={1} es={6}>
+                <HeroImage src={HeroImg} />
+            </HeroWrapper>
         </HeroSection>
     )
 }
