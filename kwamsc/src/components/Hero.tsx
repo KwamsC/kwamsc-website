@@ -4,14 +4,15 @@ import HeroImg from '../assets/hero-image-3.png';
 import Button from './Button';
 
 const HeroSection = styled(MaxWidthSection)`
-  padding: 4rem 0rem;
+  padding: 5rem 0rem;
   /* height: 100vh; */
   /* max-height: 1100px; */
   position: relative;
+  margin: auto;
 `;
 
 const HeroWrapper = styled(Row)`
-  padding: 4rem 1rem;
+  padding: 4rem 0 0;
   height: 100%;
   width: 100%;
   max-width: 69ch;
@@ -34,7 +35,10 @@ const Heroheading = styled.p`
 const HeroImage = styled.img`
     height: 100%;
     width: 100%;
+    flex: 0 0 75%;
+    max-width: 75%;
     object-fit: cover;
+    margin: auto;
 `;
 
 const ButtonWrapper = styled.div`
@@ -47,7 +51,7 @@ const HeroTitle = styled.h2`
     margin-bottom: 0px;
     color: rgb(22, 28, 45);
     letter-spacing: -2.81px;
-    font-size: 50px;
+    font-size: 46px;
     line-height: 56px;
 
     @media (min-width: 1200px){
@@ -69,13 +73,13 @@ const Hero = () => {
         <HeroSection>
             <HeroWrapper sd={1} ed={6} sm={1} em={3} ss={1} es={6}>
                 <Heroheading>A Design-minded front-end software engineer</Heroheading>
-                <HeroTitle>Building beautiful interfaces &#38; experiences</HeroTitle>
+                <HeroTitle>I build beautiful interfaces &#38; experiences</HeroTitle>
                 <ButtonWrapper>
                     <Button label="My work" />
                 </ButtonWrapper>
             </HeroWrapper>
             <HeroWrapper sd={7} ed={6} sm={4} em={3} ss={1} es={6}>
-                <HeroImage src={HeroImg} />
+                <HeroImage src={HeroImg} loading="lazy" alt="kwamsc personal hero image" />
             </HeroWrapper>
         </HeroSection>
     )

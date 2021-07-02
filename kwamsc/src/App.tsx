@@ -1,26 +1,28 @@
 // import Header from './components/Header';
-import styled from 'styled-components';
-import Hero from './components/Hero';
-import { Grid, MaxWidthSection } from './components/Layout/';
-
+// import styled from 'styled-components';
+import { Grid, } from './components/Layout/';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
-// import styles from './components';
+import Home from './pages/HomePage/Home';
+import { GlobalStyle } from "./styles/globalStyles";
 
-
-const Content = styled(MaxWidthSection)`
-  padding: 4rem 2rem;
-  height: 1000px;
-  background-color: lightgreen;
-`;
+// const Content = styled(MaxWidthSection)`
+//   padding: 4rem 2rem;
+//   height: 1000px;
+//   background-color: lightgreen;
+// `;
 
 function App() {
   return (
-    <Grid>
-      <Navbar />
-      <Hero />
-      <Content>
-      </Content>
-    </Grid>
+    <Router>
+      <GlobalStyle />
+      <Grid>
+        <Navbar />
+        <Switch>
+          <Route path='/' exact component={Home} />
+        </Switch>
+      </Grid>
+    </Router>
   );
 }
 

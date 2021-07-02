@@ -2,11 +2,10 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 // import Logo from './Logo';
-import './Navbar.css';
 import { MenuItems } from './MenuItems';
 import { Link } from 'react-router-dom';
 import { Row, FullWidthSection } from '../Layout';
-import { FaBars } from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const Nav = styled(Row)`
     display: flex;
@@ -14,21 +13,41 @@ const Nav = styled(Row)`
     align-items: center;
 `;
 
+interface NavmenuProps {
+    click: boolean;
+}
 
-const Header = styled(FullWidthSection)`
-  // padding: 1rem 2rem;
+interface NavbarProps {
+    navbar?: boolean;
+}
+
+const Header = styled(FullWidthSection) <NavbarProps>`
   box-shadow: rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;
   background-color: white;
-  z-index: 9999;
+  z-index: 1;
   position: fixed;
   width: 100%;
+  height: 80px;
+  align-content: center;
+  transition: all 0.4s ease 0s;
+  transform: ${({ navbar }) => (navbar ? 'translateY(0)' : 'translateY(-100%)')};  
 `;
 
-
-const NavMenu = styled.div`
+const NavMenu = styled.div<NavmenuProps>`
     display: flex;
+    align-items: center;
+    text-align: center;
     @media screen and (max-width: 768px){
-        display: none;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 90vh;
+        position:absolute;
+        top:80px;
+        right: ${({ click }) => (click ? 0 : '-100%')};
+        opacity: 1;
+        transition: all 0.4s ease;
+        background: white;
     }
 `;
 
@@ -37,6 +56,7 @@ const NavLink = css`
     transition: all 0.4s ease 0s;
     padding: 1rem;
     font-size: 0.9rem;
+    align-items: center;
     /* font-weight: 700; */
     font-weight: bold;
     color: rgb(22, 28, 45) !important;
@@ -49,6 +69,12 @@ const NavMenuLink = styled(Link)`
     &:hover {
         color: rgb(73, 95, 239) !important;
     }
+    @media screen and (max-width:768){
+        width: 100%;
+        display: table;
+        padding: 1rem;
+        text-align: center;
+    }
 `;
 const Logo = styled(Link)`
     ${NavLink};
@@ -58,18 +84,24 @@ const Logo = styled(Link)`
     line-height: 1.42;
 `;
 
-const MenuBars = styled(FaBars)`
+const MobileIcon = styled.div`
     display: none;
     @media screen and (max-width: 768px){
         display: block;
-        align-items:center;
-        height: 40px;
-        /* width: 40px; */
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(-100%, 60%) ;
+        font-size: 1.5rem;
+        cursor: pointer;
     }
 `;
 
 const Navbar = () => {
     const [navbar, setNavbar] = useState(false);
+    const [click, setClick] = useState(false);
+
+    const handleClick = () => { setClick(!click) };
 
     const changeBackground = () => {
         if (window.scrollY >= 80) {
@@ -79,16 +111,13 @@ const Navbar = () => {
         }
     }
     window.addEventListener('scroll', changeBackground)
-    // const [clicked, setClick] = useState(false);
     return (
-        <Header className={navbar ? 'reveal' : 'hide'} as="header">
+        <Header navbar={navbar} as="header">
             <Nav as="nav" sd={2} ed={12} sm={2} em={6} ss={2} es={6}>
                 <Logo to='/'>KWAMSC</Logo>
-                <MenuBars />
-                {/* <div className='menu-icon' onClick={()=>setClick(!clicked)}>
-                <i> {clicked? 'menu': 'menu-icon'}</i>
-            </div>  */}
-                <NavMenu>
+                {/* <MenuBars /> */}
+                <MobileIcon onClick={handleClick} >{click ? <FaTimes /> : <FaBars />}</MobileIcon>
+                <NavMenu onClick={handleClick} click={click}>
                     {MenuItems.map((item, index) => {
                         return (
                             <NavMenuLink to={item.url} key={index}>{item.title}</NavMenuLink>
@@ -101,3 +130,7 @@ const Navbar = () => {
 }
 
 export default Navbar
+// function styledComponentWithProps<T, U>(div: ThemedStyledFunction<"div", any, {}, never>) {
+//     throw new Error('Function not implemented.');
+// }
+

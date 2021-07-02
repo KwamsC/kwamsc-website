@@ -1,9 +1,0 @@
-.hide {
-  transform: translateY(-100%);
-  transition: all 0.4s ease 0s;
-}
-
-.reveal {
-  transition: all 0.4s ease 0s;
-  position: fixed !important;
-}
