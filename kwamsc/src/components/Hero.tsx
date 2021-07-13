@@ -75,7 +75,7 @@ const Hero = () => {
                 <Heroheading>A Design-minded front-end software engineer</Heroheading>
                 <HeroTitle>I build beautiful interfaces &#38; experiences</HeroTitle>
                 <ButtonWrapper>
-                    <Button label="My work" />
+                    <Button label="Contact" />
                 </ButtonWrapper>
             </HeroWrapper>
             <HeroWrapper sd={7} ed={6} sm={4} em={3} ss={1} es={6}>

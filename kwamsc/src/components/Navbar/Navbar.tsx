@@ -1,5 +1,5 @@
 // import React from 'react'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 // import Logo from './Logo';
 import { MenuItems } from './MenuItems';
@@ -18,19 +18,31 @@ interface NavmenuProps {
 }
 
 interface NavbarProps {
-    navbar?: boolean;
+    navbar?: string;
 }
 
+// const Header = styled(FullWidthSection) <NavbarProps>`
+//   box-shadow: rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;
+//   background-color: white;
+//   z-index: 1;
+//   position: fixed;
+//   width: 100%;
+//   height: 80px;
+//   align-content: center;
+//   transition: all 0.4s ease 0s;
+//   transform: ${({ navbar }) => (navbar ? 'translateY(0)' : 'translateY(-100%)')};  
+// `;
+
 const Header = styled(FullWidthSection) <NavbarProps>`
-  box-shadow: rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;
-  background-color: white;
+  box-shadow: ${({ navbar }) => (navbar === 'transparent' || navbar === 'hide' ? 'none' : 'rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;')}; 
+  background-color: ${({ navbar }) => (navbar === 'transparent' ? 'transparent' : 'white')}; 
   z-index: 1;
   position: fixed;
   width: 100%;
   height: 80px;
   align-content: center;
   transition: all 0.4s ease 0s;
-  transform: ${({ navbar }) => (navbar ? 'translateY(0)' : 'translateY(-100%)')};  
+  transform: ${({ navbar }) => (navbar === 'hide' ? 'translateY(-100%)' : 'translateY(0)')};  
 `;
 
 const NavMenu = styled.div<NavmenuProps>`
@@ -98,16 +110,25 @@ const MobileIcon = styled.div`
 `;
 
 const Navbar = () => {
-    const [navbar, setNavbar] = useState(false);
+    const [navbar, setNavbar] = useState('transparent');
     const [click, setClick] = useState(false);
 
     const handleClick = () => { setClick(!click) };
 
+    useEffect(() => {
+        changeBackground();
+        return () => {
+            setNavbar('transparent') // This worked for me
+        };
+    }, []);
+
     const changeBackground = () => {
-        if (window.scrollY >= 80) {
-            setNavbar(true)
+        if (window.scrollY >= 1 && window.scrollY < 400) {
+            setNavbar('hide')
+        } else if (window.scrollY >= 400) {
+            setNavbar('sticky')
         } else {
-            setNavbar(false)
+            setNavbar('transparent')
         }
     }
     window.addEventListener('scroll', changeBackground)
@@ -115,7 +136,6 @@ const Navbar = () => {
         <Header navbar={navbar} as="header">
             <Nav as="nav" sd={2} ed={12} sm={2} em={6} ss={2} es={6}>
                 <Logo to='/'>KWAMSC</Logo>
-                {/* <MenuBars /> */}
                 <MobileIcon onClick={handleClick} >{click ? <FaTimes /> : <FaBars />}</MobileIcon>
                 <NavMenu onClick={handleClick} click={click}>
                     {MenuItems.map((item, index) => {

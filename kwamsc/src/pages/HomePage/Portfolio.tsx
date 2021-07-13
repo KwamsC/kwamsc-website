@@ -53,6 +53,9 @@ const PortfolioNavListItem = styled.div`
 const ItemText = styled.a`
     text-transform: uppercase;
     font-weight: bold;
+    font-size: 0.8125rem;
+    line-height: 1.63;
+    letter-spacing: 1.63px;
     &:hover {
             color: rgb(73, 95, 239) !important;
             font-weight: bold;
@@ -71,10 +74,7 @@ const Portfolio = () => {
                         <ItemText>UX-Design</ItemText>
                     </PortfolioNavListItem>
                     <PortfolioNavListItem>
-                        <ItemText>Branding</ItemText>
-                    </PortfolioNavListItem>
-                    <PortfolioNavListItem>
-                        <ItemText>Photography</ItemText>
+                        <ItemText>Code</ItemText>
                     </PortfolioNavListItem>
                 </PortfolioNavList>
             </PortfolioNavContainer>
