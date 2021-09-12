@@ -21,18 +21,6 @@ interface NavbarProps {
     navbar?: string;
 }
 
-// const Header = styled(FullWidthSection) <NavbarProps>`
-//   box-shadow: rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;
-//   background-color: white;
-//   z-index: 1;
-//   position: fixed;
-//   width: 100%;
-//   height: 80px;
-//   align-content: center;
-//   transition: all 0.4s ease 0s;
-//   transform: ${({ navbar }) => (navbar ? 'translateY(0)' : 'translateY(-100%)')};  
-// `;
-
 const Header = styled(FullWidthSection) <NavbarProps>`
   box-shadow: ${({ navbar }) => (navbar === 'transparent' || navbar === 'hide' ? 'none' : 'rgba(65, 62, 101, 0.1) 0px 12px 34px -11px;')}; 
   background-color: ${({ navbar }) => (navbar === 'transparent' ? 'transparent' : 'white')}; 
