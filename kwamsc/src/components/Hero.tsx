@@ -12,9 +12,6 @@ const HeroSection = styled(MaxWidthSection)`
 
 const HeroWrapper = styled(Row)`
   padding: 4rem 1rem;
-  height: 100%;
-  width: 100%;
-  max-width: 69ch;
   justify-content: center;
   align-items: normal;
   display: flex;
@@ -32,8 +29,8 @@ const Heroheading = styled.p`
 `;
 
 const HeroImage = styled.img`
-    height: 100%;
-    width: 100%;
+    max-width: 36ch;
+    align-self: center;
     object-fit: cover;
 `;
 
