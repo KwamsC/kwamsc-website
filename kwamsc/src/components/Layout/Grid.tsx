@@ -3,10 +3,10 @@ import styled from "styled-components";
 export type GridProps = {
   className?: string;
   children: React.ReactNode;
-  gap?: string | number;  
-  gapDefault?:   string | number; // grid-gap
-  gapMedium?:   string | number;
-  gapSmall?:   string | number;
+  gap?: string | number;
+  gapDefault?: string | number; // grid-gap
+  gapMedium?: string | number;
+  gapSmall?: string | number;
   marginDefault?: number;
   marginMedium?: number;
   marginSmall?: number;
@@ -18,12 +18,8 @@ export type GridProps = {
   ss?: string | number;
   es?: string | number;
   columns?: string | string[];  // grid-template-columns
-  rows?: string | string[]; 
+  rows?: string | string[];
 }
-
-
-
-
 
 const Grid = styled.div`
   display: grid;

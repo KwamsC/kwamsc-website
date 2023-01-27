@@ -12,8 +12,8 @@ export const GlobalStyles = createGlobalStyle`
       /* overflow: hidden; */
     }
 
-    html, body {
+    /* html, body {
         height: 100%;
-    }
+    } */
 
 `;

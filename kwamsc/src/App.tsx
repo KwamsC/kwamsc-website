@@ -2,13 +2,14 @@
 import styled from 'styled-components';
 import Hero from './components/Hero';
 import * as React from "react"
-import { Grid, MaxWidthSection } from './components/Layout/';
+import { Grid, MaxWidthSection, FullWidthSection } from './components/Layout/';
 
 import Navbar from './components/Navbar/Navbar';
+import axios from 'axios';
 // import styles from './components';
 
 
-const Content = styled(MaxWidthSection)`
+const Content = styled(FullWidthSection)`
   padding: 4rem 2rem;
   height: 1000px;
   background-color: lightgreen;
@@ -16,77 +17,51 @@ const Content = styled(MaxWidthSection)`
 
 function App() {
   const [counter, setCounter] = React.useState(0)
-  const [user, setUser] = React.useState<any>([])
-
-  // const getRandomUser = () => {
-  //   return fetch("https://randomuser.me/api").then((data) => {
-  //     console.log(data.json())
-  //     return "hello";
-  //   }).catch(e => {
-  //     console.log(e);
-  //   })
-  // }
+  const [users, setUsers] = React.useState<any>([])
+  const [JSONData, setJSON] = React.useState('')
 
   const getRandomUser = () => {
-    return fetch('https://randomuser.me/api', {
-      method: 'GET',
-    });
+    return axios
+      .get("https://randomuser.me/api")
+      .then(({ data }) => {
+        console.log(data)
+        return data
+      }).catch(e => {
+        console.log(e)
+      })
   };
 
-  // const getRandomUser = () => {
-  //   return fetch('https://randomuser.me/api', {
-  //     method: 'GET',
-  //   })
-  //     .then((response) => {
-  //       console.log(response.json().resti);
-  //       return response;
-  //     }).catch(e => {
-  //       console.log(e);
-  //     });
-  // }
+  interface UserName {
+    title: string;
+    firstName: string;
+    lastName: string;
+  }
 
-  // console.log(await currentloginid());
+  interface Picture {
+    large: string;
+    medium: string;
+    thumbnail: string;
+  }
 
-  // const getRandomUser = async () => {
-  //   try {
-  //     const response = await fetch(`https://randomuser.me/api`, {
-  //       method: 'GET',
-  //     });
-  //     return JSON.stringify(response);
-  //   } catch (e) {
-  //     return console.log(e);
-  //   }
-  // }
+  interface UserInfo {
+    name: UserName;
+    picture: Picture;
+    gender: string;
+  }
 
-
-  // async function getRandomUser() {
-  //   fetch('https://randomuser.me/api')
-  //     .then(response => response.json())
-  //     .then(data => console.log(data));
-  //   // const res = await fetch("https://randomuser.me/api");
-  //   // console.log(res)
-  //   // return setUser(JSON.stringify(res))
-  // }
+  const getFullUserName = (userInfo: any) => {
+    const { name: { first, last } } = userInfo
+    return `${first} ${last}`;
+  }
 
   React.useEffect(() => {
-    getRandomUser().then((value) => {
-      console.log(value);
-      setUser(value) // 👉️ 42
+    getRandomUser().then((data) => {
+      setUsers(data.results)
+      setJSON(JSON.stringify(data));
+      // console.log(value.results);
+      // setUser(value) // 👉️ 42
     });
-    // getRandomUser().then((randomData) => {
-    //   // console.log(JSON.stringify(randomData, null, 2));
-    //   // console.log(randomData);
-    // })
-
-    // console.log(getRandomUser())
-    // getRandomUser().then((data) => {
-    //   setUser(data.toString());
-    // }).catch((e) => console.log(e));
   }, [])
-
-  // https://randomuser.me/api
-
-  //  zconst [first, setfirst] = React.useState(second)
 
   return (
     <Grid>
@@ -94,7 +69,7 @@ function App() {
       <Hero />
       <Content>
         <div>
-          {user[1]}
+          {counter}
         </div>
         <button onClick={() => setCounter(counter - 1)} >
           SUB
@@ -102,7 +77,16 @@ function App() {
         <button onClick={() => setCounter(counter + 1)} >
           ADD
         </button>
-        <p>{user[1]}</p>
+        {
+          users.map((userInfo: UserInfo, idx: number) => {
+            return <div key={idx}>
+              <p>{getFullUserName(userInfo)}</p>
+              <img src={userInfo.picture.thumbnail} alt={"user"} />
+              <p>{userInfo.gender}</p>
+            </div>
+          })
+        }
+        <pre>{JSONData}</pre>
       </Content>
     </Grid>
   );
