@@ -4,19 +4,19 @@ import {
   addDoc,
   getDocs,
   getDoc,
-  setDoc,
   doc,
   deleteDoc,
   updateDoc,
-  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../db";
 import { Post } from "../models/post";
+import { postConverter } from "../utils/firebaseConverters";
 
 // Add a new document in collection "posts"
 const addPost = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+
     await addDoc(collection(db, "posts"), data);
 
     res.send("Post saved succesfully");
@@ -25,25 +25,30 @@ const addPost = async (req: Request, res: Response) => {
   }
 };
 
+// Update a document by id in collection "posts"
 const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
     const post = req.body;
+    const postRef = doc(db, "posts", id).withConverter(postConverter);
 
-    await setDoc(doc(db, "posts", id), post, { merge: true });
+    await updateDoc(postRef, post);
     res.send("Post updated succesfully");
   } catch (err) {
     res.status(400).send(err.message);
   }
 };
 
+// Gets a document by id in collection "posts"
 const getPost = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const post = await getDoc(doc(db, "posts", id));
+    const postRef = doc(db, "posts", id).withConverter(postConverter);
+    const docSnap = await getDoc(postRef);
 
-    if (post.exists()) {
-      res.send(post.data());
+    if (docSnap.exists()) {
+      const post = docSnap.data();
+      res.send(post);
     } else {
       res.status(404).send("Post with given ID is not found");
     }
@@ -52,9 +57,11 @@ const getPost = async (req: Request, res: Response) => {
   }
 };
 
+// Deletes a document by id in collection "posts"
 const deletePost = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
+
     await deleteDoc(doc(db, "posts", id));
     res.send("Record deleted successfully");
   } catch (err) {
@@ -62,17 +69,12 @@ const deletePost = async (req: Request, res: Response) => {
   }
 };
 
+// Gets all documents in collection "posts"
 const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const posts: Post[] = [];
-
-    const converter = {
-      toFirestore: (data: Post) => data,
-      fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as Post,
-    };
-
     const querySnapshot = await getDocs(
-      collection(db, "posts").withConverter(converter)
+      collection(db, "posts").withConverter(postConverter)
     );
 
     if (querySnapshot.empty) {
@@ -82,7 +84,6 @@ const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
         if (doc.exists()) {
           posts.push({ id: doc.id, ...doc.data() });
         }
-        console.log(`${doc.id} => ${doc.data()}`);
       });
 
       res.send(posts);

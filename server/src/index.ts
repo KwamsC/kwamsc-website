@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/api", postRoutes.routes);
-app.use(setCache);
+// app.use(setCache);
 
 app.get("/", (req, res) => {
   res.send("hello");
