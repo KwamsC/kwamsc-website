@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import {
   collection,
   addDoc,
@@ -21,12 +21,13 @@ const addPost = async (req: Request, res: Response) => {
 
     res.send("Post saved succesfully");
   } catch (err) {
-    res.status(400).send(err.message);
+    if (err instanceof Error)
+      res.status(400).send(err.message);
   }
 };
 
 // Update a document by id in collection "posts"
-const updatePost = async (req: Request, res: Response, next: NextFunction) => {
+const updatePost = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const post = req.body;
@@ -35,7 +36,8 @@ const updatePost = async (req: Request, res: Response, next: NextFunction) => {
     await updateDoc(postRef, post);
     res.send("Post updated succesfully");
   } catch (err) {
-    res.status(400).send(err.message);
+    if (err instanceof Error)
+      res.status(400).send(err.message);
   }
 };
 
@@ -53,7 +55,8 @@ const getPost = async (req: Request, res: Response) => {
       res.status(404).send("Post with given ID is not found");
     }
   } catch (err) {
-    res.status(400).send(err.message);
+    if (err instanceof Error)
+      res.status(400).send(err.message);
   }
 };
 
@@ -65,12 +68,13 @@ const deletePost = async (req: Request, res: Response) => {
     await deleteDoc(doc(db, "posts", id));
     res.send("Record deleted successfully");
   } catch (err) {
-    res.status(400).send(err.message);
+    if (err instanceof Error)
+      res.status(400).send(err.message);
   }
 };
 
-// Gets all documents in collection "posts"
-const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
+// Gets all documents from collection "posts"
+const getAllPosts = async (res: Response) => {
   try {
     const posts: Post[] = [];
     const querySnapshot = await getDocs(
@@ -82,14 +86,15 @@ const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
     } else {
       querySnapshot.forEach((doc) => {
         if (doc.exists()) {
-          posts.push({ id: doc.id, ...doc.data() });
+          posts.push({ ...doc.data(), id: doc.id, });
         }
       });
 
       res.send(posts);
     }
   } catch (err) {
-    res.status(400).send(err.message);
+    if (err instanceof Error)
+      res.status(400).send(err.message);
   }
 };
 

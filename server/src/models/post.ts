@@ -28,14 +28,12 @@
 // }
 
 export interface Post {
-  id: Number;
-  author: String;
-  title: String;
-  slug: String;
-  tags: String[];
-  published: Boolean;
-  content: String;
-  createdAt: Date;
+  id: string
+  author: string
+  title: string
+  slug: string
+  tags: string[]
+  published: Boolean
+  content: string
+  createdAt: Date
 }
-
-// let blogs: Post[];
