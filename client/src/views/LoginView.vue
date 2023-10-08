@@ -2,17 +2,15 @@
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import { Ref, ref } from 'vue'
-// import { login } from '@/services/loginService'
 
 const store = useAuthStore()
 const email: Ref<string> = ref('')
 const password: Ref<string> = ref('')
+const { user } = storeToRefs(store)
 
 const handleLogin = (mail: string, pw: string) => {
   store.login(mail, pw)
 }
-
-const { user } = storeToRefs(store)
 </script>
 
 <template>
@@ -31,6 +29,6 @@ const { user } = storeToRefs(store)
     </form>
   </div>
   <div v-else>
-    {{ user.data }}
+    <h1>Logged in</h1>
   </div>
 </template>

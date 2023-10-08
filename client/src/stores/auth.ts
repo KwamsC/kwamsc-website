@@ -11,23 +11,20 @@ export const useAuthStore = defineStore('user', {
       // for initially empty lists
       // cityList: [] as CityWeather[]
       user: {
-        loggedIn: false,
-        data: {},
-        token: ''
+        loggedIn: false || window.localStorage.getItem('auth') === 'true',
+        token: null
       }
     }
   },
   getters: {
     getUser: (state) => state.user
-    // getCities: (state) => state.cityList,
-    // getNumberOfCities: (state) => state.cityList.length
   },
   actions: {
     async login(email: string, password: string) {
       await signInWithEmailAndPassword(auth, email, password).then((userCredentials) => {
         if (userCredentials) {
-          this.user.data = userCredentials
           this.user.loggedIn = true
+          window.localStorage.setItem('auth', 'true')
           console.log(userCredentials)
         }
       })
@@ -36,35 +33,23 @@ export const useAuthStore = defineStore('user', {
     async logout() {
       await signOut(auth)
       this.user.loggedIn = false
-      this.user.data = {}
+      window.localStorage.removeItem('auth')
     },
 
     init() {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          user.getIdToken().then((idToken) => {
+      onAuthStateChanged(auth, (userCredentials) => {
+        if (userCredentials) {
+          userCredentials.getIdToken().then((idToken) => {
             this.user.token = idToken
-            console.log(idToken)
           })
-          this.user.data = user
           this.user.loggedIn = true
+          window.localStorage.setItem('auth', 'true')
         } else {
-          this.user.data = {}
           this.user.loggedIn = false
+          this.user.token = null
+          window.localStorage.removeItem('auth')
         }
       })
     }
-    // addCity(city: CityWeather) {
-    //   if (this.cityList.find(({ id }) => id === city.id) === undefined) {
-    //     this.cityList.push(city)
-    //   } else {
-    //     console.log('already added to the list')
-    //   }
-    // },
-    // deleteCity(itemID: string) {
-    //   this.cityList = this.cityList.filter((city) => {
-    //     return city.id !== itemID
-    //   })
-    // }
   }
 })

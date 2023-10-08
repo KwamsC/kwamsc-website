@@ -22,6 +22,8 @@ onMounted(() => {
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
+        <RouterLink to="/posts">Posts</RouterLink>
+        <button @click="store.logout()">Logout</button>
       </nav>
     </div>
   </header>
