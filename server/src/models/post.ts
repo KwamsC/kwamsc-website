@@ -26,6 +26,27 @@
 //     this.createdAt = c_createdAt;
 //   }
 // }
+// export class Todo {
+//   constructor(
+//     public id: string, 
+//     public author: string,
+//     public title: string,
+//     public slug: string,
+//     public tags: string[],
+//     public published: boolean,
+//     public content: string,
+//     public createdAt: Date
+//   ) 
+//     {}
+// }
+// export class Todo {
+//   id: string;
+//   text: string;
+//   constructor(id:string, text: string) {
+//     this.id = id;
+//     this.text = text;
+//   }
+// }
 
 export interface Post {
   id: string
@@ -33,7 +54,7 @@ export interface Post {
   title: string
   slug: string
   tags: string[]
-  published: Boolean
+  published: boolean
   content: string
   createdAt: Date
 }

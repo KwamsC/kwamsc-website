@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 
-export const setCache = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const setCache = async (req: Request, res: Response, next: NextFunction) => {
   const period = 60 * 5
 
   if (req.method === 'GET') {

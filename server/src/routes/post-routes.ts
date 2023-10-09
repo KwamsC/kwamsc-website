@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 import {
   addPost,
   deletePost,
@@ -6,15 +6,11 @@ import {
   getPost,
   updatePost,
 } from "../controllers/postController";
+import { authenticateJWT } from "../middleWare/authenticateJWT";
 
-const router = express.Router();
+const router = Router();
 
-router.post("/post", addPost);
-router.get("/posts", getAllPosts);
-router.get("/post/:id", getPost);
-router.put("/post/:id", updatePost);
-router.delete("/post/:id", deletePost);
+router.route("/").get(authenticateJWT, getAllPosts).post(addPost)
+router.route("/:id").get(getPost).put(updatePost).delete(deletePost)
 
-export default {
-  routes: router,
-};
+export default router
