@@ -6,10 +6,16 @@
       "module": "NodeNext",
       "moduleResolution": "NodeNext",
       "esModuleInterop": true,
-      "target": "ES2020",
+      "types": [
+        "jest"
+      ],
+      "target": "ESNext",
       "strict": true,
-      "noImplicitAny": true
+      "noImplicitAny": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames":true
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "test/**/*"],
+    "exclude": ["node_modules"]
   }
   
