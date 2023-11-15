@@ -1,5 +1,5 @@
 import { QueryDocumentSnapshot } from "firebase/firestore";
-import { Post } from "models/post";
+import { Post } from "../models/post";
 
 export const postConverter = {
   toFirestore: (post: Post) => post,

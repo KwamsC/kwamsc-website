@@ -10,12 +10,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../db";
 import { Post } from "../models/post";
-import { postConverter } from "../utils/firebaseConverters";
-import { handleFirestoreOperation } from "../utils/handleFirestoreOperation";
+import { postConverter } from "../helpers/firebaseConverters";
+import { handleFirestoreOperation } from "../helpers/handleFirestoreOperation";
 
-// Add a new document in collection "posts"
 // @desc    Create a new document in collection "posts"
-// @route   POST /api/post/:id
+// @route   POST /api/posts
 // @access  Private
 const addPost:RequestHandler = async (req, res) => {
   const data:Post = req.body;
@@ -29,7 +28,7 @@ const addPost:RequestHandler = async (req, res) => {
 };
 
 // @desc    Update a document by id in collection "posts"
-// @route   PUT /api/post/:id
+// @route   PUT /api/posts/:id
 // @access  Private
 const updatePost:RequestHandler = async (req, res) => {
   const id = req.params.id;
@@ -45,7 +44,7 @@ const updatePost:RequestHandler = async (req, res) => {
 };
 
 // @desc    Gets a document by id in collection "posts"
-// @route   GET /api/post/:id
+// @route   GET /api/posts/:id
 // @access  Public
 const getPost:RequestHandler = async (req, res) => {
   try {
@@ -67,7 +66,7 @@ const getPost:RequestHandler = async (req, res) => {
 };
 
 // @desc    Delete post by id from collection "posts"
-// @route   DELETE /api/post/:id
+// @route   DELETE /api/posts/:id
 // @access  Private
 const deletePost:RequestHandler = async (req, res) => {
   const id = req.params.id;
