@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p .",
+    "start": "node build/src/index.js",
     "dev": "nodemon",
     "lint": "eslint . --fix",
     "test": "jest",
+    "docker:start": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
+    "docker:serve": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
+    "dockers:exec": "docker exec -it kwamsc-app /bin/sh",
     "firebase-export-seed": "firebase emulators:export seed",
     "firebase:emulator-start": "firebase emulators:start --import seed"
   },

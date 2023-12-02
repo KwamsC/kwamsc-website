@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-      "outDir": "dist",
+      "outDir": "./build",
       "sourceMap": true,
-      "baseUrl": "src",
+      "baseUrl": "./src",
       "module": "NodeNext",
       "moduleResolution": "NodeNext",
       "esModuleInterop": true,

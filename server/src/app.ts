@@ -14,9 +14,13 @@ app.use(limiter)
 // app.use(setCache);
 app.use("/api/posts", postRoutes);
 
-// Below route is trigerred when any error is is thrown
-app.use((err: Error, req: Request, res:Response) => {
-  res.status(500).json({message: err.message});
+app.get("/", (req: Request, res: Response) => {
+  res.send("Starting Server");
 });
+
+// // Below route is trigerred when any error is is thrown
+// app.use((err: Error, req: Request, res:Response) => {
+//   res.status(500).json({message: err.message});
+// });
 
 export default app;
