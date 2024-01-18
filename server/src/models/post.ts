@@ -55,6 +55,7 @@ export interface Post {
   slug: string
   tags: string[]
   published: boolean
-  content: string
+  body: string
+  updatedAt: Date
   createdAt: Date
 }

@@ -31,7 +31,7 @@ const firebaseConfig = {
 
 export default {
   host: HOST,
-  port: PORT,
+  port: PORT || 8080,
   url: HOST_URL,
   firebaseConfig,
 };

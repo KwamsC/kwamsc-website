@@ -1,0 +1,262 @@
+/**
+* The Cloud Firestore Rules.
+*
+* @author    Kwame Dame 
+*/
+rules_version = '2'
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Functions ---
+    function userSignedIn() {
+      return request.auth.uid != null
+    }
+
+    function resourceBelongsToUser(id) {
+      return request.auth.uid == id
+    }
+
+    match /posts/{document=**} {
+      allow write: if userSignedIn()
+      allow read: if true;
+    }
+    // --- Functions ---
+
+
+
+    // /**
+    //  * Verifies if the given user has the requested permission.
+    //  *
+    //  * @param {string} The requested permission
+    //  *
+    //  * @returns {boolean}
+    //  */
+  // function userHasPermission(permission) {
+    //   return request.auth.token.permissions[permission] != 'undefined'
+    // }
+
+    // /**
+    //  * Verifies if the given user belongs to the requested resource's tenant.
+    //  *
+    //  * @param {string} The tenant name
+    //  *
+    //  * @returns {boolean}
+    //  */
+  // function userBelongsToTenant(tenant) {
+    //   return request.auth.token.tenant == tenant
+    // }
+
+    // /**
+    //  * Verifies if the given resource explicitly belongs to the authenticated user.
+    //  *
+    //  * @param {id} The resource user identifier
+    //  *
+    //  * @returns {boolean}
+    //  */
+  // function resourceBelongsToUser(id) {
+    //   return request.auth.uid == id
+    // }
+
+    // /**
+    //  * Verifies if the given resource explicitly belongs to the authenticated user with email address.
+    //  *
+    //  * @param {email} The resource user email address
+    //  *
+    //  * @returns {boolean}
+    //  */
+  // function resourceBelongsToUserWithEmail(email) {
+    //   return request.auth.token.email == email
+    // }
+
+    // // Disallow by default
+    // allow read, write: if false
+
+  // match /admin/_shared/{document=**} {
+    //   allow read: if userSignedIn()
+    // }
+
+    // // A read rule can be broken into get and list,
+    // // while a write rule can be broken into create, update, and delete.
+    // // @see https://firebase.google.com/docs/firestore/security/rules-structure#granular_operations
+  // match /admin/{tenant} {
+    //   allow read, write: if userSignedIn() && userBelongsToTenant(tenant)
+
+  //   match /connectorSettings/{document=**} {
+    //     allow create: if userHasPermission('update:connectors')
+    //     allow read: if userHasPermission('read:connectors')
+    //     allow update: if userHasPermission('update:connectors')
+    //   }
+
+  //   match /counters/{document=**} {
+    //     allow create: if userHasPermission('create:counters')
+    //     allow read: if userHasPermission('read:counters')
+    //     allow update: if userHasPermission('update:counters')
+    //     allow delete: if userHasPermission('delete:counters')
+    //   }
+
+  //   match /formConfigurations/{document=**} {
+    //     allow create: if userHasPermission('create:form_configurations')
+    //     allow read: if userHasPermission('read:form_configurations')
+    //     allow update: if userHasPermission('update:form_configurations')
+    //     allow delete: if userHasPermission('delete:form_configurations')
+    //   }
+
+  //   match /formFields/{document=**} {
+    //     allow create: if userHasPermission('create:form_fields')
+    //     allow read: if userHasPermission('read:form_fields')
+    //     allow update: if userHasPermission('update:form_fields')
+    //     allow delete: if userHasPermission('delete:form_fields')
+    //   }
+
+  //   match /forms/{document=**} {
+    //     allow create: if userHasPermission('create:forms')
+    //     allow read: if userHasPermission('read:forms')
+    //     allow update: if userHasPermission('update:forms')
+    //     allow delete: if userHasPermission('delete:forms')
+    //   }
+
+  //   match /integrations/{document=**} {
+    //     allow create: if userHasPermission('create:integrations')
+    //     allow read: if userHasPermission('read:integrations')
+    //     allow update: if userHasPermission('update:integrations')
+    //     allow delete: if userHasPermission('delete:integrations')
+    //   }
+
+  //   match /logs/{document=**} {
+    //     allow create: if userHasPermission('create:logs')
+    //     allow read: if userHasPermission('read:logs')
+    //   }
+
+  //   match /oauth/{document=**} {
+    //     allow create: if userHasPermission('create:client_admin_api_credentials')
+    //     allow read: if userHasPermission('read:developers_console')
+
+    //     // Use the create permission also for the update action for this one.
+    //     allow update: if userHasPermission('create:client_admin_api_credentials')
+    //     allow delete: if userHasPermission('delete:client_admin_api_credentials')
+    //   }
+
+  //   match /organization/{document=**} {
+    //     allow read: if userHasPermission('read:organization')
+    //     allow write: if userHasPermission('update:organization')
+    //   }
+
+  //   match /pages/{document=**} {
+    //     allow create: if userHasPermission('create:pages')
+    //     allow read: if userHasPermission('read:pages')
+    //     allow update: if userHasPermission('update:pages')
+    //     allow delete: if userHasPermission('delete:pages')
+    //   }
+
+  //   match /preferenceCenters/{document=**} {
+    //     allow create: if userHasPermission('create:preference_centers')
+    //     allow read: if userHasPermission('read:preference_centers')
+    //     allow update: if userHasPermission('update:preference_centers')
+    //     allow delete: if userHasPermission('delete:preference_centers')
+    //   }
+
+  //   match /privacy/{document=**} {
+    //     allow create: if userHasPermission('create:privacy')
+    //     allow read: if userHasPermission('read:privacy')
+    //     allow update: if userHasPermission('update:privacy')
+    //     allow delete: if false
+    //   }
+
+  //   match /security/{document=**} {
+    //     allow create: if userHasPermission('create:security')
+    //     allow read: if userHasPermission('read:security')
+    //     allow update: if userHasPermission('update:security')
+    //     allow delete: if userHasPermission('delete:security')
+    //   }
+
+  //   match /regularExpressions/{document=**} {
+    //     allow read: if userHasPermission('read:regular_expressions')
+    //     allow update: if userHasPermission('update:regular_expressions')
+    //     allow delete: if userHasPermission('delete:regular_expressions')
+    //     allow create: if userHasPermission('create:regular_expressions')
+    //   }
+
+    //   // Since this collection holds all kind of data regarding all resources,
+    //   // make sure to set allow to false for `read`, and let that operation be handled
+    //   // by a Cloud Function to check if the logged in user is allowed to `read`.
+  //   match /revisions/{document=**} {
+    //     allow create: if true
+    //     allow read: if true
+    //   }
+
+  //   match /usage/{document=**} {
+    //     allow read: if userHasPermission('read:usage')
+    //   }
+
+  //   match /users/{document=**} {
+    //     allow read: if userHasPermission('read:users')
+    //     allow update: if userHasPermission('update:users') || resourceBelongsToUser(resource.data.auth0UserId)
+    //     allow delete: if userHasPermission('delete:users')
+    //     allow create: if userHasPermission('create:users') && userHasPermission('create:user_invitations')
+    //   }
+
+  //   match /webhooks/{document=**} {
+    //     allow read: if userHasPermission('read:webhooks')
+    //     allow write: if userHasPermission('create:webhooks')
+    //   }
+    // }
+
+    // // --- Domains ---
+  // match /domains {
+    //   allow read, write: if false
+
+  //   match /{tenant}/domainMappings/{document=**} {
+    //     // Only allow for authenticated users of the same tenant.
+    //     allow read: if userSignedIn() && userHasPermission('read:domain_mappings') && userBelongsToTenant(tenant)
+    //     allow write: if userSignedIn() && userHasPermission('update:domain_mappings') && userBelongsToTenant(tenant)
+    //   }
+    // }
+
+    // // --- Tenants ---
+  // match /tenants/{tenant} {
+    //   allow read: if userSignedIn() && userBelongsToTenant(resource.data.tenant)
+
+  //   match /subscriptions/{document=**} {
+    //     allow list: if userSignedIn()
+    //   }
+    // }
+
+    // // --- DnsAuthorizations ---
+  // match /dnsAuthorizations/{document=**} {
+    //   allow read: if userSignedIn() && userHasPermission('read:domain_mappings')
+    // }
+
+    // // --- Customers ---
+  // match /customers {
+    //   allow read, write: if false
+
+    //   // Only allow for authenticated users of the same tenant.
+  //   match /{tenant}/transactions/{document=**} {
+    //     allow read: if userSignedIn() && userHasPermission('read:transactions') && userBelongsToTenant(tenant)
+    //   }
+
+    //   // Only allow when matching the exact document ID.
+    //   // @consumedBy https://gitlab.com/growingminds/internal/novti-renderers/novti-pages-renderer-tsed/-/blob/59bdbda0df6fd50df4860b115378297d69d91371/src/statics/js/novti.client.js#L355
+    //   // @see to https://firebase.google.com/docs/firestore/security/rules-structure#granular_operations
+  //   match /{tenant}/transactions/{transaction} {
+    //     allow get: if true
+    //   }
+    // }
+
+    // // Packages
+  // match /packages/{document=**} {
+    //   allow read: if userSignedIn()
+    // }
+
+    // // Users subcollection collection group query rule
+  // match /{path=**}/users/{user} {
+    //   allow read: if userSignedIn() && resourceBelongsToUserWithEmail(resource.data.email)
+    // }
+
+    // // Allow the read of the document regardless of context
+  // match /counters/{tenant}/campaigns/{document=**} {
+    //   allow read: if true
+    //   allow write: if userHasPermission('create:counters') && userSignedIn() && userBelongsToTenant(tenant)
+    // }
+  }
+}

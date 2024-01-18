@@ -10,7 +10,7 @@ import { authenticateJWT } from "../middleWare/authenticateJWT";
 
 const router = Router();
 
-router.route("/").get(getAllPosts).post(addPost)
-router.route("/:id").get(getPost).put(updatePost).delete(deletePost)
+router.route("/posts").get(getAllPosts).post(authenticateJWT, addPost)
+router.route("/posts/:id").get(getPost).put(authenticateJWT, updatePost).delete(authenticateJWT, deletePost)
 
 export default router
