@@ -1,7 +1,7 @@
 import { RequestHandler, Request, Response } from "express";
 import {
   collection,
-  addDoc,
+  setDoc,
   getDocs,
   getDoc,
   doc,
@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../db";
 import { Post } from "../models/post";
+import { CreatePostDto, UpdatePostDto } from "../models/postSchema";
 import { postConverter } from "../helpers/firebaseConverters";
 import { handleFirestoreOperation } from "../helpers/handleFirestoreOperation";
 
@@ -21,10 +22,17 @@ import { handleFirestoreOperation } from "../helpers/handleFirestoreOperation";
  * @param   {Response} res - Express response object
  */
 const addPost:RequestHandler = async (req: Request, res: Response) => {
-  const data:Post = req.body;
+  const postData: CreatePostDto = req.body;
+  const timestamp = Date.now();
+  const postRef = doc(collection(db, "posts"));
 
   await handleFirestoreOperation(
-    () => addDoc(collection(db, "posts"), data),
+    () => setDoc(postRef, {
+      id: postRef.id,
+      ...postData,
+      createdAt: timestamp,
+      updatedAt: null,
+    }),
     "Post saved successfully",
     "Failed to save post",
     res
@@ -40,11 +48,15 @@ const addPost:RequestHandler = async (req: Request, res: Response) => {
  */
 const updatePost:RequestHandler = async (req: Request, res:Response) => {
   const id = req.params.id;
-  const post = req.body;
+  const timestamp = Date.now();
+  const post: UpdatePostDto = req.body;
   const postRef = doc(db, "posts", id).withConverter(postConverter);
 
   await handleFirestoreOperation(
-    () => updateDoc(postRef, post),
+    () => updateDoc(postRef, {
+      ...post,
+      updatedAt: timestamp,
+    }),
     'Post updated succesfully',
     'Failed to update post',
     res
@@ -71,9 +83,8 @@ const getPost:RequestHandler = async (req: Request, res: Response) => {
       res.status(404).send("Post with given ID is not found");
     }
   } catch (err ) {
-    if (err instanceof Error){
+    if (err instanceof Error)
       res.status(400).send(err.message);
-    }
   }
 };
 
@@ -113,10 +124,10 @@ const getAllPosts:RequestHandler = async (req: Request, res: Response) => {
       res.status(404).send("No posts found");
       return;
     }
-    
+
     querySnapshot.forEach((doc) => {
       if (doc.exists()) {
-        posts.push({ ...doc.data(), id: doc.id, });
+        posts.push(doc.data());
       }
     });
 
@@ -128,4 +139,12 @@ const getAllPosts:RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
-export { addPost, getPost, getAllPosts, updatePost, deletePost };
+const postController = {
+  addPost, 
+  getPost,
+  getAllPosts,
+  updatePost,
+  deletePost
+};
+
+export default postController;

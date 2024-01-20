@@ -49,13 +49,13 @@
 // }
 
 export interface Post {
-  id: string
-  author: string
-  title: string
-  slug: string
-  tags: string[]
+  id: string; // Unique identifier for the blog post
+  title: string; // Title of the blog post
+  content: string; // Main content of the blog post (HTML or Markdown)
+  author: string; // Information about the author
+  tags: string[]; // Array of tags associated with the blog post
+  imageUrl?: string; // URL for the blog post cover image (optional)
   published: boolean
-  body: string
-  updatedAt: Date
-  createdAt: Date
+  updatedAt: Date // Date when the blog post was updated
+  createdAt: Date // Date when the blog post was published
 }
