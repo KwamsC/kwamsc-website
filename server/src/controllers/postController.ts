@@ -8,15 +8,14 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../db";
-import { Post } from "../models/post";
-import { CreatePostDto, UpdatePostDto } from "../models/postSchema";
+import { db } from "../config/db";
+import { CreatePostDto, UpdatePostDto, Post } from "../models/postSchema";
 import { postConverter } from "../helpers/firebaseConverters";
 import { handleFirestoreOperation } from "../helpers/handleFirestoreOperation";
 
 /**
  * @desc    Create a new document in the "posts" collection
- * @route   POST /api/posts
+ * @route   POST /api/v1/posts
  * @access  Private
  * @param   {Request} req - Express request object
  * @param   {Response} res - Express response object
@@ -41,7 +40,7 @@ const addPost:RequestHandler = async (req: Request, res: Response) => {
 
 /**
  * @desc    Update a document by id in the "posts" collection
- * @route   PUT /api/posts/:id
+ * @route   PUT /api/v1/posts/:id
  * @access  Private
  * @param   {Request} req - Express request object
  * @param   {Response} res - Express response object
@@ -65,7 +64,7 @@ const updatePost:RequestHandler = async (req: Request, res:Response) => {
 
 /**
  * @desc    Get a document by id from the "posts" collection
- * @route   GET /api/posts/:id
+ * @route   GET /api/v1/posts/:id
  * @access  Public
  * @param   {Request} req - Express request object
  * @param   {Response} res - Express response object
@@ -90,7 +89,7 @@ const getPost:RequestHandler = async (req: Request, res: Response) => {
 
 /**
  * @desc    Delete a post by id from the "posts" collection
- * @route   DELETE /api/posts/:id
+ * @route   DELETE /api/v1/posts/:id
  * @access  Private
  * @param   {Request} req - Express request object
  * @param   {Response} res - Express response object
@@ -108,7 +107,7 @@ const deletePost:RequestHandler = async (req: Request, res: Response) => {
 
 /**
  * @desc    Get all posts from the "posts" collection
- * @route   GET /api/posts
+ * @route   GET /api/v1/posts
  * @access  Public
  * @param   {Request} req - Express request object
  * @param   {Response} res - Express response object
