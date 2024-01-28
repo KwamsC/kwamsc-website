@@ -64,5 +64,7 @@ typings/
 
 # next.js build output
 .next
+
 serviceAccount.json
 kwamsc.code-workspace
+server/seed/firestore_export
