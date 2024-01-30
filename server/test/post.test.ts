@@ -21,6 +21,12 @@ beforeEach(async () => {
     firebase = await getFireBase;
 });
 
+afterAll(done => {
+    // Closing the firestore connection allows Jest to exit successfully.
+    firebase.cleanup()
+    done()
+})
+
 describe('posts', () => {
     it('should see post data', async () =>{
         const auth = firebase.unauthenticatedContext();
