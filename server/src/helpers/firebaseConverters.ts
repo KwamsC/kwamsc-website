@@ -1,7 +1,7 @@
-import { QueryDocumentSnapshot } from "firebase/firestore";
-import { Post } from "models/postSchema";
+import { FirestoreDataConverter, QueryDocumentSnapshot } from "firebase/firestore";
+import { Entity } from "../models/common";
 
-export const postConverter = {
-  toFirestore: (post: Post) => post,
-  fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as Post,
+export const firestoreConverter: FirestoreDataConverter<Entity> = {
+  toFirestore: (entity: Entity) => entity,
+  fromFirestore: (snapshot: QueryDocumentSnapshot) => snapshot.data() as Entity,
 };
