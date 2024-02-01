@@ -14,7 +14,6 @@
     "test": "jest",
     "docker:start": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build",
     "docker:serve": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
-    "docker:serve:emulators": "npm run docker:serve & npm run firebase:emulator-start",
     "dockers:exec": "docker exec -it kwamsc-api /bin/sh",
     "firebase-export-seed": "firebase emulators:export seed",
     "firebase:emulator-start": "firebase emulators:start --import=seed --export-on-exit"
@@ -34,6 +33,7 @@
     "eslint": "8.56.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.3",
+    "prettier": "^3.2.4",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",

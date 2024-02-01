@@ -10,3 +10,19 @@ services:
     env_file: ./.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  firebase-tools:
+    image: andreysenov/firebase-tools
+    container_name: firebase-emulator
+    depends_on:
+      - node-kwamsc-app  #adjust this based on the service name
+    ports:
+      - "4000:4000"  # Adjust the port as needed for your Firebase emulator setup
+      - "4500:4500"  # Adjust the port as needed for your Firebase emulator setup
+      - "5002:5002"  # Adjust the port as needed for your Firebase emulator setup
+      - "8081:8081"  # Adjust the port as needed for your Firebase emulator setup
+      - "9099:9099"  # Adjust the port as needed for your Firebase emulator setup
+    volumes:
+      - ./:/home/node
+    command: npm run firebase:emulator-start
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

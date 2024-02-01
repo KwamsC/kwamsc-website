@@ -1,7 +1,7 @@
 /**
 * The Cloud Firestore Rules.
 *
-* @author    Kwame Dame 
+* @author    Kwame Carr 
 */
 rules_version = '2'
 service cloud.firestore {
@@ -12,17 +12,19 @@ service cloud.firestore {
       return request.auth.uid != null
     }
 
-    function resourceBelongsToUser(id) {
-      return request.auth.uid == id
-    }
+  // function resourceBelongsToUser(id) {
+    //   return request.auth.uid == id
+    // }
 
     match /posts/{document=**} {
-      allow write: if userSignedIn()
+      allow write: if userSignedIn();
       allow read: if true;
     }
-    // --- Functions ---
 
-
+    match /recipes/{document=**} {
+      allow write: if userSignedIn();
+      allow read: if true;
+    }
 
     // /**
     //  * Verifies if the given user has the requested permission.
@@ -81,39 +83,6 @@ service cloud.firestore {
   // match /admin/{tenant} {
     //   allow read, write: if userSignedIn() && userBelongsToTenant(tenant)
 
-  //   match /connectorSettings/{document=**} {
-    //     allow create: if userHasPermission('update:connectors')
-    //     allow read: if userHasPermission('read:connectors')
-    //     allow update: if userHasPermission('update:connectors')
-    //   }
-
-  //   match /counters/{document=**} {
-    //     allow create: if userHasPermission('create:counters')
-    //     allow read: if userHasPermission('read:counters')
-    //     allow update: if userHasPermission('update:counters')
-    //     allow delete: if userHasPermission('delete:counters')
-    //   }
-
-  //   match /formConfigurations/{document=**} {
-    //     allow create: if userHasPermission('create:form_configurations')
-    //     allow read: if userHasPermission('read:form_configurations')
-    //     allow update: if userHasPermission('update:form_configurations')
-    //     allow delete: if userHasPermission('delete:form_configurations')
-    //   }
-
-  //   match /formFields/{document=**} {
-    //     allow create: if userHasPermission('create:form_fields')
-    //     allow read: if userHasPermission('read:form_fields')
-    //     allow update: if userHasPermission('update:form_fields')
-    //     allow delete: if userHasPermission('delete:form_fields')
-    //   }
-
-  //   match /forms/{document=**} {
-    //     allow create: if userHasPermission('create:forms')
-    //     allow read: if userHasPermission('read:forms')
-    //     allow update: if userHasPermission('update:forms')
-    //     allow delete: if userHasPermission('delete:forms')
-    //   }
 
   //   match /integrations/{document=**} {
     //     allow create: if userHasPermission('create:integrations')
@@ -122,10 +91,6 @@ service cloud.firestore {
     //     allow delete: if userHasPermission('delete:integrations')
     //   }
 
-  //   match /logs/{document=**} {
-    //     allow create: if userHasPermission('create:logs')
-    //     allow read: if userHasPermission('read:logs')
-    //   }
 
   //   match /oauth/{document=**} {
     //     allow create: if userHasPermission('create:client_admin_api_credentials')
@@ -134,39 +99,6 @@ service cloud.firestore {
     //     // Use the create permission also for the update action for this one.
     //     allow update: if userHasPermission('create:client_admin_api_credentials')
     //     allow delete: if userHasPermission('delete:client_admin_api_credentials')
-    //   }
-
-  //   match /organization/{document=**} {
-    //     allow read: if userHasPermission('read:organization')
-    //     allow write: if userHasPermission('update:organization')
-    //   }
-
-  //   match /pages/{document=**} {
-    //     allow create: if userHasPermission('create:pages')
-    //     allow read: if userHasPermission('read:pages')
-    //     allow update: if userHasPermission('update:pages')
-    //     allow delete: if userHasPermission('delete:pages')
-    //   }
-
-  //   match /preferenceCenters/{document=**} {
-    //     allow create: if userHasPermission('create:preference_centers')
-    //     allow read: if userHasPermission('read:preference_centers')
-    //     allow update: if userHasPermission('update:preference_centers')
-    //     allow delete: if userHasPermission('delete:preference_centers')
-    //   }
-
-  //   match /privacy/{document=**} {
-    //     allow create: if userHasPermission('create:privacy')
-    //     allow read: if userHasPermission('read:privacy')
-    //     allow update: if userHasPermission('update:privacy')
-    //     allow delete: if false
-    //   }
-
-  //   match /security/{document=**} {
-    //     allow create: if userHasPermission('create:security')
-    //     allow read: if userHasPermission('read:security')
-    //     allow update: if userHasPermission('update:security')
-    //     allow delete: if userHasPermission('delete:security')
     //   }
 
   //   match /regularExpressions/{document=**} {
@@ -182,10 +114,6 @@ service cloud.firestore {
   //   match /revisions/{document=**} {
     //     allow create: if true
     //     allow read: if true
-    //   }
-
-  //   match /usage/{document=**} {
-    //     allow read: if userHasPermission('read:usage')
     //   }
 
   //   match /users/{document=**} {

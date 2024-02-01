@@ -1,5 +1,5 @@
-import { config } from "dotenv";
-import assert from "assert";
+import { config } from 'dotenv';
+import assert from 'assert';
 
 config();
 
@@ -16,8 +16,8 @@ const {
   APP_ID,
 } = process.env;
 
-assert(PORT, "Port is required");
-assert(HOST, "Host is required");
+assert(PORT, 'Port is required');
+assert(HOST, 'Host is required');
 
 const firebaseConfig = {
   apiKey: API_KEY,

@@ -1,17 +1,10 @@
 {
-  "database": {
-    "rules": "database.rules.json"
-  },
   "firestore": {
     "rules": "firestore.rules"
   },
   "hosting": {
     "public": "kwamsc/build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -21,22 +14,25 @@
   },
   "emulators": {
     "auth": {
+      "host": "0.0.0.0",
       "port": 9099
     },
-    "functions": {
-      "port": 5001
-    },
     "firestore": {
+      "host": "0.0.0.0",
       "port": 8081
     },
-    "database": {
-      "port": 9000
-    },
     "hosting": {
+      "host": "0.0.0.0",
       "port": 5002
     },
+    "logging": {
+      "host": "0.0.0.0",
+      "port": 4500
+    },
     "ui": {
-      "enabled": true
+      "enabled": true,
+      "host": "0.0.0.0",
+      "port": 4000
     },
     "singleProjectMode": true
   }

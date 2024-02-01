@@ -7,12 +7,12 @@ import { PartialPostSchema, PostSchema } from "../models/postSchema";
 const router = Router();
 
 router.route("/posts")
-  .get(postController.getAllPosts)
-  .post(validate(PostSchema), postController.addPost)
+  .get(postController.getAllEntities)
+  .post([authenticateJWT, validate(PostSchema)], postController.addEntity)
 
 router.route("/posts/:id")
-  .get(postController.getPost)
-  .put(validate(PartialPostSchema), postController.updatePost)
-  .delete(authenticateJWT, postController.deletePost)
+  .get(postController.getEntity)
+  .put([authenticateJWT, validate(PartialPostSchema)], postController.updateEntity)
+  .delete(authenticateJWT, postController.deleteEntity)
 
 export default router
