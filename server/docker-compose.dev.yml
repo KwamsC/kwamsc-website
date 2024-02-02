@@ -1,6 +1,8 @@
 version: '3.8'
 services:
   node-kwamsc-app:
+    depends_on:
+      - firebase-tools  #adjust this based on the service name
     volumes:
       - ./:/app
       - /app/node_modules
@@ -13,8 +15,6 @@ services:
   firebase-tools:
     image: andreysenov/firebase-tools
     container_name: firebase-emulator
-    depends_on:
-      - node-kwamsc-app  #adjust this based on the service name
     ports:
       - "4000:4000"  # Adjust the port as needed for your Firebase emulator setup
       - "4500:4500"  # Adjust the port as needed for your Firebase emulator setup

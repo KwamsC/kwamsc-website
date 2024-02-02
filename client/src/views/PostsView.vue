@@ -11,17 +11,21 @@ const { user } = storeToRefs(store)
 let posts: Ref<Post[] | undefined> = ref()
 
 const fetchData = async (token: string) => {
-  console.log('token ' + token)
-  const res = await axios.get('http://localhost:8080/api/posts', {
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  })
-  posts.value = res.data
+  // console.log('token ' + token)
+  const res = await axios
+    .get('http://localhost:8080/api/posts', {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    })
+    .catch((error) => {
+      // store.logout()
+    })
+  posts.value = res?.data
 }
 
 watch(user.value, async () => {
-  console.log('logged out watcher' + user.value.token)
+  // console.log('logged out watcher' + user.value.token)
   if (user.value.token) {
     fetchData(user.value.token)
   } else {
@@ -30,7 +34,7 @@ watch(user.value, async () => {
 })
 
 onMounted(() => {
-  console.log('logged out mounted' + user.value.token)
+  // console.log('logged out mounted' + user.value.token)
 
   if (user.value.token) {
     fetchData(user.value.token)

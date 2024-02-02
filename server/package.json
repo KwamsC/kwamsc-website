@@ -14,7 +14,8 @@
     "test": "jest",
     "docker:start": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build",
     "docker:serve": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
-    "dockers:exec": "docker exec -it kwamsc-api /bin/sh",
+    "dockers:exec:api": "docker exec -it kwamsc-api /bin/sh",
+    "dockers:exec:firebase": "docker exec -it firebase-emulator /bin/sh",
     "firebase-export-seed": "firebase emulators:export seed",
     "firebase:emulator-start": "firebase emulators:start --import=seed --export-on-exit"
   },
