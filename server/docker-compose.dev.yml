@@ -17,6 +17,7 @@ services:
     container_name: firebase-emulator
     ports:
       - "4000:4000"  # Adjust the port as needed for your Firebase emulator setup
+      - "4400:4400"  # Adjust the port as needed for your Firebase emulator setup
       - "4500:4500"  # Adjust the port as needed for your Firebase emulator setup
       - "5002:5002"  # Adjust the port as needed for your Firebase emulator setup
       - "8081:8081"  # Adjust the port as needed for your Firebase emulator setup

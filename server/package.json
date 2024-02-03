@@ -17,7 +17,7 @@
     "dockers:exec:api": "docker exec -it kwamsc-api /bin/sh",
     "dockers:exec:firebase": "docker exec -it firebase-emulator /bin/sh",
     "firebase-export-seed": "firebase emulators:export seed",
-    "firebase:emulator-start": "firebase emulators:start --import=seed --export-on-exit"
+    "firebase:emulator-start": "firebase emulators:start --import=seed"
   },
   "keywords": [],
   "author": "",
