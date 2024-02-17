@@ -1,4 +1,4 @@
-import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit  } from 'firebase/firestore';
 import { db } from '../config/db';
 import { Entity, CreateDto, UpdateDto } from '../models/common';
 import { firestoreConverter } from '../helpers/firebaseConverters';
@@ -50,12 +50,17 @@ export const deleteEntityFromFirestore = async (
 };
 
 export const getAllEntitiesFromFirestore = async <T extends Entity>(
-  collectionName: string
+  collectionName: string,
+  count: number
 ): Promise<T[]> => {
   const entities: T[] = [];
-  const querySnapshot = await getDocs(
-    collection(db, collectionName).withConverter(firestoreConverter)
-  );
+  const first = query(
+    collection(db, collectionName).withConverter(firestoreConverter),
+    orderBy("createdAt", 'desc'),
+    limit(count)
+  )
+
+  const querySnapshot = await getDocs(first);
 
   if (querySnapshot.empty) {
     throw new Error(`No ${collectionName.toLowerCase()}s found`);
