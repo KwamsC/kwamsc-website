@@ -66,8 +66,10 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
   };
 
   public getAllEntities: RequestHandler = async (req: Request, res: Response) => {
+    const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if count is not provided
+
     try {
-      const entities: T[] = await getAllEntitiesFromFirestore(this.collectionName);
+      const entities: T[] = await getAllEntitiesFromFirestore(this.collectionName, count);
       res.status(200).json(entities);
     } catch (error) {
       res.status(500).json({ error: `Failed to get ${this.collectionName}` });
