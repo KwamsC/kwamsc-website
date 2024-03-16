@@ -14,7 +14,7 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
         return next();
       })
       .catch((error) => {
-        console.log('Catch ' + error);
+        console.log(`Catch ${ error}`);
         return res.sendStatus(403);
       });
   } else {

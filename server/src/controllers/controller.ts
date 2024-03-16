@@ -59,9 +59,9 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
 
     try {
       await deleteEntityFromFirestore(this.collectionName, id);
-      res.status(200).json({ message: `Record deleted successfully` });
+      res.status(200).json({ message: 'Record deleted successfully' });
     } catch (error) {
-      res.status(500).json({ error: `Failed to delete record` });
+      res.status(500).json({ error: 'Failed to delete record' });
     }
   };
 

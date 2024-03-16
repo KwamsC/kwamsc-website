@@ -11,13 +11,13 @@ export interface Post {
 }
 
 const myBlogPost: Post = {
-  id: "1",
-  title: "Introduction to TypeScript",
-  content: "TypeScript is a superset of JavaScript that adds static typing...",
-  author: "John Doe",
+  id: '1',
+  title: 'Introduction to TypeScript',
+  content: 'TypeScript is a superset of JavaScript that adds static typing...',
+  author: 'John Doe',
   published: true,
-  createdAt: new Date("2024-01-18T12:00:00Z"),
-  tags: ["TypeScript", "JavaScript", "Programming"],
-  updatedAt: new Date("2024-01-18T12:00:00Z"),
-  imageUrl: "https://example.com/typescript-intro.jpg",
+  createdAt: new Date('2024-01-18T12:00:00Z'),
+  tags: ['TypeScript', 'JavaScript', 'Programming'],
+  updatedAt: new Date('2024-01-18T12:00:00Z'),
+  imageUrl: 'https://example.com/typescript-intro.jpg',
 };

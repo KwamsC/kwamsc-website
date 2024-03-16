@@ -1,4 +1,4 @@
-import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit  } from 'firebase/firestore';
+import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/db';
 import { Entity, CreateDto, UpdateDto } from '../models/common';
 import { firestoreConverter } from '../helpers/firebaseConverters';
@@ -56,9 +56,9 @@ export const getAllEntitiesFromFirestore = async <T extends Entity>(
   const entities: T[] = [];
   const first = query(
     collection(db, collectionName).withConverter(firestoreConverter),
-    orderBy("createdAt", 'desc'),
+    orderBy('createdAt', 'desc'),
     limit(count)
-  )
+  );
 
   const querySnapshot = await getDocs(first);
 

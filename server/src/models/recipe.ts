@@ -20,33 +20,33 @@ interface Ingredient {
 }
 
 enum DifficultyLevel {
-  Easy = "Easy",
-  Medium = "Medium",
-  Hard = "Hard",
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard',
 }
 
 const myRecipe: Recipe = {
-  id: "1",
-  title: "Spaghetti Bolognese",
-  description: "Classic Italian pasta dish with a rich meat sauce.",
+  id: '1',
+  title: 'Spaghetti Bolognese',
+  description: 'Classic Italian pasta dish with a rich meat sauce.',
   ingredients: [
-    { name: "Spaghetti", quantity: "200g" },
-    { name: "Ground beef", quantity: "500g" },
-    { name: "Tomato sauce", quantity: "2 cups" },
+    { name: 'Spaghetti', quantity: '200g' },
+    { name: 'Ground beef', quantity: '500g' },
+    { name: 'Tomato sauce', quantity: '2 cups' },
     // Add more ingredients as needed
   ],
   instructions: [
-    "Boil water and cook spaghetti according to package instructions.",
-    "In a pan, brown the ground beef.",
-    "Add tomato sauce to the beef and simmer.",
+    'Boil water and cook spaghetti according to package instructions.',
+    'In a pan, brown the ground beef.',
+    'Add tomato sauce to the beef and simmer.',
     // Add more instructions as needed
   ],
   servings: 4,
-  prepTime: "15 minutes",
-  cookTime: "30 minutes",
-  totalTime: "45 minutes",
+  prepTime: '15 minutes',
+  cookTime: '30 minutes',
+  totalTime: '45 minutes',
   difficulty: DifficultyLevel.Medium,
-  cuisine: "Italian",
-  mealType: "Dinner",
-  imageUrl: "https://example.com/spaghetti-bolognese.jpg",
+  cuisine: 'Italian',
+  mealType: 'Dinner',
+  imageUrl: 'https://example.com/spaghetti-bolognese.jpg',
 };
