@@ -56,7 +56,7 @@ export const getAllEntitiesFromFirestore = async <T extends Entity>(
   const entities: T[] = [];
   const first = query(
     collection(db, collectionName).withConverter(firestoreConverter),
-    orderBy('createdAt', 'desc'),
+    orderBy('createdAt', 'asc'),
     limit(count)
   );
 
