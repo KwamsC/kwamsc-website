@@ -8,8 +8,14 @@ import { setCache } from '../middleware/postCache';
 
 const app: Application = express();
 
+const allowedOrigins = ['http://localhost:5173', 'http://kwamsc.com', 'https://kwamsc.com/'];
+
+const corsOptions: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
