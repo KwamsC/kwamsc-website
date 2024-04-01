@@ -14,6 +14,7 @@ const {
   STORAGE_BUCKET,
   MESSAGING_SENDER_ID,
   APP_ID,
+  ADDRESS,
 } = process.env;
 
 assert(PORT, 'Port is required');
@@ -31,7 +32,8 @@ const firebaseConfig = {
 
 export default {
   host: HOST,
-  port: PORT || 8080,
+  port: PORT,
+  address: ADDRESS,
   url: HOST_URL,
   firebaseConfig,
 };

@@ -1,14 +1,15 @@
-// import { Router } from 'express';
 import postController from '../controllers/postController';
-// import { authenticateJWT } from '../middleware/authenticateJWT';
-// import { validate } from '../middleware/validator';
-// import { PartialPostSchema, PostSchema } from '../models/postSchema';
+import { authenticateJWT } from '../middleware/authenticateJWT';
+import { validate } from '../middleware/validator';
+import { PartialPostSchema, PostSchema } from '../models/postSchema';
 import { FastifyInstance } from 'fastify';
 
 async function postRoutes(fastify: FastifyInstance) {
   fastify.get('/posts', postController.getAllEntities);
   // fastify.post('/posts', { preHandler: [authenticateJWT, validate(PostSchema)] }, postController.addEntity);
-  // fastify.get('/posts/:id', postController.getEntity);
+
+  // fastify.post<{ Body: typeof PostSchema }>('/posts', { preHandler: [authenticateJWT, validate(PostSchema)] }, postController.addEntity );
+  fastify.get('/posts/:id', postController.getEntity);
   // fastify.put('/posts/:id', { preHandler: [authenticateJWT, validate(PartialPostSchema)] }, postController.updateEntity);
   // fastify.delete('/posts/:id', { preHandler: authenticateJWT }, postController.deleteEntity);
 }
