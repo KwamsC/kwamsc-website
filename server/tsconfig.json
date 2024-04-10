@@ -9,6 +9,7 @@
     "types": ["jest"],
     "target": "ES2022",
     "strict": true,
+    "noImplicitAny": false,
     "resolveJsonModule": true,
     "removeComments": true,
     "noFallthroughCasesInSwitch": true,
