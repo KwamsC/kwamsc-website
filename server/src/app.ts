@@ -2,9 +2,9 @@ import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import postRoutes from '../routes/post-routes';
-import recipeRoutes from '../routes/recipe-routes';
-import { setCache } from '../middleware/postCache';
+import postRoutes from './entry-points/post-routes';
+import recipeRoutes from './entry-points/recipe-routes';
+import { setCache } from './middleware/postCache';
 import { rateLimit } from 'express-rate-limit';
 
 const app: Application = express();

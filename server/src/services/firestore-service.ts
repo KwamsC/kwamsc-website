@@ -1,7 +1,6 @@
-import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
+import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit, FirestoreDataConverter, QueryDocumentSnapshot } from 'firebase/firestore';
 import { db } from '../config/db';
 import { Entity, CreateDto, UpdateDto } from '../models/common';
-import { firestoreConverter } from '../helpers/firebaseConverters';
 
 export class FirebaseError extends Error {
   code: number;
@@ -12,6 +11,11 @@ export class FirebaseError extends Error {
     this.code = code;
   }
 }
+
+const firestoreConverter: FirestoreDataConverter<Entity> = {
+  toFirestore: (entity: Entity) => entity,
+  fromFirestore: (snapshot: QueryDocumentSnapshot) => snapshot.data() as Entity,
+};
 
 export const addEntityToFirestore = async (
   collectionName: string,
