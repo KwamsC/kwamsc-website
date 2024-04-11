@@ -1,6 +1,6 @@
 import {
   initializeTestEnvironment,
-  assertFails,
+  // assertFails,
   assertSucceeds,
   RulesTestEnvironment,
   RulesTestContext,
