@@ -3,6 +3,16 @@ import { db } from '../config/db';
 import { Entity, CreateDto, UpdateDto } from '../models/common';
 import { firestoreConverter } from '../helpers/firebaseConverters';
 
+export class FirebaseError extends Error {
+  code: number;
+
+  constructor(message: string, code: number) {
+    super(message);
+    this.name = this.constructor.name;
+    this.code = code;
+  }
+}
+
 export const addEntityToFirestore = async (
   collectionName: string,
   entityData: CreateDto
@@ -46,6 +56,11 @@ export const deleteEntityFromFirestore = async (
   collectionName: string,
   id: string
 ): Promise<void> => {
+  const docRef = doc(db, collectionName, id);
+  const docDoc = await getDoc(docRef);
+
+  if (!docDoc.exists()) throw new FirebaseError(`${collectionName} does not exist`, 404);
+  
   await deleteDoc(doc(db, collectionName, id));
 };
 

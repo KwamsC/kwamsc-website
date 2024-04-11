@@ -6,6 +6,7 @@ import {
   getEntityFromFirestore,
   deleteEntityFromFirestore,
   getAllEntitiesFromFirestore,
+  FirebaseError,
 } from '../services/firestore-service';
 
 class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
@@ -23,7 +24,7 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
       res.status(201).json({ message: `${this.collectionName} saved successfully` });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: `Failed to save ${this.collectionName.toLowerCase()}` });
+      res.status(500).json({ error: `Failed to save ${this.collectionName}` });
     }
   };
 
@@ -35,7 +36,7 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
       await updateEntityInFirestore(this.collectionName, id, entity);
       res.status(200).json({ message: `${this.collectionName} updated successfully` });
     } catch (error) {
-      res.status(500).json({ error: `Failed to update ${this.collectionName.toLowerCase()}` });
+      res.status(500).json({ error: `Failed to update ${this.collectionName}` });
     }
   };
 
@@ -61,7 +62,11 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
       await deleteEntityFromFirestore(this.collectionName, id);
       res.status(200).json({ message: 'Record deleted successfully' });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to delete record' });
+      if (error instanceof FirebaseError && error.code === 404) {
+        res.status(404).json({ error: `${this.collectionName} not found` });
+      } else {
+        res.status(500).json({ error: 'Failed to delete record' });
+      }
     }
   };
 

@@ -9,3 +9,7 @@ app.listen(config.port, () =>
 process.on('unhandledRejection', (err) => {
   console.log(err);
 });
+
+process.on('uncaughtException', error => {
+  console.log(error);
+});
