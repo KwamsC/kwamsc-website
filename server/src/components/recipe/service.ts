@@ -1,5 +1,5 @@
 import { addEntityToFirestore, updateEntityInFirestore, getEntityFromFirestore, deleteEntityFromFirestore, getAllEntitiesFromFirestore } from '../../services/firestore-service';
-import { Recipe, CreateRecipeDTO, UpdateRecipeDTO } from './model';
+import { RecipeDTO, CreateRecipeDTO, UpdateRecipeDTO } from './model';
 
 class RecipeService {
   private collectionName: string;
@@ -16,16 +16,16 @@ class RecipeService {
     await updateEntityInFirestore(this.collectionName, id, entityData);
   }
 
-  async getRecipeById(id: string): Promise<Recipe | null> {
-    return await getEntityFromFirestore<Recipe>(this.collectionName, id);
+  async getRecipeById(id: string): Promise<RecipeDTO | null> {
+    return await getEntityFromFirestore<RecipeDTO>(this.collectionName, id);
   }
 
   async deleteRecipe(id: string): Promise<void> {
     await deleteEntityFromFirestore(this.collectionName, id);
   }
 
-  async getAllRecipes(count: number): Promise<Recipe[]> {
-    return await getAllEntitiesFromFirestore<Recipe>(this.collectionName, count);
+  async getAllRecipes(count: number): Promise<RecipeDTO[]> {
+    return await getAllEntitiesFromFirestore<RecipeDTO>(this.collectionName, count);
   }
 }
 

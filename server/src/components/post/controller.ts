@@ -1,12 +1,13 @@
 import { RequestHandler } from 'express';
 import PostService from './service';
-import { CreatePostDTO, UpdatePostDTO, Post } from './model';
-import { FirebaseError } from '../../services/firestore-service';
+import { CreatePostDTO, UpdatePostDTO, PostDTO } from './model';
+import { FirebaseError } from '../../services/firestore-error';
 
 const postService = new PostService('posts');
 
 const addPost: RequestHandler = async (req, res) => {
   const postData: CreatePostDTO = req.body;
+
   try {
     await postService.addPost(postData);
     res.status(201).json({ message: 'Post created successfully' });
@@ -19,6 +20,7 @@ const addPost: RequestHandler = async (req, res) => {
 const updatePost: RequestHandler = async (req, res) => {
   const postId = req.params.id;
   const postData: UpdatePostDTO = req.body;
+
   try {
     await postService.updatePost(postId, postData);
     res.status(200).json({ message: 'Post updated successfully' });
@@ -45,8 +47,9 @@ const getPostById: RequestHandler = async (req, res) => {
 
 const getAllPosts: RequestHandler = async (req, res) => {
   const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if count is not provided
+
   try {
-    const entities: Post[] = await postService.getAllPosts(count);
+    const entities: PostDTO[] = await postService.getAllPosts(count);
     res.status(200).json(entities);
   } catch (error) {
     res.status(500).json({ error: 'Failed to get posts' });
@@ -63,12 +66,9 @@ const deletePost: RequestHandler = async (req, res) => {
     if (error instanceof FirebaseError && error.code === 404) {
       res.status(404).json({ error: 'Post not found' });
     } else {
-      res.status(500).json({ error: 'Failed to delete record' });
+      res.status(500).json({ error: 'Failed to delete post' });
     }
   }
 };
-
-
-// Define other controller handlers similarly
 
 export { addPost, updatePost, getPostById, getAllPosts, deletePost};

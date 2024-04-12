@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { addRecipe, deleteRecipe, getAllRecipes, getRecipeById, updateRecipe } from './controller';
 import { authenticateJWT } from '../../middleware/authenticateJWT';
-import { PartialRecipeSchema, RecipeSchema} from './schema';
+import { PartialRecipeSchema, RecipeSchema} from './model';
 import { validate } from '../../middleware/validator';
 
 const router: Router = Router();

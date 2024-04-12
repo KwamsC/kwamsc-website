@@ -1,29 +1,15 @@
 import { 
   collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, 
   query, orderBy, limit, 
-  FirestoreDataConverter, QueryDocumentSnapshot 
 } from 'firebase/firestore';
 import { db } from '../config/db';
-import { Entity, CreateDto, UpdateDto } from '../models/common';
-
-export class FirebaseError extends Error {
-  code: number;
-
-  constructor(message: string, code: number) {
-    super(message);
-    this.name = this.constructor.name;
-    this.code = code;
-  }
-}
-
-export const firestoreConverter: FirestoreDataConverter<Entity> = {
-  toFirestore: (entity: Entity) => entity,
-  fromFirestore: (snapshot: QueryDocumentSnapshot) => snapshot.data() as Entity,
-};
+import { firestoreConverter } from '../helpers/firestore-converter';
+import { FirebaseError } from './firestore-error';
+import { FirestoreCreateDto, FirestoreUpdateDto, FirestoreEntity } from '../models/firestore';
 
 export const addEntityToFirestore = async (
   collectionName: string,
-  entityData: CreateDto
+  entityData: FirestoreCreateDto
 ): Promise<void> => {
   const timestamp = Date.now();
   const entityRef = doc(collection(db, collectionName));
@@ -39,7 +25,7 @@ export const addEntityToFirestore = async (
 export const updateEntityInFirestore = async (
   collectionName: string,
   id: string,
-  entityData: UpdateDto
+  entityData: FirestoreUpdateDto
 ): Promise<void> => {
   const timestamp = Date.now();
   const entityRef = doc(db, collectionName, id);
@@ -50,7 +36,7 @@ export const updateEntityInFirestore = async (
   });
 };
 
-export const getEntityFromFirestore = async <T extends Entity>(
+export const getEntityFromFirestore = async <T extends FirestoreEntity>(
   collectionName: string,
   id: string
 ): Promise<T | null> => {
@@ -72,7 +58,7 @@ export const deleteEntityFromFirestore = async (
   await deleteDoc(doc(db, collectionName, id));
 };
 
-export const getAllEntitiesFromFirestore = async <T extends Entity>(
+export const getAllEntitiesFromFirestore = async <T extends FirestoreEntity>(
   collectionName: string,
   count: number
 ): Promise<T[]> => {
