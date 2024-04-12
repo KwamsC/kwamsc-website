@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "engines": {
-    "node": "20.12"
+    "node": "20.12.2"
   },
   "scripts": {
     "build": "tsc -p .",
