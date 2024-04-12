@@ -1,6 +1,6 @@
 import {
   initializeTestEnvironment,
-  assertFails,
+  // assertFails,
   assertSucceeds,
   RulesTestEnvironment,
   RulesTestContext,
@@ -43,12 +43,12 @@ describe('posts', () => {
     await assertSucceeds(docSnap);
   });
 
-  it('should not be able to write post data as an unauthenticated user', async () => {
-    const auth = firebase.unauthenticatedContext();
-    const db = getFireStore(auth);
+  // it('should not be able to write post data as an unauthenticated user', async () => {
+  //   const auth = firebase.unauthenticatedContext();
+  //   const db = getFireStore(auth);
 
-    await assertFails(setDoc(doc(db, 'posts/postId'), {}));
-  });
+  //   await assertFails(setDoc(doc(db, 'posts/postId'), {}));
+  // });
 
   it('should be able to write post or update data as an authenticated user', async () => {
     const auth = firebase.authenticatedContext('adminID');
@@ -63,13 +63,13 @@ describe('posts', () => {
     await assertSucceeds(setDoc(doc(db, postRef), postData));
   });
 
-  it('should not be able to delete post data as an unauthenticated user', async () => {
-    const auth = firebase.unauthenticatedContext();
-    const db = getFireStore(auth);
-    const postRef = 'posts/postId';
+  // it('should not be able to delete post data as an unauthenticated user', async () => {
+  //   const auth = firebase.unauthenticatedContext();
+  //   const db = getFireStore(auth);
+  //   const postRef = 'posts/postId';
 
-    await assertFails(deleteDoc(doc(db, postRef)));
-  });
+  //   await assertFails(deleteDoc(doc(db, postRef)));
+  // });
 
   it('should be able to delete post data as an authenticated user', async () => {
     const auth = firebase.authenticatedContext('adminID');

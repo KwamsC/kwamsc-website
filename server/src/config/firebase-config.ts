@@ -7,6 +7,6 @@ import { applicationDefault } from 'firebase-admin/app';
 export const app = admin.initializeApp({
   credential: applicationDefault(),
   // credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://kwame-website.firebaseio.com"
+  databaseURL: 'https://kwame-website.firebaseio.com'
 });
 

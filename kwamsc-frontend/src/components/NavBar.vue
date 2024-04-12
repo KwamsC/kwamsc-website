@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import IconKc from './icons/IconKc.vue'
 </script>
 
 <template>
   <nav class="flex items-center justify-between">
-    <h1>KwamsC</h1>
-    <ul class="flex-1 flex justify-end items-center gap-16 max-lg:hidden">
+    <a href="/">
+      <icon-kc />
+    </a>
+    <ul class="flex flex-1 items-center justify-end gap-16 max-lg:hidden">
       <li>
         <router-link to="/about">About me</router-link>
       </li>

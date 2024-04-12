@@ -1,11 +1,15 @@
-import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit  } from 'firebase/firestore';
+import { 
+  collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, 
+  query, orderBy, limit, 
+} from 'firebase/firestore';
 import { db } from '../config/db';
-import { Entity, CreateDto, UpdateDto } from '../models/common';
-import { firestoreConverter } from '../helpers/firebaseConverters';
+import { firestoreConverter } from '../helpers/firestore-converter';
+import { FirebaseError } from './firestore-error';
+import { FirestoreCreateDto, FirestoreUpdateDto, FirestoreEntity } from '../models/firestore';
 
 export const addEntityToFirestore = async (
   collectionName: string,
-  entityData: CreateDto
+  entityData: FirestoreCreateDto
 ): Promise<void> => {
   const timestamp = Date.now();
   const entityRef = doc(collection(db, collectionName));
@@ -21,7 +25,7 @@ export const addEntityToFirestore = async (
 export const updateEntityInFirestore = async (
   collectionName: string,
   id: string,
-  entityData: UpdateDto
+  entityData: FirestoreUpdateDto
 ): Promise<void> => {
   const timestamp = Date.now();
   const entityRef = doc(db, collectionName, id);
@@ -32,7 +36,7 @@ export const updateEntityInFirestore = async (
   });
 };
 
-export const getEntityFromFirestore = async <T extends Entity>(
+export const getEntityFromFirestore = async <T extends FirestoreEntity>(
   collectionName: string,
   id: string
 ): Promise<T | null> => {
@@ -46,19 +50,24 @@ export const deleteEntityFromFirestore = async (
   collectionName: string,
   id: string
 ): Promise<void> => {
+  const docRef = doc(db, collectionName, id);
+  const docDoc = await getDoc(docRef);
+
+  if (!docDoc.exists()) throw new FirebaseError(`${collectionName} does not exist`, 404);
+  
   await deleteDoc(doc(db, collectionName, id));
 };
 
-export const getAllEntitiesFromFirestore = async <T extends Entity>(
+export const getAllEntitiesFromFirestore = async <T extends FirestoreEntity>(
   collectionName: string,
   count: number
 ): Promise<T[]> => {
   const entities: T[] = [];
   const first = query(
     collection(db, collectionName).withConverter(firestoreConverter),
-    orderBy("createdAt", 'desc'),
+    orderBy('createdAt', 'asc'),
     limit(count)
-  )
+  );
 
   const querySnapshot = await getDocs(first);
 
