@@ -1,16 +1,141 @@
-# This workflow will deploy source code on Cloud Run when a commit is pushed to the "main" branch
+# # This workflow will deploy source code on Cloud Run when a commit is pushed to the "main" branch
+# #
+# # Overview:
+# #
+# # 1. Authenticate to Google Cloud
+# # 2. Deploy it to Cloud Run
+# #
+# # To configure this workflow:
+# #
+# # 1. Ensure the required Google Cloud APIs are enabled:
+# #
+# #    Cloud Run            run.googleapis.com
+# #    Cloud Build          cloudbuild.googleapis.com
+# #    Artifact Registry    artifactregistry.googleapis.com
+# #
+# # 2. Create and configure Workload Identity Federation for GitHub (https://github.com/google-github-actions/auth#setting-up-workload-identity-federation)
+# #
+# # 3. Ensure the required IAM permissions are granted
+# #
+# #    Cloud Run
+# #      roles/run.admin
+# #      roles/iam.serviceAccountUser     (to act as the Cloud Run runtime service account)
+# #
+# #    Cloud Build
+# #      roles/cloudbuild.builds.editor
+# #
+# #    Cloud Storage
+# #      roles/storage.objectAdmin
+# #
+# #    Artifact Registry
+# #      roles/artifactregistry.admin     (project or repository level)
+# #
+# #    NOTE: You should always follow the principle of least privilege when assigning IAM roles
+# #
+# # 4. Create GitHub secrets for WIF_PROVIDER and WIF_SERVICE_ACCOUNT
+# #
+# # 5. Change the values for the SERVICE and REGION environment variables (below).
+# #
+# # For more support on how to run this workflow, please visit https://github.com/marketplace/actions/deploy-to-cloud-run
+# #
+# # Further reading:
+# #   Cloud Run runtime service account   - https://cloud.google.com/run/docs/securing/service-identity
+# #   Cloud Run IAM permissions           - https://cloud.google.com/run/docs/deploying-source-code#permissions_required_to_deploy
+# #   Cloud Run builds from source        - https://cloud.google.com/run/docs/deploying-source-code
+# #   Principle of least privilege        - https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege
+
+# name: Deploy to Cloud Run from Source
+
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+
+# env:
+#   PROJECT_ID: kwame-website # TODO: update Google Cloud project id
+#   SERVICE: kwamsc-node-image # TODO: update Cloud Run service name
+#   REGION: europe-west4 # TODO: update Cloud Run service region
+
+# jobs:
+#   # build:
+
+#   #   runs-on: ubuntu-latest
+
+#   #   steps:
+#   #   - uses: actions/checkout@v3
+#   #   - name: Build the Docker image
+#   #     run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+#   build-and-deploy:
+#     name: Setup, Build, and Deploy
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       # NOTE: Alternative option - authentication via credentials json
+#       - name: Google Auth
+#         id: auth
+#         uses: 'google-github-actions/auth@v2'
+#         with:
+#           credentials_json: '${{ secrets.SA_CREDS }}'
+
+#       - name: Set up Cloud SDK
+#         uses: google-github-actions/setup-gcloud@v0
+
+#       - name: Authorize Docker push
+#         run: gcloud auth configure-docker
+        
+#         # gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA
+#         # europe-west4-docker.pkg.dev/kwame-website/kwamsc-repository
+#       - name: Build and tag the docker image
+#         run: |-
+#           docker build . --tag $REGION-docker.pkg.dev/PROJECT_ID/REPO_NAME/PATH:TAG .
+          
+#       # europe-west4-docker.pkg.dev/kwame-website/kwamsc-repository
+
+#       - name: Push the image to the Google Container Registry (GCR)
+#         run: |-
+#           docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA
+
+#       - name: Deploy
+#         run: |-
+#           gcloud run deploy $REPO_NAME \
+#           --region $REGION \
+#           --image gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA \
+#           --platform "managed" \
+#           --quiet
+
+#       # - name: Deploy to Cloud Run
+#       #   id: deploy
+#       #   uses: google-github-actions/deploy-cloudrun@v2
+#       #   with:
+#       #     service: ${{ env.SERVICE }}
+#       #     region: ${{ env.REGION }}
+#       #     # NOTE: If required, update to the appropriate source folder
+#       #     source: ./server
+
+#       # # If required, use the Cloud Run url output in later steps
+#       # - name: Show Output
+#       #   run: echo ${{ steps.deploy.outputs.url }}
+      
+
+# This workflow build and push a Docker container to Google Artifact Registry and deploy it on Cloud Run when a commit is pushed to the "main" branch
 #
 # Overview:
 #
 # 1. Authenticate to Google Cloud
-# 2. Deploy it to Cloud Run
+# 2. Authenticate Docker to Artifact Registry
+# 3. Build a docker container
+# 4. Publish it to Google Artifact Registry
+# 5. Deploy it to Cloud Run
 #
 # To configure this workflow:
 #
 # 1. Ensure the required Google Cloud APIs are enabled:
 #
 #    Cloud Run            run.googleapis.com
-#    Cloud Build          cloudbuild.googleapis.com
 #    Artifact Registry    artifactregistry.googleapis.com
 #
 # 2. Create and configure Workload Identity Federation for GitHub (https://github.com/google-github-actions/auth#setting-up-workload-identity-federation)
@@ -21,12 +146,6 @@
 #      roles/run.admin
 #      roles/iam.serviceAccountUser     (to act as the Cloud Run runtime service account)
 #
-#    Cloud Build
-#      roles/cloudbuild.builds.editor
-#
-#    Cloud Storage
-#      roles/storage.objectAdmin
-#
 #    Artifact Registry
 #      roles/artifactregistry.admin     (project or repository level)
 #
@@ -34,17 +153,19 @@
 #
 # 4. Create GitHub secrets for WIF_PROVIDER and WIF_SERVICE_ACCOUNT
 #
-# 5. Change the values for the SERVICE and REGION environment variables (below).
+# 5. Change the values for the GAR_LOCATION, SERVICE and REGION environment variables (below).
+#
+# NOTE: To use Google Container Registry instead, replace ${{ env.GAR_LOCATION }}-docker.pkg.dev with gcr.io
 #
 # For more support on how to run this workflow, please visit https://github.com/marketplace/actions/deploy-to-cloud-run
 #
 # Further reading:
-#   Cloud Run runtime service account   - https://cloud.google.com/run/docs/securing/service-identity
-#   Cloud Run IAM permissions           - https://cloud.google.com/run/docs/deploying-source-code#permissions_required_to_deploy
-#   Cloud Run builds from source        - https://cloud.google.com/run/docs/deploying-source-code
-#   Principle of least privilege        - https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege
+#   Cloud Run IAM permissions                 - https://cloud.google.com/run/docs/deploying
+#   Artifact Registry IAM permissions         - https://cloud.google.com/artifact-registry/docs/access-control#roles
+#   Container Registry vs Artifact Registry   - https://cloud.google.com/blog/products/application-development/understanding-artifact-registry-vs-container-registry
+#   Principle of least privilege              - https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege
 
-name: Deploy to Cloud Run from Source
+name: Build and Deploy to Cloud Run
 
 on:
   push:
@@ -54,6 +175,7 @@ env:
   PROJECT_ID: kwame-website # TODO: update Google Cloud project id
   SERVICE: kwamsc-node-image # TODO: update Cloud Run service name
   REGION: europe-west4 # TODO: update Cloud Run service region
+  GAR_LOCATION: europe-west4 # TODO: update Artifact Registry location
 
 jobs:
   deploy:
@@ -65,29 +187,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      # - name: Google Auth
-      #   id: auth
-      #   uses: 'google-github-actions/auth@v0'
-      #   with:
-      #     workload_identity_provider: '${{ secrets.WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-      #     service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
-
-      # NOTE: Alternative option - authentication via credentials json
       - name: Google Auth
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.SA_CREDS }}'
 
+      # BEGIN - Docker auth and build (NOTE: If you already have a container image, these Docker steps can be omitted)
+
+      # Authenticate Docker to Google Cloud Artifact Registry
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+
+      - name: Build and Push Container
+        run: |-
+          docker build ./server -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+
+      # END - Docker auth and build
+
       - name: Deploy to Cloud Run
         id: deploy
-        uses: google-github-actions/deploy-cloudrun@v2
+        uses: google-github-actions/deploy-cloudrun@v0
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          # NOTE: If required, update to the appropriate source folder
+          # NOTE: If using a pre-built image, update the image name here
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
           source: ./server
 
       # If required, use the Cloud Run url output in later steps
