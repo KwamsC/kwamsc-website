@@ -8,6 +8,7 @@ import recipeRoutes from './components/recipe/routes';
 import postRoutes from './components/post/routes';
 
 const app: Application = express();
+app.set('trust proxy', 1);
 
 // CORS
 const allowedOrigins = ['http://localhost:5173', 'http://kwamsc.com', 'https://kwamsc.com/'];
@@ -36,6 +37,7 @@ app.use(setCache);
 app.use('/api/v1', postRoutes);
 app.use('/api/v1', recipeRoutes);
 
+app.get('/ip', (request, response) => response.send(request.ip));
 app.get('/', (req: Request, res: Response) => {
   res.send('Starting Server');
 });
