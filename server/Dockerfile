@@ -8,7 +8,7 @@ ENV HOST 0.0.0.0
 
 COPY package*.json ./
 
-RUN npm ci && npm cache clean --force
+RUN npm ci --only=production
 
 COPY . .
 
