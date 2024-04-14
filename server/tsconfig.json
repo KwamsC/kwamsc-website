@@ -3,6 +3,9 @@
     "outDir": "build",
     "sourceMap": true,
     "baseUrl": "./src",
+    "paths": {
+      "*": ["*", "src/*"]
+    },
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
