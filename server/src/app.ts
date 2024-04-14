@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors, { CorsOptions } from 'cors';
 import bodyParser from 'body-parser';
-import { setCache } from './middleware/postCache';
+import { setCache } from './middle/postCache';
 import { rateLimit } from 'express-rate-limit';
 import recipeRoutes from './components/recipe/routes';
 import postRoutes from './components/post/routes';

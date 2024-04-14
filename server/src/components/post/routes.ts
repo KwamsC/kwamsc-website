@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { addPost, deletePost, getAllPosts, getPostById, updatePost } from './controller';
-import { authenticateJWT } from '../../middleware/authenticateJWT';
+import { authenticateJWT } from '../../middle/authenticateJWT';
 import { PartialPostSchema, PostSchema } from './model';
-import { validate } from '../../middleware/validator';
+import { validate } from '../../middle/validator';
 
 const router: Router = Router();
 
