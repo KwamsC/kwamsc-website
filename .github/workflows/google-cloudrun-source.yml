@@ -200,7 +200,7 @@ jobs:
 
       # Authenticate Docker to Google Cloud Artifact Registry
       - name: Authorize Docker push
-        run: gcloud auth configure-docker
+        run: gcloud auth configure-docker europe-west4-docker.pkg.dev
 
       - name: Build and Push Container
         working-directory: ./server
