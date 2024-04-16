@@ -33,7 +33,7 @@ const HasRecipeMetaData = z.object({
 const RecipeWithMetaData = RecipeSchema.merge(HasRecipeMetaData);
 
 // infer CreateRecipe from RecipeWithMetaData
-export type Recipe = z.infer<typeof RecipeWithMetaData>;
+export type RecipeDTO = z.infer<typeof RecipeWithMetaData>;
 export type CreateRecipeDTO = z.infer<typeof RecipeSchema>;
 
 // infer UpdateRecipe from RecipeWithMetaData

@@ -1,18 +1,22 @@
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import bodyParser from 'body-parser';
-import postRoutes from './entry-points/post-routes';
-import recipeRoutes from './entry-points/recipe-routes';
-import { setCache } from './middleware/postCache';
+import { setCache } from './middle/postCache';
 import { rateLimit } from 'express-rate-limit';
+import recipeRoutes from './components/recipe/routes';
+import postRoutes from './components/post/routes';
 
 const app: Application = express();
+app.set('trust proxy', 1);
 
+// CORS
 const allowedOrigins = ['http://localhost:5173', 'http://kwamsc.com', 'https://kwamsc.com/'];
-const corsOptions: cors.CorsOptions = {
+const corsOptions: CorsOptions = {
   origin: allowedOrigins
 };
+
+app.use(cors(corsOptions));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -23,7 +27,6 @@ const limiter = rateLimit({
 
 // Apply the rate limiting middleware to all requests.
 app.use(limiter);
-app.use(cors(corsOptions));
 app.use(express.json({ limit: '300kb' }));
 app.use(helmet());
 app.use(bodyParser.json());
@@ -34,6 +37,7 @@ app.use(setCache);
 app.use('/api/v1', postRoutes);
 app.use('/api/v1', recipeRoutes);
 
+app.get('/ip', (request, response) => response.send(request.ip));
 app.get('/', (req: Request, res: Response) => {
   res.send('Starting Server');
 });

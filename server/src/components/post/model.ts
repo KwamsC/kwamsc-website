@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 export const PostSchema = z.object({
   title: z
     .string({
@@ -27,7 +28,7 @@ const HasPostMetaData = z.object({
 const PostWithMetaData = PostSchema.merge(HasPostMetaData);
 
 // infer CreatePost from PostWithMetaData
-export type Post = z.infer<typeof PostWithMetaData>;
+export type PostDTO = z.infer<typeof PostWithMetaData>;
 export type CreatePostDTO = z.infer<typeof PostSchema>;
 
 // infer UpdatePost from PostWithMetaData

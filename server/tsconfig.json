@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "./build",
+    "outDir": "build",
     "sourceMap": true,
     "baseUrl": "./src",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "types": ["jest"],
     "target": "ESNext",
     "strict": true,
     "noImplicitAny": true,

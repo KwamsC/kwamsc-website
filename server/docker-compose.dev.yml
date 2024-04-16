@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  node-kwamsc-app:
+  kwamsc-api:
     depends_on:
       - firebase-tools  #adjust this based on the service name
     volumes:
