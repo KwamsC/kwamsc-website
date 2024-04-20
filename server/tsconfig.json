@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "./build",
+    "outDir": "build",
     "sourceMap": true,
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
@@ -17,6 +17,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
   },
-  "include": ["src/**/*.ts", "test/**/*"],
+  "include": ["src/**/*.ts", "tests/**/*"],
   "exclude": ["node_modules"],
 }

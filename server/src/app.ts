@@ -1,7 +1,7 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
-import postRoutes from '../routes/post-routes';
-import recipeRoutes from '../routes/recipe-routes';
+import postRoutes from './routes/post-routes';
+import recipeRoutes from './routes/recipe-routes';
 import helmet from '@fastify/helmet';
 
 const app = fastify({
