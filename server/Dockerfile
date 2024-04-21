@@ -8,12 +8,12 @@ ENV HOST 0.0.0.0
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm ci && npm cache clean --force
 
 COPY . .
 
 FROM base as production
 
-RUN npm run build
+RUN npm run build && npm prune --production
 
 CMD npm start

@@ -1,17 +1,8 @@
 import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/db';
-import { Entity, CreateDto, UpdateDto } from '../models/common';
+import { Entity, CreateDto, UpdateDto } from '../models/firestore';
 import { firestoreConverter } from '../helpers/firebaseConverters';
-
-export class FirebaseError extends Error {
-  code: number;
-
-  constructor(message: string, code: number) {
-    super(message);
-    this.name = this.constructor.name;
-    this.code = code;
-  }
-}
+import { FirebaseError } from './firestore-error';
 
 export const addEntityToFirestore = async (
   collectionName: string,

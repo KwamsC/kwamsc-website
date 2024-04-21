@@ -10,17 +10,17 @@ export interface Post {
   createdAt: Date // Date when the blog post was published
 }
 
-const myBlogPost: Post = {
-  id: '1',
-  title: 'Introduction to TypeScript',
-  content: 'TypeScript is a superset of JavaScript that adds static typing...',
-  author: 'John Doe',
-  published: true,
-  createdAt: new Date('2024-01-18T12:00:00Z'),
-  tags: ['TypeScript', 'JavaScript', 'Programming'],
-  updatedAt: new Date('2024-01-18T12:00:00Z'),
-  imageUrl: 'https://example.com/typescript-intro.jpg',
-};
+// const myBlogPost: Post = {
+//   id: '1',
+//   title: 'Introduction to TypeScript',
+//   content: 'TypeScript is a superset of JavaScript that adds static typing...',
+//   author: 'John Doe',
+//   published: true,
+//   createdAt: new Date('2024-01-18T12:00:00Z'),
+//   tags: ['TypeScript', 'JavaScript', 'Programming'],
+//   updatedAt: new Date('2024-01-18T12:00:00Z'),
+//   imageUrl: 'https://example.com/typescript-intro.jpg',
+// };
 
 export const postSchema = {
   type: 'object',
@@ -38,4 +38,4 @@ export const postSchema = {
   required: ['title', 'content', 'published', 'author', 'tags'],
 } as const; // don't forget to use const !
 
-export const { required, ...putSchema} = postSchema;
+export const { required, ...postPutSchema} = postSchema;

@@ -1,13 +1,13 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Entity, CreateDto, UpdateDto } from '../models/common';
+import { Entity, CreateDto, UpdateDto } from '../models/firestore';
 import {
   addEntityToFirestore,
   updateEntityInFirestore,
   getEntityFromFirestore,
   deleteEntityFromFirestore,
   getAllEntitiesFromFirestore,
-  FirebaseError,
 } from '../services/firestore-service';
+import { FirebaseError } from '../services/firestore-error';
 
 
 class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {

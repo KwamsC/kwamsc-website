@@ -1,8 +1,6 @@
-import { postSchema, putSchema } from '../models/post';
+import { postSchema, postPutSchema } from '../models/post';
 import postController from '../controllers/postController';
 import { authenticateJWT } from '../middleware/authenticateJWT';
-// import { validate } from '../middleware/validator';
-// import { PartialPostSchema, PostSchema } from '../models/postSchema';
 import { FastifyInstance } from 'fastify';
 
 const opts = {
@@ -24,7 +22,7 @@ const getOpt = {
       id: { type: 'string'}
     },
     response: {
-      200: putSchema
+      200: postPutSchema
     },
   }
 } as const;
@@ -46,14 +44,14 @@ async function postRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    // preHandler: authenticateJWT,
+    preHandler: authenticateJWT,
     handler: postController.addEntity
   });
   fastify.route({
     method: 'PUT',
     url: '/:id',
     schema: {
-      body: putSchema,
+      body: postPutSchema,
       response: {
         200: {
           type: 'object',
@@ -63,7 +61,7 @@ async function postRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    // preHandler: authenticateJWT,
+    preHandler: authenticateJWT,
     handler: postController.updateEntity
   });
   fastify.route({

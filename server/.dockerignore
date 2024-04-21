@@ -6,6 +6,11 @@ seed
 .gitignore
 .git
 
+.eslint*
+.prettier*
+docker-compose.dev.yml
+Makefile 
+
 # Logs
 logs
 *.log

@@ -1,7 +1,6 @@
+import { recipePutSchema, recipeSchema } from '../models/recipe';
 import recipeController from '../controllers/recipeController';
 import { authenticateJWT } from '../middleware/authenticateJWT';
-import { validate } from '../middleware/validator';
-import { PartialRecipeSchema, RecipeSchema } from '../models/recipeSchema';
 import { FastifyInstance } from 'fastify';
 
 const opts = {
@@ -22,9 +21,9 @@ const getOpt = {
     querystring: {
       id: { type: 'string'}
     },
-    // response: {
-    //   200: putSchema
-    // },
+    response: {
+      200: recipePutSchema
+    },
   }
 } as const;
 
@@ -35,7 +34,7 @@ async function recipeRoutes(fastify: FastifyInstance) {
     method: 'POST',
     url: '/',
     schema: {
-      // body: postSchema,
+      body: recipeSchema,
       response: {
         201: {
           type: 'object',
@@ -45,14 +44,14 @@ async function recipeRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    preHandler: authenticateJWT,
+    // preHandler: authenticateJWT,
     handler: recipeController.addEntity
   });
   fastify.route({
     method: 'PUT',
     url: '/:id',
     schema: {
-      // body: putSchema,
+      body: recipePutSchema,
       response: {
         200: {
           type: 'object',
@@ -74,17 +73,3 @@ async function recipeRoutes(fastify: FastifyInstance) {
 }
 
 export default recipeRoutes;
-
-
-// router
-//   .route('/recipes')
-//   .get(recipeController.getAllEntities)
-//   .post([authenticateJWT, validate(RecipeSchema)], recipeController.addEntity);
-
-// router
-//   .route('/recipes/:id')
-//   .get(recipeController.getEntity)
-//   .put([authenticateJWT, validate(PartialRecipeSchema)], recipeController.updateEntity)
-//   .delete(authenticateJWT, recipeController.deleteEntity);
-
-// export default router;
