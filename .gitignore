@@ -69,6 +69,6 @@ typings/
 
 serviceAccount.json
 kwamsc.code-workspace
-server/seed/firestore_export
+server/seed/
 
 .config

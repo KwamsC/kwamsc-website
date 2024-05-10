@@ -14,8 +14,12 @@ This personal portfolio full stack application is made to enhance my developers 
 - Express
 - Typescript
 - Jest Unit Testing
-- Docker
-- Firebase
+- Firebase Firestore
+
+<b>Devops</b>
+ - Github Actions
+ - Google Cloud Run
+ - Docker
 
 
 ## Development server

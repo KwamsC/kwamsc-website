@@ -6,7 +6,6 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
 
   if (authHeader) {
     const idToken = authHeader.split(' ')[1];
-    // console.log(authHeader)
     app
       .auth()
       .verifyIdToken(idToken)

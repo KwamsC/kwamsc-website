@@ -1,7 +1,4 @@
-import { config } from 'dotenv';
 import assert from 'assert';
-
-config();
 
 const {
   PORT,
