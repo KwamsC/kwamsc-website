@@ -24,8 +24,31 @@ export interface Recipe {
   cuisine: string; // Cuisine type (e.g., "Italian", "Mexican")
   mealType: string; // Meal type (e.g., "Breakfast", "Dinner")
   published: boolean; // Whether the recipe is published
+  createdAt: number; // Date when the recipe was created
+  updatedAt: number; // Date when the recipe was updated
   imageUrl?: string; // URL for the recipe image (optional)
 }
+
+export interface CreateRecipeDTO {
+  id: string; // Unique identifier for the recipe
+  title: string; // Title of the recipe
+  author: string; // Author of the recipe
+  description: string; // Brief description of the recipe
+  ingredients: Ingredient[]; // Array of ingredients
+  instructions: string[]; // Array of cooking instructions
+  servings: number; // Number of servings the recipe yields
+  prepTime: string; // Preparation time (e.g., "30 minutes")
+  cookTime: string; // Cooking time (e.g., "1 hour")
+  totalTime: string; // Total time (prepTime + cookTime)
+  difficulty: DifficultyLevel; // Difficulty level of the recipe
+  cuisine: string; // Cuisine type (e.g., "Italian", "Mexican")
+  mealType: string; // Meal type (e.g., "Breakfast", "Dinner")
+  published: boolean; // Whether the recipe is published
+  imageUrl?: string; // URL for the recipe image (optional)
+}
+
+export type UpdateRecipeDTO = Partial<CreateRecipeDTO>
+
 
 // const myRecipe: Recipe = {
 //   id: '1',

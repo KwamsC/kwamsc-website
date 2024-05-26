@@ -6,9 +6,20 @@ export interface Post {
   tags: string[]; // Array of tags associated with the blog post
   imageUrl?: string; // URL for the blog post cover image (optional)
   published: boolean
-  updatedAt: Date // Date when the blog post was updated
-  createdAt: Date // Date when the blog post was published
+  updatedAt: number // Date when the blog post was updated
+  createdAt: number // Date when the blog post was published
 }
+
+export interface CreatePostDTO {
+  title: string; // Title of the blog post
+  content: string; // Main content of the blog post (HTML or Markdown)
+  author: string; // Information about the author
+  tags: string[]; // Array of tags associated with the blog post
+  imageUrl?: string; // URL for the blog post cover image (optional)
+  published: boolean
+}
+
+export type UpdatePostDTO = Partial<CreatePostDTO>
 
 // const myBlogPost: Post = {
 //   id: '1',

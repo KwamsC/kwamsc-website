@@ -14,7 +14,7 @@ export const postSchema = {
   required: ['title', 'content', 'published', 'author', 'tags'],
 } as const; // don't forget to use const !
   
-export const { required, ...postPutSchema} = postSchema;
+const { required, ...postPutSchema} = postSchema;
 
 export const putSchema = {
   body: postPutSchema,

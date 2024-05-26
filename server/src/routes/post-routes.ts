@@ -1,5 +1,4 @@
-import { getSchema, getAllSchema, putSchema, deleteSchema } from 'schemas/postSchema';
-import { postJsonSchema } from 'schemas/recipeSchema';
+import { getSchema, getAllSchema, putSchema, deleteSchema, postJsonSchema } from 'schemas/postSchema';
 import postController from '../controllers/postController';
 import { authenticateJWT } from '../middleware/authenticateJWT';
 import { FastifyInstance } from 'fastify';
@@ -14,8 +13,8 @@ async function postRoutes(fastify: FastifyInstance) {
   });
   fastify.put('/:id',{
     schema: putSchema,
-    handler: postController.updateEntity,
     preHandler: authenticateJWT,
+    handler: postController.updateEntity,
   });
   fastify.delete('/:id', {
     schema: deleteSchema,
