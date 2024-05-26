@@ -1,72 +1,24 @@
-import { postSchema, postPutSchema } from '../models/post';
+import { getSchema, getAllSchema, putSchema, deleteSchema } from 'schemas/postSchema';
+import { postJsonSchema } from 'schemas/recipeSchema';
 import postController from '../controllers/postController';
 import { authenticateJWT } from '../middleware/authenticateJWT';
 import { FastifyInstance } from 'fastify';
 
-const opts = {
-  schema: {
-    querystring: {
-      count: { type: 'number', maximum: 100 }
-    },
-    response: {
-      200: {
-        type: 'array',
-      }
-    }
-  }
-} as const;
-
-const getOpt = { 
-  schema:{
-    querystring: {
-      id: { type: 'string'}
-    },
-    response: {
-      200: postPutSchema
-    },
-  }
-} as const;
-
 async function postRoutes(fastify: FastifyInstance) {
-  fastify.get('/:id', getOpt, postController.getEntity);
-  fastify.get('/', opts, postController.getAllEntities);
-  fastify.route({
-    method: 'POST',
-    url: '/',
-    schema: {
-      body: postSchema,
-      response: {
-        201: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' },
-          }
-        },
-      },
-    },
+  fastify.get('/:id', {schema: getSchema}, postController.getEntity);
+  fastify.get('/', {schema: getAllSchema}, postController.getAllEntities);
+  fastify.post('/', {
+    schema: postJsonSchema,
     preHandler: authenticateJWT,
     handler: postController.addEntity
   });
-  fastify.route({
-    method: 'PUT',
-    url: '/:id',
-    schema: {
-      body: postPutSchema,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' },
-          }
-        },
-      },
-    },
+  fastify.put('/:id',{
+    schema: putSchema,
+    handler: postController.updateEntity,
     preHandler: authenticateJWT,
-    handler: postController.updateEntity
   });
-  fastify.route({
-    method: 'DELETE',
-    url: '/:id',
+  fastify.delete('/:id', {
+    schema: deleteSchema,
     preHandler: authenticateJWT,
     handler: postController.deleteEntity
   });

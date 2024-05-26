@@ -27,30 +27,6 @@ export interface Recipe {
   imageUrl?: string; // URL for the recipe image (optional)
 }
 
-export const recipeSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'string' },
-    title: { type: 'string' },
-    author: { type: 'string' },
-    description: { type: 'string' },
-    ingredients: { type: 'array' },
-    instructions: { type: 'array' },
-    servings: { type: 'number' },
-    prepTime: { type: 'string' },
-    cookTime: { type: 'string' },
-    totalTime: { type: 'string' },
-    difficulty: { type: 'string', enum: ['Easy', 'Medium', 'Hard'] },
-    cuisine: { type: 'string' },
-    mealType: { type: 'string'},
-    published: { type: 'boolean' },
-    imageUrl: { type: 'string' },
-  },
-  required: ['title', 'published', 'author', 'description', 'ingredients', 'instructions', 'cuisine'],
-} as const; // don't forget to use const !
-
-export const { required, ...recipePutSchema} = recipeSchema;
-
 // const myRecipe: Recipe = {
 //   id: '1',
 //   title: 'Spaghetti Bolognese',

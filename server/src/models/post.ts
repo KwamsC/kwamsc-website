@@ -21,21 +21,3 @@ export interface Post {
 //   updatedAt: new Date('2024-01-18T12:00:00Z'),
 //   imageUrl: 'https://example.com/typescript-intro.jpg',
 // };
-
-export const postSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'string' },
-    title: { type: 'string' },
-    content: { type: 'string' },
-    author: { type: 'string'},
-    published: { type: 'boolean' },
-    createdAt: { type: 'number'},
-    tags: { type: 'array'},
-    updatedAt: { type: 'number', nullable: true },
-    imageUrl: { type: 'string' },
-  },
-  required: ['title', 'content', 'published', 'author', 'tags'],
-} as const; // don't forget to use const !
-
-export const { required, ...postPutSchema} = postSchema;
