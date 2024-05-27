@@ -1,4 +1,4 @@
-import { getSchema, getAllSchema, putSchema, deleteSchema, postJsonSchema } from 'schemas/postSchema';
+import { getSchema, getAllSchema, putSchema, deleteSchema, postJsonSchema } from '../schemas/postSchema';
 import postController from '../controllers/postController';
 import { authenticateJWT } from '../middleware/authenticateJWT';
 import { FastifyInstance } from 'fastify';

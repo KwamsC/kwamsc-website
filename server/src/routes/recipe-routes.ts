@@ -1,4 +1,4 @@
-import { deleteJsonSchema, getAllJsonSchema, getJsonSchema, postJsonSchema, putJsonSchema } from 'schemas/recipeSchema';
+import { deleteJsonSchema, getAllJsonSchema, getJsonSchema, postJsonSchema, putJsonSchema } from '../schemas/recipeSchema';
 import recipeController from '../controllers/recipeController';
 import { authenticateJWT } from '../middleware/authenticateJWT';
 import { FastifyInstance } from 'fastify';
