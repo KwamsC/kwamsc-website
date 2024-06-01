@@ -4,12 +4,12 @@
   "description": "",
   "main": "server.js",
   "engines": {
-    "node": "20.12.2"
+    "node": "20.13.1"
   },
   "scripts": {
     "build": "tsc -p .",
     "start": "node build/src/server.js",
-    "dev": "node --env-file=.env --watch -r ts-node/register ./src/server.ts",
+    "dev": "node --watch-path=./src --env-file=.env -r ts-node/register src/server.ts",
     "lint": "eslint . --fix",
     "test": "jest",
     "docker:start": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build",

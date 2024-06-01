@@ -1,5 +1,7 @@
 node_modules
 Dockerfile
+docker-compose*
+Makefile
 seed
 .dockerignore
 .env
