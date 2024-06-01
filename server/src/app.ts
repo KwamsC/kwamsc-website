@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors, { CorsOptions } from 'cors';
-import bodyParser from 'body-parser';
 import { setCache } from './middleware/postCache';
 import { rateLimit } from 'express-rate-limit';
 import recipeRoutes from './components/recipe/routes';
@@ -28,9 +27,8 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests.
 app.use(limiter);
 app.use(express.json({ limit: '300kb' }));
+app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(setCache);
 
 // Routes

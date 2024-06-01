@@ -23,7 +23,6 @@ FROM node:20.13.1-alpine3.20 as production
 WORKDIR /app
 
 ENV PORT 8080
-ENV ADDRESS 0.0.0.0
 ENV HOST 0.0.0.0
 
 # Copy only the necessary files from the build stage
@@ -33,4 +32,4 @@ COPY firebase.json ./
 RUN npm ci --only=production && npm cache clean --force
 COPY --from=build /app/build ./build
 
-CMD ["node", "build/src/server.js"]
+CMD ["node", "build/server.js"]

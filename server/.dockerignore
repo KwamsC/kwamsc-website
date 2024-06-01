@@ -3,8 +3,9 @@ Dockerfile
 docker-compose*
 Makefile
 seed
+tests
 .dockerignore
-.env
+.env*
 .gitignore
 .git
 
