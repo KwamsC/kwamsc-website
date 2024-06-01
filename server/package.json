@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "start": "node build/src/index.js",
-    "dev": "node --env-file=.env --import=tsx --watch ./src/index.ts",
+    "start": "node build/index.js",
+    "dev": "node --watch-path=./src --env-file=.env -r ts-node/register src/index.ts",
     "lint": "eslint . --fix",
     "test": "jest",
     "docker:start": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build",
@@ -34,7 +34,7 @@
     "prettier": "^3.2.5",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
-    "tsx": "^4.7.2",
+    "ts-node": "10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {

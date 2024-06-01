@@ -82,7 +82,8 @@ export const postJsonSchema = {
     }
   }
 };
-  
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { required, ...recipePutSchema } = recipeSchema;
   
 export const putJsonSchema = {

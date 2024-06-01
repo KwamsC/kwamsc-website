@@ -14,6 +14,7 @@ export const postSchema = {
   required: ['title', 'content', 'published', 'author', 'tags'],
 } as const; // don't forget to use const !
   
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { required, ...postPutSchema} = postSchema;
 
 export const putSchema = {

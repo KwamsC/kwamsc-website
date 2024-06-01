@@ -1,3 +1,4 @@
+# Base stage
 FROM node:20.13.1-alpine3.20 as base
 
 WORKDIR /app
@@ -12,8 +13,25 @@ RUN npm ci && npm cache clean --force
 
 COPY . .
 
-FROM base as production
+# Build stage
+FROM base as build
 
-RUN npm run build && npm prune --production
+RUN npm run build
 
-CMD npm start
+# Production stage
+FROM node:20.13.1-alpine3.20 as production
+
+WORKDIR /app
+
+ENV PORT 8080
+ENV ADDRESS 0.0.0.0
+ENV HOST 0.0.0.0
+
+# Copy only the necessary files from the build stage
+COPY package*.json ./
+COPY firebase.json ./
+
+RUN npm ci --only=production && npm cache clean --force
+COPY --from=build /app/build ./build
+
+CMD ["node", "build/index.js"]

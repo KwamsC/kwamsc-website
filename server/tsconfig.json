@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "target": "es2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "lib": ["esnext"],
     "esModuleInterop": true,
     "sourceMap": true,
@@ -19,4 +19,9 @@
   },
   "include": ["src/**/*.ts", "tests/**/*"],
   "exclude": ["node_modules"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

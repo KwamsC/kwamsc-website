@@ -2,13 +2,13 @@ node_modules
 Dockerfile
 seed
 .dockerignore
-.env
+.env*
 .gitignore
+tests
 .git
-
 .eslint*
 .prettier*
-docker-compose.dev.yml
+docker-compose*
 Makefile 
 
 # Logs
