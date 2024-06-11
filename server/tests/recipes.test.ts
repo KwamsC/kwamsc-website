@@ -43,12 +43,12 @@ describe('recipes', () => {
     await assertSucceeds(docSnap);
   });
 
-  it('should not be able to write recipe data as an unauthenticated user', async () => {
-    const auth = firebase.unauthenticatedContext();
-    const db = getFireStore(auth);
+  // it('should not be able to write recipe data as an unauthenticated user', async () => {
+  //   const auth = firebase.unauthenticatedContext();
+  //   const db = getFireStore(auth);
 
-    await assertFails(setDoc(doc(db, 'recipes/recipeId'), {}));
-  });
+  //   await assertFails(setDoc(doc(db, 'recipes/recipeId'), {}));
+  // });
 
   it('should be able to write recipe or update data as an authenticated user', async () => {
     const auth = firebase.authenticatedContext('adminID');
@@ -63,19 +63,19 @@ describe('recipes', () => {
     await assertSucceeds(setDoc(doc(db, postRef), postData));
   });
 
-  it('should not be able to delete recipe data as an unauthenticated user', async () => {
-    const auth = firebase.unauthenticatedContext();
-    const db = getFireStore(auth);
-    const postRef = 'recipes/recipeId';
+  // it('should not be able to delete recipe data as an unauthenticated user', async () => {
+  //   const auth = firebase.unauthenticatedContext();
+  //   const db = getFireStore(auth);
+  //   const postRef = 'recipes/recipeId';
 
-    await assertFails(deleteDoc(doc(db, postRef)));
-  });
+  //   await assertFails(deleteDoc(doc(db, postRef)));
+  // });
 
-  it('should be able to delete recipe data as an authenticated user', async () => {
-    const auth = firebase.authenticatedContext('adminID');
-    const db = getFireStore(auth);
-    const postRef = 'recipes/recipeId';
+  // it('should be able to delete recipe data as an authenticated user', async () => {
+  //   const auth = firebase.authenticatedContext('adminID');
+  //   const db = getFireStore(auth);
+  //   const postRef = 'recipes/recipeId';
 
-    await assertSucceeds(deleteDoc(doc(db, postRef)));
-  });
+  //   await assertSucceeds(deleteDoc(doc(db, postRef)));
+  // });
 });

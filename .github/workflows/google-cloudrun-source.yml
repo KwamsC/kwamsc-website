@@ -71,6 +71,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Test
+        uses: actions/setup-node@v4
+        with: 
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm test
+
       - name: Google Auth
         id: auth
         uses: 'google-github-actions/auth@v2'
