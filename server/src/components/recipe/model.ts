@@ -19,13 +19,14 @@ export const RecipeSchema = z.object({
   difficulty: z.string(),
   cuisine: z.string(),
   mealType: z.string(),
+  description: z.string(),
   imageUrl: z.string().optional(),
 });
 
 // define a schema for Post with metadata
 const HasRecipeMetaData = z.object({
   id: z.string(),
-  updatedAt: z.number(),
+  updatedAt: z.number().nullable(),
   createdAt: z.number(),
 });
 

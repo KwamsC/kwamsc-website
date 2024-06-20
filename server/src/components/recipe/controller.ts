@@ -11,7 +11,6 @@ const addRecipe: RequestHandler = async (req, res) => {
     await recipeService.addRecipe(recipeData);
     res.status(201).json({ message: 'Recipe created successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to create recipe' });
   }
 };
@@ -23,7 +22,6 @@ const updateRecipe: RequestHandler = async (req, res) => {
     await recipeService.updateRecipe(recipeId, recipeData);
     res.status(200).json({ message: 'Recipe updated successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to update recipe' });
   }
 };
@@ -63,7 +61,7 @@ const deleteRecipe: RequestHandler = async (req, res) => {
     if (error instanceof FirebaseError && error.code === 404) {
       res.status(404).json({ error: 'Recipe not found' });
     } else {
-      res.status(500).json({ error: 'Failed to delete record' });
+      res.status(500).json({ error: 'Failed to delete recipe' });
     }
   }
 };
