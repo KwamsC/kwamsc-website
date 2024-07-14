@@ -1,9 +1,10 @@
 import request, { Request, Response } from 'supertest';
 import app from '../src/app';
+import { describe, expect, it, afterEach, jest } from '@jest/globals';
 import sinon from 'sinon';
 import RecipeService from '../src/components/recipe/service';
 import { FirebaseError } from '../src/services/firestore-error';
-import { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from 'components/recipe/model';
+import { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from '../src/components/recipe/model';
 
 // Mock the authenticateJWT middleware
 jest.mock('../src/middleware/authenticateJWT', () => ({
@@ -35,7 +36,7 @@ describe('POST /api/v1/recipes', () => {
       description:'Classic Italian pasta dish with a rich meat sauce.'
     };
 
-    const createRecipeStub = sinon.stub(RecipeService.prototype, 'addRecipe').resolves(recipeData);
+    const createRecipeStub = sinon.stub(RecipeService.prototype, 'addRecipe').resolves();
 
     const response = await request(app)
       .post('/api/v1/recipes')
@@ -70,7 +71,7 @@ describe('POST /api/v1/recipes', () => {
       .send(recipeData);
 
     expect(response.status).toBe(409);
-    expect(response.body.status).toEqual('validation error');
+    expect(response.body.error[0]).toEqual({message: 'title is required', path: 'title'});
   });
 
   it('should handle server errors', async () => {
@@ -114,7 +115,7 @@ describe('PUT /api/v1/recipes/:id', () => {
       title:'Ghanaian Spaghetti Bolognese',
     };
 
-    const updateRecipeStub = sinon.stub(RecipeService.prototype, 'updateRecipe').resolves(recipeData);
+    const updateRecipeStub = sinon.stub(RecipeService.prototype, 'updateRecipe').resolves();
 
     const response = await request(app)
       .put(`/api/v1/recipes/${recipeId}`)
@@ -149,9 +150,9 @@ describe('GET /api/v1/recipes', () => {
     const mockRecipes: RecipeDTO[] = [
       {
         id: '1',
-        title:'Frosties and milk',
+        title:'Cornflakes and milk',
         ingredients:[
-          {name: 'Frosties', quantity: '100g'},
+          {name: 'Cornflakes', quantity: '100g'},
           {name: 'Milk', quantity: '200ml'}
         ],
         mealType: 'Breakfast',
@@ -164,8 +165,8 @@ describe('GET /api/v1/recipes', () => {
         updatedAt: null,
         createdAt:1234567,
         cuisine:'World',
-        instructions:['Pour 100 gram of Frosties Cereal in a bowl','In a pan, brown the ground beef.','Add tomato sauce to the beef and simmer.'],
-        description:'Frosties Cereal with milk'
+        instructions:['Pour 100 gram of Cornflakes Cereal in a bowl','In a pan, brown the ground beef.','Add tomato sauce to the beef and simmer.'],
+        description:'Cornflakes Cereal with milk'
       },
       {
         id: '2',
@@ -199,7 +200,7 @@ describe('GET /api/v1/recipes', () => {
     expect(response.body).toHaveLength(2);
   });
 
-  it('should return 500 on server error', async () => {
+  it('should handle server errors', async () => {
     sinon.stub(RecipeService.prototype, 'getAllRecipes').throws(new Error('Database Error'));
 
     const response = await request(app).get('/api/v1/recipes');
@@ -211,7 +212,27 @@ describe('GET /api/v1/recipes', () => {
 
 describe('GET /api/v1/recipes/:id', () => {
   it('should return a recipe by ID', async () => {
-    const mockRecipe = { id: '1', title: 'Test Recipe'};
+    const mockRecipe: RecipeDTO = {
+      id: '1',
+      ingredients:[
+        {name: 'Spaghetti',quantity:'200g'},
+        {quantity: '500g', name: 'Ground beef'}, 
+        {quantity: '2 cups', name :'Tomato sauce'}
+      ],
+      mealType: 'Dinner',
+      title:'Spaghetti Bolognese',
+      cookTime:'30 minutes',
+      servings:4,
+      difficulty:'Medium',
+      imageUrl:'https://example.com/spaghetti-bolognese.jpg',
+      totalTime:'45 minutes',
+      prepTime:'15 minutes',
+      cuisine:'Italian',
+      instructions:['Boil water and cook spaghetti according to package instructions.','In a pan, brown the ground beef.','Add tomato sauce to the beef and simmer.'],
+      description:'Classic Italian pasta dish with a rich meat sauce.',
+      createdAt: Date.now(),
+      updatedAt: null,
+    };
     
     const getRecipeByIdStub = sinon.stub(RecipeService.prototype, 'getRecipeById').resolves(mockRecipe);
 
@@ -232,7 +253,7 @@ describe('GET /api/v1/recipes/:id', () => {
   });
   
 
-  it('should handle errors gracefully', async () => {
+  it('should handle server errors', async () => {
     sinon.stub(RecipeService.prototype, 'getRecipeById').throws(new Error('Failed to get recipe'));
 
     const response = await request(app).get('/api/v1/recipes/1');

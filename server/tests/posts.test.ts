@@ -1,12 +1,14 @@
 import request from 'supertest';
 import app from '../src/app';
 import sinon from 'sinon';
+import { describe, expect, it, afterEach, jest } from '@jest/globals';
 import PostService from '../src/components/post/service';
 import { FirebaseError } from '../src/services/firestore-error';
+import { CreatePostDTO, PostDTO, UpdatePostDTO } from '../src/components/post/model';
 
 // Mock the authenticateJWT middleware
 jest.mock('../src/middleware/authenticateJWT', () => ({
-  authenticateJWT: (_req, _res, next) => next()
+  authenticateJWT: (_req: Request, _res: Response, next) => next()
 }));
 
 afterEach(() => {
@@ -15,15 +17,15 @@ afterEach(() => {
 
 describe('POST /api/v1/posts', () => {
   it('should create a new post', async () => {
-    const postData = {
+    const postData: CreatePostDTO = {
       title: '11th Post',
       content: 'This is my 11th ID post',
       published: true,
       author: 'Emm Carr',
-      tags: ['tech', 'lifestyle', 'coding']
+      tags: ['tech', 'lifestyle', 'coding'],
     };
 
-    const createPostStub = sinon.stub(PostService.prototype, 'addPost').resolves(postData);
+    const createPostStub = sinon.stub(PostService.prototype, 'addPost').resolves();
 
     const response = await request(app)
       .post('/api/v1/posts')
@@ -35,7 +37,7 @@ describe('POST /api/v1/posts', () => {
   });
 
   it('should handle validation errors', async () => {
-    const postDataWithoutTitle = {
+    const postDataWithoutTitle: Omit<CreatePostDTO, 'title'> = {
       content: 'This is my 11th ID post',
       published: true,
       author: 'Emm Carr',
@@ -47,16 +49,16 @@ describe('POST /api/v1/posts', () => {
       .send(postDataWithoutTitle);
 
     expect(response.status).toBe(409);
-    expect(response.body.error[0]).toEqual({'message': 'title is required', 'path': 'title'});
+    expect(response.body.error[0]).toEqual({message: 'title is required', path: 'title'});
   });
 
   it('should handle server errors', async () => {
-    const postData = {
+    const postData: CreatePostDTO = {
       title: '11th Post',
       content: 'This is my 11th ID post',
       published: true,
       author: 'Emm Carr',
-      tags: ['tech', 'lifestyle', 'coding']
+      tags: ['tech', 'lifestyle', 'coding'],
     };
 
     const createPostStub = sinon.stub(PostService.prototype, 'addPost').throws(new Error('Database Error'));
@@ -74,15 +76,15 @@ describe('POST /api/v1/posts', () => {
 describe('PUT /api/v1/posts/:id', () => {
   it('should update an existing post', async () => {
     const postId = '1';
-    const postData = {
+    const postData: UpdatePostDTO = {
       title: 'Updated Post Title',
       content: 'Updated post content',
       published: false,
       author: 'Updated Author',
-      tags: ['updated', 'tags']
+      tags: ['updated', 'tags'],
     };
 
-    const updatePostStub = sinon.stub(PostService.prototype, 'updatePost').resolves(postData);
+    const updatePostStub = sinon.stub(PostService.prototype, 'updatePost').resolves();
 
     const response = await request(app)
       .put(`/api/v1/posts/${postId}`)
@@ -96,12 +98,12 @@ describe('PUT /api/v1/posts/:id', () => {
 
   it('should handle server errors', async () => {
     const postId = '1';
-    const postData = {
+    const postData: UpdatePostDTO = {
       title: 'Updated Post Title',
       content: 'Updated post content',
       published: false,
       author: 'Updated Author',
-      tags: ['updated', 'tags']
+      tags: ['updated', 'tags'],
     };
 
     const updatePostStub = sinon.stub(PostService.prototype, 'updatePost').throws(new Error('Database Error'));
@@ -118,20 +120,37 @@ describe('PUT /api/v1/posts/:id', () => {
 
 describe('GET /api/v1/posts', () => {
   it('should return a list of posts', async () => {
-    const mockPosts = [
-      { id: '1', title: 'Test Post 1', content: 'This is the first test post.' },
-      { id: '2', title: 'Test Post 2', content: 'This is the second test post.' },
+    const mockPosts: PostDTO[] = [
+      { 
+        id: '1', 
+        title: 'Test Post 1', 
+        content: 'This is the first test post.', 
+        author: 'Author 1',
+        tags: ['tag1'], 
+        published: true, 
+        updatedAt: Date.now(), 
+        createdAt: Date.now(),
+      },
+      { 
+        id: '2', 
+        title: 'Test Post 2', 
+        content: 'This is the second test post.', 
+        author: 'Author 2', 
+        tags: ['tag2'], 
+        published: true, 
+        updatedAt: Date.now(), 
+        createdAt: Date.now() },
     ];
 
     sinon.stub(PostService.prototype, 'getAllPosts').resolves(mockPosts);
 
-    const response = await request(app).get('/api/v1/posts').query({ count: 2 }); ;
+    const response = await request(app).get('/api/v1/posts').query({ count: 2 });
 
     expect(response.status).toBe(200);
     expect(response.body).toStrictEqual(mockPosts);
   });
 
-  it('should return 500 on server error', async () => {
+  it('should handle server errors', async () => {
     sinon.stub(PostService.prototype, 'getAllPosts').throws(new Error('Database Error'));
 
     const response = await request(app).get('/api/v1/posts');
@@ -143,7 +162,16 @@ describe('GET /api/v1/posts', () => {
 
 describe('GET /api/v1/posts/:id', () => {
   it('should return a post by ID', async () => {
-    const mockPost = { id: '1', title: 'Test Post', content: 'Test Content' };
+    const mockPost: PostDTO = { 
+      id: '1', 
+      title: 'Test Post', 
+      content: 'Test Content', 
+      author: 'Author 1', 
+      tags: ['tag1'], 
+      published: true, 
+      updatedAt: Date.now(), 
+      createdAt: Date.now() 
+    };
     
     const getPostByIdStub = sinon.stub(PostService.prototype, 'getPostById').resolves(mockPost);
 
@@ -162,9 +190,8 @@ describe('GET /api/v1/posts/:id', () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ message: 'Post with given ID not found' });
   });
-  
 
-  it('should handle errors gracefully', async () => {
+  it('should handle server errors', async () => {
     sinon.stub(PostService.prototype, 'getPostById').throws(new Error('Failed to get post'));
 
     const response = await request(app).get('/api/v1/posts/1');
