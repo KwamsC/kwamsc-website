@@ -5,12 +5,14 @@ import { setCache } from './middleware/postCache';
 import { rateLimit } from 'express-rate-limit';
 import recipeRoutes from './components/recipe/routes';
 import postRoutes from './components/post/routes';
+import swaggerUi from 'swagger-ui-express';
+import { apiDocumentation } from './docs/apidoc';
 
 const app: Application = express();
 app.set('trust proxy', 1);
 
 // CORS
-const allowedOrigins = ['http://localhost:5173', 'http://kwamsc.com', 'https://kwamsc.com/'];
+const allowedOrigins = ['http://localhost:5173', 'http://kwamsc.com', 'https://kwamsc.com'];
 const corsOptions: CorsOptions = {
   origin: allowedOrigins
 };
@@ -28,12 +30,13 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json({ limit: '300kb' }));
 app.use(express.urlencoded({ extended: false }));
-app.use(helmet());
 app.use(setCache);
 
 // Routes
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(apiDocumentation));
 app.use('/api/v1', postRoutes);
 app.use('/api/v1', recipeRoutes);
+app.use(helmet());
 
 app.get('/ip', (request, response) => response.send(request.ip));
 app.get('/', (req: Request, res: Response) => {
