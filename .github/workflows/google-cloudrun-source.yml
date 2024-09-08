@@ -76,7 +76,9 @@ jobs:
         with: 
           node-version: '20.x'
       - run: npm ci
+        working-directory: ./server # Adjust this path to your actual test directory
       - run: npm test
+        working-directory: ./server # Adjust this path to your actual test directory
 
       - name: Google Auth
         id: auth
