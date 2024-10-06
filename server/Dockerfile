@@ -1,5 +1,5 @@
 # Base stage
-FROM node:20.13.1-alpine3.20 as base
+FROM node:20.15.0-alpine3.20 as base
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ FROM base as build
 RUN npm run build
 
 # Production stage
-FROM node:20.13.1-alpine3.20 as production
+FROM node:20.15.0-alpine3.20 as production
 
 WORKDIR /app
 
