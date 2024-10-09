@@ -31,7 +31,10 @@ export const putSchema = {
   
 export const getAllSchema = {
   querystring: {
-    count: { type: 'number', maximum: 100 }
+    type: 'object',
+    properties: {
+      count: { type: 'number', maximum: 100 }
+    },
   },
   response: {
     200: {
@@ -41,8 +44,8 @@ export const getAllSchema = {
 };
   
 export const getSchema = {
-  querystring: {
-    id: { type: 'string'}
+  params: {
+    id: { type: 'string' }
   },
   response: {
     200: postPutSchema
@@ -50,8 +53,8 @@ export const getSchema = {
 };
   
 export const deleteSchema = {
-  querystring: {
-    id: { type: 'string'}
+  params: {
+    id: { type: 'string' }
   },
   response: {
     200: {

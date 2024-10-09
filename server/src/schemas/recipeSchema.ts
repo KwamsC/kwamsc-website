@@ -38,7 +38,10 @@ export const recipeSchema = {
   
 export const getAllJsonSchema = {
   querystring: {
-    count: { type: 'number', maximum: 100 }
+    type: 'object',
+    properties: {
+      count: { type: 'number', maximum: 100 }
+    },
   },
   response: {
     200: {
