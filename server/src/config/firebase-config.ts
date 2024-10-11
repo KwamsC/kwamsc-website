@@ -1,5 +1,5 @@
-import admin from 'firebase-admin';
-import { applicationDefault } from 'firebase-admin/app';
+import admin from "firebase-admin";
+import { applicationDefault } from "firebase-admin/app";
 // import serviceAccount from './serviceAccount.json';
 
 // export GOOGLE_APPLICATION_CREDENTIALS="/Users/kwamecarr/Downloads/kwamsc/server/src/config/serviceAccount.json"
@@ -8,5 +8,5 @@ import { applicationDefault } from 'firebase-admin/app';
 export const app = admin.initializeApp({
   credential: applicationDefault(),
   // credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-  databaseURL: 'https://kwame-website.firebaseio.com'
+  databaseURL: "https://kwame-website.firebaseio.com",
 });

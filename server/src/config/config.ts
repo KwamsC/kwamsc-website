@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from "assert";
 
 const {
   PORT,
@@ -14,8 +14,8 @@ const {
   ADDRESS,
 } = process.env;
 
-assert(PORT, 'Port is required');
-assert(HOST, 'Host is required');
+assert(PORT, "Port is required");
+assert(HOST, "Host is required");
 
 const firebaseConfig = {
   apiKey: API_KEY,

@@ -1,13 +1,13 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { Entity, CreateDto, UpdateDto } from '../config/firestore';
+import { FastifyRequest, FastifyReply } from "fastify";
+import { Entity, CreateDto, UpdateDto } from "../config/firestore";
 import {
   addEntityToFirestore,
   updateEntityInFirestore,
   getEntityFromFirestore,
   deleteEntityFromFirestore,
   getAllEntitiesFromFirestore,
-} from '../services/firestore-service';
-import { FirebaseError } from '../services/firestore-error';
+} from "../services/firestore-service";
+import { FirebaseError } from "../services/firestore-error";
 
 class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
   private collectionName: string;
@@ -30,7 +30,7 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
 
   public updateEntity = async (
     req: FastifyRequest<{ Params: { id: string }; Body: U }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const id = req.params.id;
     const entity = req.body as U;
@@ -45,7 +45,7 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
 
   public getEntity = async (
     req: FastifyRequest<{ Params: { id: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const id = req.params.id;
 
@@ -63,27 +63,27 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
 
   public deleteEntity = async (
     req: FastifyRequest<{ Params: { id: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const id = req.params.id;
 
     try {
       await deleteEntityFromFirestore(this.collectionName, id);
-      reply.code(200).send({ message: 'Record deleted successfully' });
+      reply.code(200).send({ message: "Record deleted successfully" });
     } catch (error) {
       if (error instanceof FirebaseError && error.code === 404) {
         reply.code(404).send({ error: `${this.collectionName} not found` });
       } else {
-        reply.code(500).send({ error: 'Failed to delete record' });
+        reply.code(500).send({ error: "Failed to delete record" });
       }
     }
   };
 
   public getAllEntities = async (
     request: FastifyRequest<{ Querystring: { count?: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
-    const count: number = parseInt(request.query.count || '10', 10); // Default to 10 if count is not provided
+    const count: number = parseInt(request.query.count || "10", 10); // Default to 10 if count is not provided
 
     try {
       const entities: T[] = await getAllEntitiesFromFirestore(this.collectionName, count);

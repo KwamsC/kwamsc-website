@@ -1,5 +1,5 @@
-import app from './app';
-import config from './config/config';
+import app from "./app";
+import config from "./config/config";
 
 app.listen({ host: config.address, port: parseInt(config.port, 10) }, (err, address) => {
   if (err) {

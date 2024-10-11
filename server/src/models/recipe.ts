@@ -4,9 +4,9 @@ interface Ingredient {
 }
 
 enum DifficultyLevel {
-  Easy = 'Easy',
-  Medium = 'Medium',
-  Hard = 'Hard',
+  Easy = "Easy",
+  Medium = "Medium",
+  Hard = "Hard",
 }
 
 export interface Recipe {
@@ -47,8 +47,7 @@ export interface CreateRecipeDTO {
   imageUrl?: string; // URL for the recipe image (optional)
 }
 
-export type UpdateRecipeDTO = Partial<CreateRecipeDTO>
-
+export type UpdateRecipeDTO = Partial<CreateRecipeDTO>;
 
 // const myRecipe: Recipe = {
 //   id: '1',
