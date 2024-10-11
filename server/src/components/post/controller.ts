@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express';
-import PostService from './service';
-import { CreatePostDTO, UpdatePostDTO, PostDTO } from './model';
+import type { RequestHandler } from 'express';
 import { FirebaseError } from '../../services/firestore-error';
+import type { CreatePostDTO, PostDTO, UpdatePostDTO } from './model';
+import PostService from './service';
 
 const postService = new PostService('posts');
 
@@ -44,7 +44,7 @@ const getPostById: RequestHandler = async (req, res) => {
 };
 
 const getAllPosts: RequestHandler = async (req, res) => {
-  const count: number = parseInt(req.query.count as string, 10) || 10; // Default to 10 if count is not provided
+  const count: number = Number.parseInt(req.query.count as string, 10) || 10; // Default to 10 if count is not provided
 
   try {
     const entities: PostDTO[] = await postService.getAllPosts(count);
@@ -69,4 +69,4 @@ const deletePost: RequestHandler = async (req, res) => {
   }
 };
 
-export { addPost, updatePost, getPostById, getAllPosts, deletePost};
+export { addPost, updatePost, getPostById, getAllPosts, deletePost };

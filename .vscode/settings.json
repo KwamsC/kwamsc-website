@@ -1,0 +1,23 @@
+{
+	"workbench.colorTheme": "Default Dark Modern",
+	"terminal.integrated.env.osx": {
+		"FIG_NEW_SESSION": "1",
+		"CW_NEW_SESSION": "1",
+		"Q_NEW_SESSION": "1"
+	},
+	"tabnine.experimentalAutoImports": true,
+	"[json][javascript][typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"editor.codeActionsOnSave": {
+		"quickfix.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
+	"auto-rename-tag.activationOnLanguage": ["*"],
+	"biome.lspBin": "../server/node_modules/@biomejs/biome/bin/biome",
+	"editor.formatOnSave": true,
+	"editor.indentSize": "tabSize",
+	"editor.tabSize": 2,
+	"biome.searchInPath": true,
+	"biome_lsp.trace.server": "verbose",
+}
