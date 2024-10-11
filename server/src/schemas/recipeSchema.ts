@@ -58,7 +58,10 @@ export const getAllJsonSchema = {
 
 export const getJsonSchema = {
   params: {
-    id: { type: "string" },
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
   },
   response: {
     200: recipeSchema,
@@ -67,7 +70,10 @@ export const getJsonSchema = {
 
 export const deleteJsonSchema = {
   params: {
-    id: { type: "string" },
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
   },
   response: {
     200: {
@@ -96,6 +102,12 @@ const { required, ...recipePutSchema } = recipeSchema;
 
 export const putJsonSchema = {
   body: recipePutSchema,
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+  },
   response: {
     200: {
       type: "object",

@@ -19,6 +19,12 @@ const { required, ...postPutSchema } = postSchema;
 
 export const putSchema = {
   body: postPutSchema,
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+  },
   response: {
     200: {
       type: "object",
@@ -45,7 +51,10 @@ export const getAllSchema = {
 
 export const getSchema = {
   params: {
-    id: { type: "string" },
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
   },
   response: {
     200: postPutSchema,
@@ -54,7 +63,10 @@ export const getSchema = {
 
 export const deleteSchema = {
   params: {
-    id: { type: "string" },
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
   },
   response: {
     200: {
