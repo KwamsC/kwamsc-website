@@ -5,15 +5,20 @@ import recipeRoutes from './routes/recipe-routes';
 import helmet from '@fastify/helmet';
 import fastifyRateLimit from '@fastify/rate-limit';
 
-const app = fastify({logger: true});
+const app = fastify({ logger: true });
 
-const allowedOrigins = ['http://localhost:5173', 'http://kwamsc.com', 'https://kwamsc.com/', 'http://localhost:8080'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://kwamsc.com',
+  'https://kwamsc.com/',
+  'http://localhost:8080',
+];
 
 app.register(cors, { origin: allowedOrigins });
 app.register(helmet);
 app.register(fastifyRateLimit, {
   max: 100,
-  timeWindow: '1 minute'
+  timeWindow: '1 minute',
 });
 
 // Routes

@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Entity, CreateDto, UpdateDto } from '../models/firestore';
+import { Entity, CreateDto, UpdateDto } from '../config/firestore';
 import {
   addEntityToFirestore,
   updateEntityInFirestore,
@@ -8,7 +8,6 @@ import {
   getAllEntitiesFromFirestore,
 } from '../services/firestore-service';
 import { FirebaseError } from '../services/firestore-error';
-
 
 class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
   private collectionName: string;
@@ -29,7 +28,10 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
     }
   };
 
-  public updateEntity = async (req: FastifyRequest<{ Params: { id: string }, Body: U }>, reply: FastifyReply) => {
+  public updateEntity = async (
+    req: FastifyRequest<{ Params: { id: string }; Body: U }>,
+    reply: FastifyReply
+  ) => {
     const id = req.params.id;
     const entity = req.body as U;
 
@@ -41,7 +43,10 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
     }
   };
 
-  public getEntity = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  public getEntity = async (
+    req: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply
+  ) => {
     const id = req.params.id;
 
     try {
@@ -56,7 +61,10 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
     }
   };
 
-  public deleteEntity = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  public deleteEntity = async (
+    req: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply
+  ) => {
     const id = req.params.id;
 
     try {
@@ -71,7 +79,10 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
     }
   };
 
-  public getAllEntities = async (request: FastifyRequest<{ Querystring: { count?: string } }>, reply: FastifyReply) => {
+  public getAllEntities = async (
+    request: FastifyRequest<{ Querystring: { count?: string } }>,
+    reply: FastifyReply
+  ) => {
     const count: number = parseInt(request.query.count || '10', 10); // Default to 10 if count is not provided
 
     try {

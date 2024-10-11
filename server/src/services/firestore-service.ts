@@ -1,6 +1,6 @@
 import { collection, setDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/db';
-import { Entity, CreateDto, UpdateDto } from '../models/firestore';
+import { Entity, CreateDto, UpdateDto } from '../config/firestore';
 import { firestoreConverter } from '../helpers/firebaseConverters';
 import { FirebaseError } from './firestore-error';
 
