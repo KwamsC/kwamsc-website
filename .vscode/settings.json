@@ -6,13 +6,20 @@
 		"Q_NEW_SESSION": "1"
 	},
 	"tabnine.experimentalAutoImports": true,
-	"[json][javascript][typescript]": {
-		"editor.defaultFormatter": "biomejs.biome"
+	"[javascript][typescript]": {
+		"editor.defaultFormatter": "biomejs.biome",
+		"editor.codeActionsOnSave": {
+			"quickfix.biome": "explicit",
+			"source.organizeImports.biome": "explicit"
+		},
 	},
-	"editor.codeActionsOnSave": {
-		"quickfix.biome": "explicit",
-		"source.organizeImports.biome": "explicit"
+	"[vue]":{
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "always"
+		}
 	},
+	"[css][html][json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
 	"auto-rename-tag.activationOnLanguage": ["*"],
 	"biome.lspBin": "../server/node_modules/@biomejs/biome/bin/biome",
 	"editor.formatOnSave": true,
