@@ -1,72 +1,44 @@
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue'
-import { Badge } from '@/components/ui/badge'
-import { useRoute } from 'vue-router'
-import axios from 'axios'
-import type { RecipeDTO } from '@/types/recipe'
+import AnimatedTitle from '@/components/AnimatedTitle.vue'
+import { useRecipeStore } from '@/stores/recipes'
 
-const route = useRoute()
-
-const state = reactive<{
-  recipe: Partial<RecipeDTO>
-  isLoading: boolean
-}>({
-  recipe: {},
+const recipeStore = useRecipeStore()
+const state = reactive<{ isLoading: boolean }>({
   isLoading: true,
 })
 
-const recepeId = route.params.id
-
 onMounted(async () => {
-  try {
-    const response = await axios.get(
-      `http://localhost:8080/api/v1/recipes/${recepeId}`,
-    )
-    state.recipe = response.data
-  } catch (error) {
-    console.error('Error fetching job', error)
-  } finally {
+  const { success, status } = await recipeStore.dispatchGetRecipes()
+
+  if (!success) {
+    alert('Ups, something happened 🙂')
+    console.log('Api status ->', status)
+  } else {
     state.isLoading = false
+    console.log('Api status ->', status, success, recipeStore.recipes)
   }
 })
 </script>
 
 <template>
-  <section v-if="!state.isLoading" class="container">
+  <section class="container">
     <div class="py-8 relative">
-      <h1
-        class="text-4xl absolute z-10 top-1/2 -left-3.5 font-bold tracking-tight text-zinc-800 sm:text-6xl dark:text-zinc-100"
-      >
-        <span class="bg-white">{{ state.recipe.title }}</span>
-      </h1>
-      <div class="overflow-hidden md:h-96 rounded-xl sm:rounded-2xl">
-        <img src="../assets/spaghetti-bake.jpg" />
-      </div>
+      <AnimatedTitle title="Explore my selection of curated recipes" />
     </div>
-    <div id="preparation" class="grid grid-cols-3 gap-4 py-8">
-      <div class="instructions col-span-3 md:col-span-2 py-6">
-        <h3 class="text-3xl font-serif font-bold mb-4">Instructions</h3>
-        <ol
-          v-for="(item, index) in state.recipe.instructions"
-          :key="index"
-          class="instructions text-sm font-semibold leading-6 text-gray-900"
-        >
-          <li>
-            <Badge variant="outline">{{ index + 1 }}</Badge> {{ item }}
-          </li>
-        </ol>
-      </div>
-      <div class="Ingredients col-span-3 md:col-span-1 bg-orange-100 p-6">
-        <h3 class="text-3xl font-serif font-bold mb-4">Ingredients</h3>
-        <ol
-          v-for="(item, index) in state.recipe.ingredients"
-          :key="index"
-          class="instructions text-sm font-semibold leading-6 text-gray-900"
-        >
-          <li class="content-between">{{ item.name }} {{ item.quantity }}</li>
-        </ol>
+  </section>
+  <section v-if="!state.isLoading" class="container">
+    <div>
+      <div v-for="recipe in recipeStore.recipes" :key="recipe?.id">
+        <div>{{ recipe?.title }}</div>
       </div>
     </div>
   </section>
-  <div class="container" v-else>Loading</div>
+  <div class="container flex flex-col space-y-3" v-else>
+    <Skeleton class="h-[125px] w-[250px] rounded-xl" />
+    <div class="space-y-2">
+      <Skeleton class="h-4 w-[250px]" />
+      <Skeleton class="h-4 w-[200px]" />
+    </div>
+  </div>
 </template>

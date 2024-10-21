@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { Button } from '@/components/ui/button'
+import kwamsc from '@/assets/img/kwamsc.svg'
 
 const navigation = [
   { name: 'Blog', href: '/blog' },
@@ -13,7 +14,7 @@ const navigation = [
   <header class="container inset-x-0 top-0 z-50">
     <nav class="flex items-center justify-between py-8">
       <router-link to="/" class="">
-        <img src="../assets/kwamsc.svg" width="64px" alt="Vite logo" />
+        <img :src="kwamsc" width="64px" alt="Vite logo" />
       </router-link>
       <div class="flex lg:flex-1"></div>
       <div class="lg:flex lg:gap-x-12">

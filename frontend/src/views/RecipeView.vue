@@ -3,7 +3,7 @@ import { reactive, onMounted } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
-import type { RecipeDTO } from '@/types/recipe'
+import type { RecipeDTO } from '@/services/recipes/types'
 
 const route = useRoute()
 
@@ -20,7 +20,7 @@ const recepeId = route.params.id
 onMounted(async () => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/v1/recipes/${recepeId}`,
+      `${import.meta.env.VITE_API_ENDPOINT}/recipes/${recepeId}`,
     )
     state.recipe = response.data
   } catch (error) {
@@ -70,5 +70,11 @@ onMounted(async () => {
       </div>
     </div>
   </section>
-  <div class="container" v-else>Loading</div>
+  <div class="container flex flex-col space-y-3" v-else>
+    <Skeleton class="h-[125px] w-[250px] rounded-xl" />
+    <div class="space-y-2">
+      <Skeleton class="h-4 w-[250px]" />
+      <Skeleton class="h-4 w-[200px]" />
+    </div>
+  </div>
 </template>
