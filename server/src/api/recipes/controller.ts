@@ -1,5 +1,5 @@
-import Controller from "./controller";
-import { Recipe, CreateRecipeDTO, UpdateRecipeDTO } from "../models/recipe";
+import Controller from "../../controllers/controller";
+import { Recipe, CreateRecipeDTO, UpdateRecipeDTO } from "./model";
 
 const recipeController = new Controller<Recipe, CreateRecipeDTO, UpdateRecipeDTO>("recipes");
 
