@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/db";
 import { Entity, CreateDto, UpdateDto } from "../config/firestore";
-import { firestoreConverter } from "../helpers/firebaseConverters";
+import { firestoreConverter } from "./firebaseConverters";
 import { FirebaseError } from "./firestore-error";
 
 export const addEntityToFirestore = async (

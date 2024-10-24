@@ -47,7 +47,7 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
   ) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     try {
       const result = await getEntityFromFirestore(this.collectionName, id);
@@ -65,7 +65,7 @@ class Controller<T extends Entity, C extends CreateDto, U extends UpdateDto> {
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
   ) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     try {
       await deleteEntityFromFirestore(this.collectionName, id);

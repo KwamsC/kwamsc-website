@@ -1,28 +1,28 @@
-import { getSchema, getAllSchema, postJsonSchema, putSchema, deleteSchema } from "./schema";
-import recipeController from "./controller";
 import { FastifyInstance } from "fastify";
 import { authenticateJWT } from "../../middleware/authenticateJWT";
+import postController from "./controller";
+import { getSchema, getAllSchema, AddSchema, putSchema, deleteSchema } from "./schema";
 
 async function recipeRoutes(fastify: FastifyInstance) {
-  fastify.get("/:id", { schema: getSchema }, recipeController.getEntity);
-  fastify.get("/", { schema: getAllSchema }, recipeController.getAllEntities);
+  fastify.get("/:id", { schema: { tags: ["posts"], ...getSchema } }, postController.getEntity);
+  fastify.get("/", { schema: { tags: ["posts"], ...getAllSchema } }, postController.getAllEntities);
 
   fastify.post("/", {
-    schema: postJsonSchema,
+    schema: { tags: ["posts"], ...AddSchema },
     preHandler: authenticateJWT,
-    handler: recipeController.addEntity,
+    handler: postController.addEntity,
   });
 
   fastify.put("/:id", {
-    schema: putSchema,
+    schema: { tags: ["posts"], ...putSchema },
     preHandler: authenticateJWT,
-    handler: recipeController.updateEntity,
+    handler: postController.updateEntity,
   });
 
   fastify.delete("/:id", {
-    schema: deleteSchema,
+    schema: { tags: ["posts"], ...deleteSchema },
     preHandler: authenticateJWT,
-    handler: recipeController.deleteEntity,
+    handler: postController.deleteEntity,
   });
 }
 

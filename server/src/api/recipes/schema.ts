@@ -41,7 +41,17 @@ export const recipeSchema = {
   ],
 } as const;
 
-export const getAllJsonSchema = {
+const messageResponse = {
+  type: "object",
+  properties: {
+    message: { type: "string" },
+  },
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { required, ...recipePutSchema } = recipeSchema;
+
+export const getAllSchema = {
   querystring: {
     type: "object",
     properties: {
@@ -56,7 +66,7 @@ export const getAllJsonSchema = {
   },
 };
 
-export const getJsonSchema = {
+export const getSchema = {
   params: {
     type: "object",
     properties: {
@@ -68,39 +78,7 @@ export const getJsonSchema = {
   },
 };
 
-export const deleteJsonSchema = {
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
-  response: {
-    200: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-  },
-};
-
-export const postJsonSchema = {
-  body: recipeSchema,
-  response: {
-    201: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-  },
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { required, ...recipePutSchema } = recipeSchema;
-
-export const putJsonSchema = {
+export const putSchema = {
   body: recipePutSchema,
   params: {
     type: "object",
@@ -109,11 +87,25 @@ export const putJsonSchema = {
     },
   },
   response: {
-    200: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
+    200: messageResponse,
+  },
+};
+
+export const deleteSchema = {
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
     },
+  },
+  response: {
+    200: messageResponse,
+  },
+};
+
+export const AddSchema = {
+  body: recipeSchema,
+  response: {
+    201: messageResponse,
   },
 };

@@ -11,29 +11,18 @@ export const postSchema = {
     updatedAt: { type: "number", nullable: true },
     imageUrl: { type: "string" },
   },
-  required: ["title", "content", "published", "author", "tags"],
+  required: ["title", "content", "published", "author"],
 } as const; // don't forget to use const !
+
+const messageResponse = {
+  type: "object",
+  properties: {
+    message: { type: "string" },
+  },
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { required, ...postPutSchema } = postSchema;
-
-export const putSchema = {
-  body: postPutSchema,
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
-  response: {
-    200: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
-  },
-};
 
 export const getAllSchema = {
   querystring: {
@@ -45,6 +34,7 @@ export const getAllSchema = {
   response: {
     200: {
       type: "array",
+      items: postSchema,
     },
   },
 };
@@ -57,7 +47,20 @@ export const getSchema = {
     },
   },
   response: {
-    200: postPutSchema,
+    200: postSchema,
+  },
+};
+
+export const putSchema = {
+  body: postPutSchema,
+  params: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+    },
+  },
+  response: {
+    200: messageResponse,
   },
 };
 
@@ -69,23 +72,13 @@ export const deleteSchema = {
     },
   },
   response: {
-    200: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
+    200: messageResponse,
   },
 };
 
-export const postJsonSchema = {
+export const AddSchema = {
   body: postSchema,
   response: {
-    201: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-      },
-    },
+    201: messageResponse,
   },
 };

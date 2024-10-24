@@ -1,0 +1,12 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true, // optional
+  "eslint.useFlatConfig": true,
+  "editor.formatOnSaveMode": "file", // required to format on save
+  "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
+  "files.autoSave": "onFocusChange", // optional but recommended
+  "vs-code-prettier-eslint.prettierLast": false // set as "true" to run 'prettier' last not first
+}
