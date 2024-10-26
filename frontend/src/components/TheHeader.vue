@@ -17,7 +17,7 @@ const navigation = [
         <img :src="kwamsc" width="64px" alt="Vite logo" />
       </router-link>
       <div class="flex lg:flex-1"></div>
-      <div class="lg:flex lg:gap-x-12">
+      <div class="rounded-full bg-orange-100 px-4 py-1 lg:flex lg:gap-x-12">
         <router-link
           v-for="item in navigation"
           :key="item.name"

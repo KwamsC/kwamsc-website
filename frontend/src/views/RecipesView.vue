@@ -12,7 +12,7 @@ onMounted(async () => {
   const { success, status } = await recipeStore.dispatchGetRecipes()
 
   if (!success) {
-    alert('Ups, something happened 🙂')
+    // alert('Ups, something happened 🙂')
     console.log('Api status ->', status)
   } else {
     state.isLoading = false
@@ -23,7 +23,7 @@ onMounted(async () => {
 
 <template>
   <section class="container">
-    <div class="py-8 relative">
+    <div class="relative py-8">
       <AnimatedTitle title="Explore my selection of curated recipes" />
     </div>
   </section>
