@@ -3,11 +3,9 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <main class="bg-orange-50 min-h-screen">
+  <main>
     <component :is="$route.meta.layout || 'div'">
       <RouterView />
     </component>
   </main>
 </template>
-
-<style scoped></style>

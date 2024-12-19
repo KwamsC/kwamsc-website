@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button'
 import kwamsc from '@/assets/img/kwamsc.svg'
 
 const navigation = [
-  { name: 'Blog', href: '/blog' },
+  // { name: 'Blog', href: '/blog' },
   { name: 'Recipes', href: '/recipes' },
-  { name: 'About', href: '/about' },
+  // { name: 'About', href: '/about' },
 ]
 </script>
 
@@ -17,7 +17,7 @@ const navigation = [
         <img :src="kwamsc" width="64px" alt="Vite logo" />
       </router-link>
       <div class="flex lg:flex-1"></div>
-      <div class="rounded-full bg-orange-100 px-4 py-1 lg:flex lg:gap-x-12">
+      <div class="rounded-full px-4 py-1 lg:flex lg:gap-x-12">
         <router-link
           v-for="item in navigation"
           :key="item.name"

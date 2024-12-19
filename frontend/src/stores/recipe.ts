@@ -1,9 +1,9 @@
 import type { AxiosError } from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { API } from "../../services";
-import type { RecipeDTO } from "../../services/recipes/types";
-import type { APIResponse } from "../../services/types";
+import { API } from "../services";
+import type { RecipeDTO } from "../services/recipes/types";
+import type { APIResponse } from "../services/types";
 
 export const useRecipeStore = defineStore("recipeStore", () => {
 	// State
@@ -91,31 +91,6 @@ export const useRecipeStore = defineStore("recipeStore", () => {
 			status: 400,
 		};
 	}
-
-	// async function dispatchGetRecipe(id: string): Promise<APIResponse<null>> {
-	//   try {
-	//     const { status, data } = await API.recipes.getRecipe(id);
-	//     if (status === 200) {
-	//       removeSchool(id);
-	//       return {
-	//         success: true,
-	//         content: null,
-	//       };
-	//     }
-	//   } catch (error) {
-	//     const _error = error as AxiosError<string>;
-	//     return {
-	//       success: false,
-	//       status: _error.response?.status,
-	//       content: null,
-	//     };
-	//   }
-	//   return {
-	//     success: false,
-	//     content: null,
-	//     status: 400,
-	//   };
-	// }
 
 	return {
 		recipes,
