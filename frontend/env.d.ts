@@ -10,4 +10,5 @@ interface ImportMetaEnv {
   VITE_STORAGE_BUCKET: string
   VITE_MESSANGING_SENDER_ID: string
   VITE_APP_ID: string
+  VITE_GOOGLE_RECAPTCHA_V3: string
 }

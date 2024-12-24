@@ -30,10 +30,10 @@ const apiDocumentation = {
 			url: "http://localhost:8080/api/v1",
 			description: "Local Server",
 		},
-		// {
-		//   url: 'https://api.mysite.com',
-		//   description: 'Production Server',
-		// },
+		{
+		  url: 'https://api.kwamsc.com/api/v1',
+		  description: 'Production Server',
+		},
 	],
 	tags: [
 		{
