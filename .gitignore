@@ -36,6 +36,8 @@ build/Release
 dist
 build
 src/environments
+.vite
+.firebase
 
 # Dependency directories
 node_modules/
