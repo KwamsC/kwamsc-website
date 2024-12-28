@@ -33,13 +33,17 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:8080",
-        description: "Development server",
+        url:
+          process.env.NODE_ENV === "production"
+            ? "https://api.kwamsc.com"
+            : "http://localhost:8080",
+        description:
+          process.env.NODE_ENV === "production" ? "Production server" : "Development server",
       },
     ],
     tags: [
-      { name: "recipes", description: "User related end-points" },
-      { name: "posts", description: "Code related end-points" },
+      { name: "recipes", description: "recipes related end-points" },
+      { name: "posts", description: "posts related end-points" },
     ],
   },
 };
@@ -49,7 +53,12 @@ const swaggerUiOptions = {
   exposeRoute: true,
 };
 
-const allowedOrigins = ["http://localhost:5173", "http://kwamsc.com", "https://kwamsc.com/"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://kwamsc.com",
+  "https://kwamsc.com/",
+  "https://www.kwamsc.com/",
+];
 
 app.register(cors, { origin: allowedOrigins });
 app.register(fastifyRateLimit, {
