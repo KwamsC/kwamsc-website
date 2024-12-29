@@ -1,18 +1,10 @@
-export const postSchema = {
+// Common Schemas
+const idParamSchema = {
   type: "object",
   properties: {
     id: { type: "string" },
-    title: { type: "string" },
-    content: { type: "string" },
-    author: { type: "string" },
-    published: { type: "boolean" },
-    createdAt: { type: "number" },
-    tags: { type: "array" },
-    updatedAt: { type: "number", nullable: true },
-    imageUrl: { type: "string" },
   },
-  required: ["title", "content", "published", "author"],
-} as const; // don't forget to use const !
+};
 
 const messageResponse = {
   type: "object",
@@ -21,8 +13,34 @@ const messageResponse = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { required, ...postPutSchema } = postSchema;
+// Post Base Schema
+const basePostSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    title: { type: "string" },
+    content: { type: "string" },
+    author: { type: "string" },
+    published: { type: "boolean" },
+    createdAt: { type: "number" },
+    tags: { type: "array", items: { type: "string" } },
+    updatedAt: { type: "number", nullable: true },
+    imageUrl: { type: "string" },
+  },
+};
+
+// Full Post Schema
+export const postSchema = {
+  ...basePostSchema,
+  required: ["title", "content", "published", "author"],
+};
+
+// Partial Post Schema for PUT
+export const postPutSchema = {
+  type: "object",
+  properties: basePostSchema.properties,
+  required: [], // No required fields for partial updates
+};
 
 export const getAllSchema = {
   querystring: {
@@ -40,12 +58,7 @@ export const getAllSchema = {
 };
 
 export const getSchema = {
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
+  params: idParamSchema,
   response: {
     200: postSchema,
   },
@@ -53,24 +66,14 @@ export const getSchema = {
 
 export const putSchema = {
   body: postPutSchema,
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
+  params: idParamSchema,
   response: {
     200: messageResponse,
   },
 };
 
 export const deleteSchema = {
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
+  params: idParamSchema,
   response: {
     200: messageResponse,
   },

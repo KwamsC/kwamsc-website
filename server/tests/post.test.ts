@@ -1,81 +1,311 @@
-// import {
-//   initializeTestEnvironment,
-//   assertFails,
-//   assertSucceeds,
-//   RulesTestEnvironment,
-//   RulesTestContext,
-// } from '@firebase/rules-unit-testing';
-// import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
+// import assert from "assert/strict";
+// import request from "supertest";
+// import { test, it, describe } from "node:test";
 
-// const PROJECT_ID = 'kwame-website';
-// let firebase: RulesTestEnvironment;
+// describe("GET /api/v1/posts", () => {
+//   assert.strictEqual(1, 1);
+//   it("should return a list of posts", async () => {
+//     const response = await request("http://localhost:8080").get("/api/v1/posts");
 
-// // Initialize the Firestore emulator database
-// const getFireBase: Promise<RulesTestEnvironment> = initializeTestEnvironment({
-//   projectId: PROJECT_ID,
-//   firestore: {
-//     host: 'localhost',
-//     port: 8081,
-//   },
+//     assert.equal;
+
+//     expect(response.status).toBe(200);
+//     expect(response.body).toEqual([]);
+//   });
 // });
 
-// const getFireStore = (context: RulesTestContext) => {
-//   return context.firestore();
-// };
+// test("GET /api/v1/posts", () => {
+//   it("should return a list of posts", async () => {
+//     const response = await request("http://localhost:8080").get("/api/v1/posts");
 
-// beforeEach(async () => {
-//   firebase = await getFireBase;
+//     expect(response.status).toBe(200);
+//     expect(response.body).toEqual([]);
+//   });
 // });
 
-// afterAll((done) => {
-//   // Closing the firestore connection allows Jest to exit successfully.
-//   firebase.cleanup();
-//   done();
-// });
+// describe("GET /api/v1/posts", () => {
+//   it("should return a list of posts", async () => {
+//     const mockPosts: PostDTO[] = [
+//       {
+//         id: "1",
+//         title: "Test Post 1",
+//         content: "This is the first test post.",
+//         author: "Author 1",
+//         tags: ["tag1"],
+//         published: true,
+//         updatedAt: Date.now(),
+//         createdAt: Date.now(),
+//       },
+//       {
+//         id: "2",
+//         title: "Test Post 2",
+//         content: "This is the second test post.",
+//         author: "Author 2",
+//         tags: ["tag2"],
+//         published: true,
+//         updatedAt: Date.now(),
+//         createdAt: Date.now(),
+//       },
+//     ];
 
-// describe('posts', () => {
-//   it('should see post data', async () => {
-//     const auth = firebase.unauthenticatedContext();
-//     const db = getFireStore(auth);
-//     const docRef = doc(db, 'posts', '1');
-//     const docSnap = getDoc(docRef);
+//     sinon.stub(PostService.prototype, "getAllPosts").resolves(mockPosts);
 
-//     await assertSucceeds(docSnap);
+//     const response = await request(app).get("/api/v1/posts").query({ count: 2 });
+
+//     expect(response.status).toBe(200);
+//     expect(response.body).toStrictEqual(mockPosts);
 //   });
 
-//   it('should not be able to write post data as an unauthenticated user', async () => {
-//     const auth = firebase.unauthenticatedContext();
-//     const db = getFireStore(auth);
+//   it("should handle server errors", async () => {
+//     sinon.stub(PostService.prototype, "getAllPosts").throws(new Error("Database Error"));
 
-//     await assertFails(setDoc(doc(db, 'posts/postId'), {}));
+//     const response = await request(app).get("/api/v1/posts");
+
+//     expect(response.status).toBe(500);
+//     expect(response.body).toStrictEqual({ error: "Failed to get posts" });
 //   });
+// });
 
-//   it('should be able to write post or update data as an authenticated user', async () => {
-//     const auth = firebase.authenticatedContext('adminID');
-//     const db = getFireStore(auth);
-//     const postRef = 'posts/postId';
-//     const postData = {
-//       title: 'title',
-//       content: 'content',
-//       author: 'author',
+// import { afterEach, describe, expect, it, jest } from "@jest/globals";
+// import sinon from "sinon";
+// import request from "supertest";
+// import app from "../src/app.js";
+// import type { CreatePostDTO, PostDTO, UpdatePostDTO } from "../src/components/post/model";
+// import PostService from "../src/components/post/service";
+// import { FirebaseError } from "../src/services/firestore-error.js";
+
+// // Mock the authenticateJWT middleware
+// jest.mock("../src/middleware/authenticateJWT", () => ({
+//   authenticateJWT: (_req: Request, _res: Response, next) => next(),
+// }));
+
+// afterEach(() => {
+//   sinon.restore();
+// });
+
+// describe("POST /api/v1/posts", () => {
+//   it("should create a new post", async () => {
+//     const postData: CreatePostDTO = {
+//       title: "11th Post",
+//       content: "This is my 11th ID post",
+//       published: true,
+//       author: "Emm Carr",
+//       tags: ["tech", "lifestyle", "coding"],
 //     };
 
-//     await assertSucceeds(setDoc(doc(db, postRef), postData));
+//     const createPostStub = sinon.stub(PostService.prototype, "addPost").resolves();
+
+//     const response = await request(app).post("/api/v1/posts").send(postData);
+
+//     expect(createPostStub.calledOnce).toBe(true);
+//     expect(response.status).toBe(201);
+//     expect(response.body.message).toBe("Post created successfully");
 //   });
 
-//   it('should not be able to delete post data as an unauthenticated user', async () => {
-//     const auth = firebase.unauthenticatedContext();
-//     const db = getFireStore(auth);
-//     const postRef = 'posts/postId';
+//   it("should handle validation errors", async () => {
+//     const postDataWithoutTitle: Omit<CreatePostDTO, "title"> = {
+//       content: "This is my 11th ID post",
+//       published: true,
+//       author: "Emm Carr",
+//       tags: ["tech", "lifestyle", "coding"],
+//     };
 
-//     await assertFails(deleteDoc(doc(db, postRef)));
+//     const response = await request(app).post("/api/v1/posts").send(postDataWithoutTitle);
+
+//     expect(response.status).toBe(409);
+//     expect(response.body.error[0]).toEqual({
+//       message: "title is required",
+//       path: "title",
+//     });
 //   });
 
-//   it('should be able to delete post data as an authenticated user', async () => {
-//     const auth = firebase.authenticatedContext('adminID');
-//     const db = getFireStore(auth);
-//     const postRef = 'posts/postId';
+//   it("should handle server errors", async () => {
+//     const postData: CreatePostDTO = {
+//       title: "11th Post",
+//       content: "This is my 11th ID post",
+//       published: true,
+//       author: "Emm Carr",
+//       tags: ["tech", "lifestyle", "coding"],
+//     };
 
-//     await assertSucceeds(deleteDoc(doc(db, postRef)));
+//     const createPostStub = sinon
+//       .stub(PostService.prototype, "addPost")
+//       .throws(new Error("Database Error"));
+
+//     const response = await request(app).post("/api/v1/posts").send(postData);
+
+//     expect(response.status).toBe(500);
+//     expect(response.body).toEqual({ error: "Failed to create post" });
+//     expect(createPostStub.calledOnce).toBe(true);
+//   });
+// });
+
+// describe("PUT /api/v1/posts/:id", () => {
+//   it("should update an existing post", async () => {
+//     const postId = "1";
+//     const postData: UpdatePostDTO = {
+//       title: "Updated Post Title",
+//       content: "Updated post content",
+//       published: false,
+//       author: "Updated Author",
+//       tags: ["updated", "tags"],
+//     };
+
+//     const updatePostStub = sinon.stub(PostService.prototype, "updatePost").resolves();
+
+//     const response = await request(app).put(`/api/v1/posts/${postId}`).send(postData);
+
+//     expect(updatePostStub.calledOnce).toBe(true);
+//     expect(updatePostStub.calledWith(postId, postData)).toBe(true);
+//     expect(response.status).toBe(200);
+//     expect(response.body.message).toBe("Post updated successfully");
+//   });
+
+//   it("should handle server errors", async () => {
+//     const postId = "1";
+//     const postData: UpdatePostDTO = {
+//       title: "Updated Post Title",
+//       content: "Updated post content",
+//       published: false,
+//       author: "Updated Author",
+//       tags: ["updated", "tags"],
+//     };
+
+//     const updatePostStub = sinon
+//       .stub(PostService.prototype, "updatePost")
+//       .throws(new Error("Database Error"));
+
+//     const response = await request(app).put(`/api/v1/posts/${postId}`).send(postData);
+
+//     expect(response.status).toBe(500);
+//     expect(response.body).toEqual({ error: "Failed to update post" });
+//     expect(updatePostStub.calledOnce).toBe(true);
+//   });
+// });
+
+// describe("GET /api/v1/posts", () => {
+//   it("should return a list of posts", async () => {
+//     const mockPosts: PostDTO[] = [
+//       {
+//         id: "1",
+//         title: "Test Post 1",
+//         content: "This is the first test post.",
+//         author: "Author 1",
+//         tags: ["tag1"],
+//         published: true,
+//         updatedAt: Date.now(),
+//         createdAt: Date.now(),
+//       },
+//       {
+//         id: "2",
+//         title: "Test Post 2",
+//         content: "This is the second test post.",
+//         author: "Author 2",
+//         tags: ["tag2"],
+//         published: true,
+//         updatedAt: Date.now(),
+//         createdAt: Date.now(),
+//       },
+//     ];
+
+//     sinon.stub(PostService.prototype, "getAllPosts").resolves(mockPosts);
+
+//     const response = await request(app).get("/api/v1/posts").query({ count: 2 });
+
+//     expect(response.status).toBe(200);
+//     expect(response.body).toStrictEqual(mockPosts);
+//   });
+
+//   it("should handle server errors", async () => {
+//     sinon.stub(PostService.prototype, "getAllPosts").throws(new Error("Database Error"));
+
+//     const response = await request(app).get("/api/v1/posts");
+
+//     expect(response.status).toBe(500);
+//     expect(response.body).toStrictEqual({ error: "Failed to get posts" });
+//   });
+// });
+
+// describe("GET /api/v1/posts/:id", () => {
+//   it("should return a post by ID", async () => {
+//     const mockPost: PostDTO = {
+//       id: "1",
+//       title: "Test Post",
+//       content: "Test Content",
+//       author: "Author 1",
+//       tags: ["tag1"],
+//       published: true,
+//       updatedAt: Date.now(),
+//       createdAt: Date.now(),
+//     };
+
+//     const getPostByIdStub = sinon.stub(PostService.prototype, "getPostById").resolves(mockPost);
+
+//     const response = await request(app).get("/api/v1/posts/1");
+
+//     expect(getPostByIdStub.calledOnce).toBe(true);
+//     expect(response.status).toBe(200);
+//     expect(response.body).toStrictEqual(mockPost);
+//   });
+
+//   it("should return 404 if post not found", async () => {
+//     sinon.stub(PostService.prototype, "getPostById").resolves(null);
+
+//     const response = await request(app).get("/api/v1/posts/1");
+
+//     expect(response.status).toBe(404);
+//     expect(response.body).toEqual({ message: "Post with given ID not found" });
+//   });
+
+//   it("should handle server errors", async () => {
+//     sinon.stub(PostService.prototype, "getPostById").throws(new Error("Failed to get post"));
+
+//     const response = await request(app).get("/api/v1/posts/1");
+
+//     expect(response.status).toBe(500);
+//     expect(response.body).toEqual({ error: "Failed to get post" });
+//   });
+// });
+
+// describe("DELETE /api/v1/posts/:id", () => {
+//   it("should delete a post", async () => {
+//     const postId = "1";
+
+//     const deletePostStub = sinon.stub(PostService.prototype, "deletePost").resolves();
+
+//     const response = await request(app).delete(`/api/v1/posts/${postId}`);
+
+//     expect(deletePostStub.calledOnce).toBe(true);
+//     expect(deletePostStub.calledWith(postId)).toBe(true);
+//     expect(response.status).toBe(200);
+//     expect(response.body.message).toBe("Post deleted successfully");
+//   });
+
+//   it("should return 404 if post not found", async () => {
+//     const postId = "nonexistent-id";
+
+//     const deletePostStub = sinon
+//       .stub(PostService.prototype, "deletePost")
+//       .throws(new FirebaseError("Post does not exist", 404));
+
+//     const response = await request(app).delete(`/api/v1/posts/${postId}`);
+
+//     expect(deletePostStub.calledOnce).toBe(true);
+//     expect(response.status).toBe(404);
+//     expect(response.body).toEqual({ error: "Post not found" });
+//   });
+
+//   it("should handle server errors", async () => {
+//     const postId = "1";
+
+//     const deletePostStub = sinon
+//       .stub(PostService.prototype, "deletePost")
+//       .throws(new Error("Database Error"));
+
+//     const response = await request(app).delete(`/api/v1/posts/${postId}`);
+
+//     expect(deletePostStub.calledOnce).toBe(true);
+//     expect(response.status).toBe(500);
+//     expect(response.body).toEqual({ error: "Failed to delete post" });
 //   });
 // });

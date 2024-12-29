@@ -1,4 +1,20 @@
-export const recipeSchema = {
+// Common Schemas
+const idParamSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+  },
+};
+
+const messageResponse = {
+  type: "object",
+  properties: {
+    message: { type: "string" },
+  },
+};
+
+// Recipe Base Schema
+const baseRecipeSchema = {
   type: "object",
   properties: {
     id: { type: "string" },
@@ -30,6 +46,11 @@ export const recipeSchema = {
     published: { type: "boolean" },
     imageUrl: { type: "string" },
   },
+};
+
+// Full Recipe Schema
+export const recipeSchema = {
+  ...baseRecipeSchema,
   required: [
     "title",
     "author",
@@ -39,17 +60,14 @@ export const recipeSchema = {
     "cuisine",
     "published",
   ],
-} as const;
-
-const messageResponse = {
-  type: "object",
-  properties: {
-    message: { type: "string" },
-  },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { required, ...recipePutSchema } = recipeSchema;
+// Partial Post Schema for PUT
+export const recipePutSchema = {
+  type: "object",
+  properties: baseRecipeSchema.properties,
+  required: [], // No required fields for partial updates
+};
 
 export const getAllSchema = {
   querystring: {
@@ -67,12 +85,7 @@ export const getAllSchema = {
 };
 
 export const getSchema = {
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
+  params: idParamSchema,
   response: {
     200: recipeSchema,
   },
@@ -80,24 +93,14 @@ export const getSchema = {
 
 export const putSchema = {
   body: recipePutSchema,
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
+  params: idParamSchema,
   response: {
     200: messageResponse,
   },
 };
 
 export const deleteSchema = {
-  params: {
-    type: "object",
-    properties: {
-      id: { type: "string" },
-    },
-  },
+  params: idParamSchema,
   response: {
     200: messageResponse,
   },
