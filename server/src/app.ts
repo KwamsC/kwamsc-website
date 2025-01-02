@@ -1,3 +1,5 @@
+import { apiDocumentation } from "#docs/apidoc.js";
+import { setCache } from "#middleware/postCache.js";
 import cors, { type CorsOptions } from "cors";
 import express, {
 	type Application,
@@ -8,10 +10,8 @@ import { rateLimit } from "express-rate-limit";
 
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
-import postRoutes from "./components/post/routes";
-import recipeRoutes from "./components/recipe/routes";
-import { apiDocumentation } from "./docs/apidoc";
-import { setCache } from "./middleware/postCache";
+import postRoutes from "#components/post/routes.js";
+import recipeRoutes from "#components/recipe/routes.js";
 
 const app: Application = express();
 app.set("trust proxy", 1);

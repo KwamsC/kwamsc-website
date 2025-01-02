@@ -1,353 +1,370 @@
-import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import { mock, afterEach, describe, it } from 'node:test';
+import assert from 'node:assert';
 import sinon from "sinon";
-import request, { type Request, type Response } from "supertest";
-import app from "../src/app";
+import request from "supertest";
+import app from "#app.js";
 import type {
 	CreateRecipeDTO,
 	RecipeDTO,
 	UpdateRecipeDTO,
-} from "../src/components/recipe/model";
-import RecipeService from "../src/components/recipe/service";
-import { FirebaseError } from "../src/services/firestore-error";
+} from "#components/recipe/model.js";
+import RecipeService from "#components/recipe/service.js";
+import { FirebaseError } from "#services/firestore-error.js";
+import { mockSuccessfulAuth } from '../__mock__/firebaseAuth.js';
 
-// Mock the authenticateJWT middleware
-jest.mock("../src/middleware/authenticateJWT", () => ({
-	authenticateJWT: (_req: Request, _res: Response, next) => next(),
-}));
+describe("Recipe API Endpoints", () => {
+  const validToken = 'valid-test-token';
 
-afterEach(() => {
-	sinon.restore();
-});
+  afterEach(() => {
+    sinon.restore();
+    mock.reset();
+  });
 
-describe("POST /api/v1/recipes", () => {
-	it("should create a new recipe", async () => {
-		const recipeData: CreateRecipeDTO = {
-			ingredients: [
-				{ name: "Spaghetti", quantity: "200g" },
-				{ quantity: "500g", name: "Ground beef" },
-				{ quantity: "2 cups", name: "Tomato sauce" },
-			],
-			mealType: "Dinner",
-			title: "Spaghetti Bolognese",
-			cookTime: "30 minutes",
-			servings: 4,
-			difficulty: "Medium",
-			imageUrl: "https://example.com/spaghetti-bolognese.jpg",
-			totalTime: "45 minutes",
-			prepTime: "15 minutes",
-			cuisine: "Italian",
-			instructions: [
-				"Boil water and cook spaghetti according to package instructions.",
-				"In a pan, brown the ground beef.",
-				"Add tomato sauce to the beef and simmer.",
-			],
-			description: "Classic Italian pasta dish with a rich meat sauce.",
-		};
+  describe("POST /api/v1/recipes", () => {
+    mockSuccessfulAuth()
 
-		const createRecipeStub = sinon
-			.stub(RecipeService.prototype, "addRecipe")
-			.resolves();
+    it("should create a new recipe", async () => {
+      const recipeData: CreateRecipeDTO = {
+        ingredients: [
+          { name: "Spaghetti", quantity: "200g" },
+          { quantity: "500g", name: "Ground beef" },
+          { quantity: "2 cups", name: "Tomato sauce" },
+        ],
+        mealType: "Dinner",
+        title: "Spaghetti Bolognese",
+        cookTime: "30 minutes",
+        servings: 4,
+        difficulty: "Medium",
+        imageUrl: "https://example.com/spaghetti-bolognese.jpg",
+        totalTime: "45 minutes",
+        prepTime: "15 minutes",
+        cuisine: "Italian",
+        instructions: [
+          "Boil water and cook spaghetti according to package instructions.",
+          "In a pan, brown the ground beef.",
+          "Add tomato sauce to the beef and simmer.",
+        ],
+        description: "Classic Italian pasta dish with a rich meat sauce.",
+      };
 
-		const response = await request(app)
-			.post("/api/v1/recipes")
-			.send(recipeData);
+      const createRecipeStub = sinon
+        .stub(RecipeService.prototype, "addRecipe")
+        .resolves();
 
-		expect(createRecipeStub.calledOnce).toBe(true);
-		expect(response.status).toBe(201);
-		expect(response.body.message).toBe("Recipe created successfully");
-	});
+      const response = await request(app)
+        .post("/api/v1/recipes")
+        .set('Authorization', `Bearer ${validToken}`)
+        .send(recipeData);
 
-	it("should handle validation errors", async () => {
-		const recipeData: Omit<CreateRecipeDTO, "title"> = {
-			ingredients: [
-				{ name: "Spaghetti", quantity: "200g" },
-				{ quantity: "500g", name: "Ground beef" },
-				{ quantity: "2 cups", name: "Tomato sauce" },
-			],
-			mealType: "Dinner",
-			cookTime: "30 minutes",
-			servings: 4,
-			difficulty: "Medium",
-			imageUrl: "https://example.com/spaghetti-bolognese.jpg",
-			totalTime: "45 minutes",
-			prepTime: "15 minutes",
-			cuisine: "Italian",
-			instructions: [
-				"Boil water and cook spaghetti according to package instructions.",
-				"In a pan, brown the ground beef.",
-				"Add tomato sauce to the beef and simmer.",
-			],
-			description: "Classic Italian pasta dish with a rich meat sauce.",
-		};
+      assert.strictEqual(createRecipeStub.calledOnce, true, "createRecipeStub was not called once");
+      assert.strictEqual(response.status, 201, "Status code is not 201");
+      assert.strictEqual(response.body.message, "Recipe created successfully", "Message is incorrect");
+    });
 
-		const response = await request(app)
-			.post("/api/v1/recipes")
-			.send(recipeData);
+    it("should handle validation errors", async () => {
+      const recipeData: Omit<CreateRecipeDTO, "title"> = {
+        ingredients: [
+          { name: "Spaghetti", quantity: "200g" },
+          { quantity: "500g", name: "Ground beef" },
+          { quantity: "2 cups", name: "Tomato sauce" },
+        ],
+        mealType: "Dinner",
+        cookTime: "30 minutes",
+        servings: 4,
+        difficulty: "Medium",
+        imageUrl: "https://example.com/spaghetti-bolognese.jpg",
+        totalTime: "45 minutes",
+        prepTime: "15 minutes",
+        cuisine: "Italian",
+        instructions: [
+          "Boil water and cook spaghetti according to package instructions.",
+          "In a pan, brown the ground beef.",
+          "Add tomato sauce to the beef and simmer.",
+        ],
+        description: "Classic Italian pasta dish with a rich meat sauce.",
+      };
 
-		expect(response.status).toBe(409);
-		expect(response.body.error[0]).toEqual({
-			message: "title is required",
-			path: "title",
-		});
-	});
+      const response = await request(app)
+        .post("/api/v1/recipes")
+        .set('Authorization', `Bearer ${validToken}`)
+        .send(recipeData);
 
-	it("should handle server errors", async () => {
-		const recipeData: CreateRecipeDTO = {
-			ingredients: [
-				{ name: "Spaghetti", quantity: "200g" },
-				{ quantity: "500g", name: "Ground beef" },
-				{ quantity: "2 cups", name: "Tomato sauce" },
-			],
-			mealType: "Dinner",
-			title: "Spaghetti Bolognese",
-			cookTime: "30 minutes",
-			servings: 4,
-			difficulty: "Medium",
-			imageUrl: "https://example.com/spaghetti-bolognese.jpg",
-			totalTime: "45 minutes",
-			prepTime: "15 minutes",
-			cuisine: "Italian",
-			instructions: [
-				"Boil water and cook spaghetti according to package instructions.",
-				"In a pan, brown the ground beef.",
-				"Add tomato sauce to the beef and simmer.",
-			],
-			description: "Classic Italian pasta dish with a rich meat sauce.",
-		};
+      assert.strictEqual(response.status, 409);
+      assert.deepStrictEqual(response.body.error[0], {
+        message: "title is required",
+        path: "title",
+      });
+    });
 
-		const createRecipeStub = sinon
-			.stub(RecipeService.prototype, "addRecipe")
-			.throws(new Error("Database Error"));
+    it("should handle server errors", async () => {
+      const recipeData: CreateRecipeDTO = {
+        ingredients: [
+          { name: "Spaghetti", quantity: "200g" },
+          { quantity: "500g", name: "Ground beef" },
+          { quantity: "2 cups", name: "Tomato sauce" },
+        ],
+        mealType: "Dinner",
+        title: "Spaghetti Bolognese",
+        cookTime: "30 minutes",
+        servings: 4,
+        difficulty: "Medium",
+        imageUrl: "https://example.com/spaghetti-bolognese.jpg",
+        totalTime: "45 minutes",
+        prepTime: "15 minutes",
+        cuisine: "Italian",
+        instructions: [
+          "Boil water and cook spaghetti according to package instructions.",
+          "In a pan, brown the ground beef.",
+          "Add tomato sauce to the beef and simmer.",
+        ],
+        description: "Classic Italian pasta dish with a rich meat sauce.",
+      };
 
-		const response = await request(app)
-			.post("/api/v1/recipes")
-			.send(recipeData);
+      const createRecipeStub = sinon
+        .stub(RecipeService.prototype, "addRecipe")
+        .throws(new Error("Database Error"));
 
-		expect(response.status).toBe(500);
-		expect(response.body).toEqual({ error: "Failed to create recipe" });
-		expect(createRecipeStub.calledOnce).toBe(true);
-	});
-});
+      const response = await request(app)
+        .post("/api/v1/recipes")
+        .set('Authorization', `Bearer ${validToken}`)
+        .send(recipeData);
+      
+      assert.strictEqual(response.status, 500);
+      assert.deepStrictEqual(response.body, { error: "Failed to create recipe" });
+      assert.strictEqual(createRecipeStub.calledOnce, true);
+    });
+  });
 
-describe("PUT /api/v1/recipes/:id", () => {
-	it("should update an existing recipe", async () => {
-		const recipeId = "1";
-		const recipeData: UpdateRecipeDTO = {
-			title: "Ghanaian Spaghetti Bolognese",
-		};
+  describe("PUT /api/v1/recipes/:id", () => {
+    mockSuccessfulAuth()
 
-		const updateRecipeStub = sinon
-			.stub(RecipeService.prototype, "updateRecipe")
-			.resolves();
+    it("should update an existing recipe", async () => {
+      const recipeId = "1";
+      const recipeData: UpdateRecipeDTO = {
+        title: "Ghanaian Spaghetti Bolognese",
+      };
 
-		const response = await request(app)
-			.put(`/api/v1/recipes/${recipeId}`)
-			.send(recipeData);
+      const updateRecipeStub = sinon
+        .stub(RecipeService.prototype, "updateRecipe")
+        .resolves();
 
-		expect(updateRecipeStub.calledOnce).toBe(true);
-		expect(updateRecipeStub.calledWith(recipeId, recipeData)).toBe(true);
-		expect(response.status).toBe(200);
-		expect(response.body.message).toBe("Recipe updated successfully");
-	});
+      const response = await request(app)
+        .put(`/api/v1/recipes/${recipeId}`)
+        .set('Authorization', `Bearer ${validToken}`)
+        .send(recipeData);
+      
+      assert.strictEqual(updateRecipeStub.calledOnce, true);
+      assert.strictEqual(updateRecipeStub.calledWith(recipeId, recipeData), true);
+      assert.strictEqual(response.status, 200);
+      assert.deepStrictEqual(response.body.message, "Recipe updated successfully");
+    });
 
-	it("should handle server errors", async () => {
-		const recipeId = "1";
-		const recipeData: UpdateRecipeDTO = {
-			title: "Ghanaian Spaghetti Bolognese",
-		};
+    it("should handle server errors", async () => {
+      const recipeId = "1";
+      const recipeData: UpdateRecipeDTO = {
+        title: "Ghanaian Spaghetti Bolognese",
+      };
 
-		const updateRecipeStub = sinon
-			.stub(RecipeService.prototype, "updateRecipe")
-			.throws(new Error("Database Error"));
+      const updateRecipeStub = sinon
+        .stub(RecipeService.prototype, "updateRecipe")
+        .throws(new Error("Database Error"));
 
-		const response = await request(app)
-			.put(`/api/v1/recipes/${recipeId}`)
-			.send(recipeData);
+      const response = await request(app)
+        .put(`/api/v1/recipes/${recipeId}`)
+        .set('Authorization', `Bearer ${validToken}`)
+        .send(recipeData);
 
-		expect(response.status).toBe(500);
-		expect(response.body).toEqual({ error: "Failed to update recipe" });
-		expect(updateRecipeStub.calledOnce).toBe(true);
-	});
-});
+      assert.strictEqual(response.status, 500);
+      assert.deepStrictEqual(response.body, { error: "Failed to update recipe" });
+      assert.strictEqual(updateRecipeStub.calledOnce, true);
+    });
+  });
 
-describe("GET /api/v1/recipes", () => {
-	it("should return a list of recipes", async () => {
-		const mockRecipes: RecipeDTO[] = [
-			{
-				id: "1",
-				title: "Cornflakes and milk",
-				ingredients: [
-					{ name: "Cornflakes", quantity: "100g" },
-					{ name: "Milk", quantity: "200ml" },
-				],
-				mealType: "Breakfast",
-				cookTime: "5 minutes",
-				servings: 1,
-				difficulty: "Easy",
-				imageUrl: "https://example.com/frosties.jpg",
-				totalTime: "6 minutes",
-				prepTime: "1 minute",
-				updatedAt: null,
-				createdAt: 1234567,
-				cuisine: "World",
-				instructions: [
-					"Pour 100 gram of Cornflakes Cereal in a bowl",
-					"In a pan, brown the ground beef.",
-					"Add tomato sauce to the beef and simmer.",
-				],
-				description: "Cornflakes Cereal with milk",
-			},
-			{
-				id: "2",
-				ingredients: [
-					{ name: "Spaghetti", quantity: "200g" },
-					{ quantity: "500g", name: "Ground beef" },
-					{ quantity: "2 cups", name: "Tomato sauce" },
-				],
-				mealType: "Dinner",
-				title: "Spaghetti Bolognese",
-				cookTime: "30 minutes",
-				servings: 4,
-				difficulty: "Medium",
-				imageUrl: "https://example.com/spaghetti-bolognese.jpg",
-				totalTime: "45 minutes",
-				prepTime: "15 minutes",
-				updatedAt: null,
-				createdAt: 1234567,
-				cuisine: "Italian",
-				instructions: [
-					"Boil water and cook spaghetti according to package instructions.",
-					"In a pan, brown the ground beef.",
-					"Add tomato sauce to the beef and simmer.",
-				],
-				description: "Classic Italian pasta dish with a rich meat sauce.",
-			},
-		];
+  describe("GET /api/v1/recipes", () => {
+    it("should return a list of recipes", async () => {
+      const mockRecipes: RecipeDTO[] = [
+        {
+          id: "1",
+          title: "Cornflakes and milk",
+          ingredients: [
+            { name: "Cornflakes", quantity: "100g" },
+            { name: "Milk", quantity: "200ml" },
+          ],
+          mealType: "Breakfast",
+          cookTime: "5 minutes",
+          servings: 1,
+          difficulty: "Easy",
+          imageUrl: "https://example.com/frosties.jpg",
+          totalTime: "6 minutes",
+          prepTime: "1 minute",
+          updatedAt: null,
+          createdAt: 1234567,
+          cuisine: "World",
+          instructions: [
+            "Pour 100 gram of Cornflakes Cereal in a bowl",
+            "In a pan, brown the ground beef.",
+            "Add tomato sauce to the beef and simmer.",
+          ],
+          description: "Cornflakes Cereal with milk",
+        },
+        {
+          id: "2",
+          ingredients: [
+            { name: "Spaghetti", quantity: "200g" },
+            { quantity: "500g", name: "Ground beef" },
+            { quantity: "2 cups", name: "Tomato sauce" },
+          ],
+          mealType: "Dinner",
+          title: "Spaghetti Bolognese",
+          cookTime: "30 minutes",
+          servings: 4,
+          difficulty: "Medium",
+          imageUrl: "https://example.com/spaghetti-bolognese.jpg",
+          totalTime: "45 minutes",
+          prepTime: "15 minutes",
+          updatedAt: null,
+          createdAt: 1234567,
+          cuisine: "Italian",
+          instructions: [
+            "Boil water and cook spaghetti according to package instructions.",
+            "In a pan, brown the ground beef.",
+            "Add tomato sauce to the beef and simmer.",
+          ],
+          description: "Classic Italian pasta dish with a rich meat sauce.",
+        },
+      ];
 
-		sinon.stub(RecipeService.prototype, "getAllRecipes").resolves(mockRecipes);
+      sinon.stub(RecipeService.prototype, "getAllRecipes").resolves(mockRecipes);
 
-		const response = await request(app).get("/api/v1/recipes");
+      const response = await request(app).get("/api/v1/recipes");
 
-		expect(response.status).toBe(200);
-		expect(response.body).toStrictEqual(mockRecipes);
-		expect(response.body).toHaveLength(2);
-	});
+      assert.strictEqual(response.status, 200);
+      assert.deepStrictEqual(response.body, mockRecipes);
+      assert.strictEqual(response.body.length, 2);
+    });
 
-	it("should handle server errors", async () => {
-		sinon
-			.stub(RecipeService.prototype, "getAllRecipes")
-			.throws(new Error("Database Error"));
+    it("should handle server errors", async () => {
+      sinon
+        .stub(RecipeService.prototype, "getAllRecipes")
+        .throws(new Error("Database Error"));
 
-		const response = await request(app).get("/api/v1/recipes");
+      const response = await request(app).get("/api/v1/recipes");
 
-		expect(response.status).toBe(500);
-		expect(response.body).toStrictEqual({ error: "Failed to get recipes" });
-	});
-});
+      assert.strictEqual(response.status, 500);
+      assert.deepStrictEqual(response.body, { error: "Failed to get recipes" });
+    });
+  });
 
-describe("GET /api/v1/recipes/:id", () => {
-	it("should return a recipe by ID", async () => {
-		const mockRecipe: RecipeDTO = {
-			id: "1",
-			ingredients: [
-				{ name: "Spaghetti", quantity: "200g" },
-				{ quantity: "500g", name: "Ground beef" },
-				{ quantity: "2 cups", name: "Tomato sauce" },
-			],
-			mealType: "Dinner",
-			title: "Spaghetti Bolognese",
-			cookTime: "30 minutes",
-			servings: 4,
-			difficulty: "Medium",
-			imageUrl: "https://example.com/spaghetti-bolognese.jpg",
-			totalTime: "45 minutes",
-			prepTime: "15 minutes",
-			cuisine: "Italian",
-			instructions: [
-				"Boil water and cook spaghetti according to package instructions.",
-				"In a pan, brown the ground beef.",
-				"Add tomato sauce to the beef and simmer.",
-			],
-			description: "Classic Italian pasta dish with a rich meat sauce.",
-			createdAt: Date.now(),
-			updatedAt: null,
-		};
+  describe("GET /api/v1/recipes/:id", () => {
+    it("should return a recipe by ID", async () => {
+      const mockRecipe: RecipeDTO = {
+        id: "1",
+        ingredients: [
+          { name: "Spaghetti", quantity: "200g" },
+          { quantity: "500g", name: "Ground beef" },
+          { quantity: "2 cups", name: "Tomato sauce" },
+        ],
+        mealType: "Dinner",
+        title: "Spaghetti Bolognese",
+        cookTime: "30 minutes",
+        servings: 4,
+        difficulty: "Medium",
+        imageUrl: "https://example.com/spaghetti-bolognese.jpg",
+        totalTime: "45 minutes",
+        prepTime: "15 minutes",
+        cuisine: "Italian",
+        instructions: [
+          "Boil water and cook spaghetti according to package instructions.",
+          "In a pan, brown the ground beef.",
+          "Add tomato sauce to the beef and simmer.",
+        ],
+        description: "Classic Italian pasta dish with a rich meat sauce.",
+        createdAt: Date.now(),
+        updatedAt: null,
+      };
 
-		const getRecipeByIdStub = sinon
-			.stub(RecipeService.prototype, "getRecipeById")
-			.resolves(mockRecipe);
+      const getRecipeByIdStub = sinon
+        .stub(RecipeService.prototype, "getRecipeById")
+        .resolves(mockRecipe);
 
-		const response = await request(app).get("/api/v1/recipes/1");
+      const response = await request(app).get("/api/v1/recipes/1");
 
-		expect(getRecipeByIdStub.calledOnce).toBe(true);
-		expect(response.status).toBe(200);
-		expect(response.body).toStrictEqual(mockRecipe);
-	});
+      assert.strictEqual(getRecipeByIdStub.calledOnce, true);
+      assert.strictEqual(response.statusCode, 200);
+      assert.deepStrictEqual(response.body, mockRecipe);
+    });
 
-	it("should return 404 if recipe not found", async () => {
-		sinon.stub(RecipeService.prototype, "getRecipeById").resolves(null);
+    it("should return 404 if recipe not found", async () => {
+      sinon.stub(RecipeService.prototype, "getRecipeById").resolves(null);
 
-		const response = await request(app).get("/api/v1/recipes/1");
+      const response = await request(app).get("/api/v1/recipes/1");
 
-		expect(response.status).toBe(404);
-		expect(response.body).toEqual({
-			message: "Recipe with given ID not found",
-		});
-	});
+      assert.strictEqual(response.status, 404);
+      assert.deepStrictEqual(response.body, { message: "Recipe with given ID not found" });
+    });
 
-	it("should handle server errors", async () => {
-		sinon
-			.stub(RecipeService.prototype, "getRecipeById")
-			.throws(new Error("Failed to get recipe"));
+    it("should handle server errors", async () => {
+      sinon
+        .stub(RecipeService.prototype, "getRecipeById")
+        .throws(new Error("Failed to get recipe"));
 
-		const response = await request(app).get("/api/v1/recipes/1");
+      const response = await request(app).get("/api/v1/recipes/1");
 
-		expect(response.status).toBe(500);
-		expect(response.body).toEqual({ error: "Failed to get recipe" });
-	});
-});
+      assert.strictEqual(response.status, 500);
+      assert.deepStrictEqual(response.body, { error: "Failed to get recipe" });
+    });
+  });
 
-describe("DELETE /api/v1/recipes/:id", () => {
-	it("should delete a recipe", async () => {
-		const recipeId = "1";
+  describe("DELETE /api/v1/recipes/:id", () => {
+    mockSuccessfulAuth()
 
-		const deleteRecipeStub = sinon
-			.stub(RecipeService.prototype, "deleteRecipe")
-			.resolves();
+    it("should delete a recipe", async () => {
+      const recipeId = "1";
 
-		const response = await request(app).delete(`/api/v1/recipes/${recipeId}`);
+      const deleteRecipeStub = sinon
+        .stub(RecipeService.prototype, "deleteRecipe")
+        .resolves();
 
-		expect(deleteRecipeStub.calledOnce).toBe(true);
-		expect(deleteRecipeStub.calledWith(recipeId)).toBe(true);
-		expect(response.status).toBe(200);
-		expect(response.body.message).toBe("Recipe deleted successfully");
-	});
+      const response = await request(app)
+      .delete(`/api/v1/recipes/${recipeId}`)
+      .set('Authorization', `Bearer ${validToken}`);
 
-	it("should return 404 if recipe not found", async () => {
-		const recipeId = "nonexistent-id";
+      assert.strictEqual(deleteRecipeStub.calledOnce, true);
+      assert.strictEqual(deleteRecipeStub.calledWith(recipeId), true);
+      assert.strictEqual(response.status, 200);
+      assert.deepStrictEqual(response.body.message, "Recipe deleted successfully");
+    });
 
-		const deleteRecipeStub = sinon
-			.stub(RecipeService.prototype, "deleteRecipe")
-			.throws(new FirebaseError("Recipe does not exist", 404));
+    it("should return 404 if recipe not found", async () => {
+      const recipeId = "nonexistent-id";
 
-		const response = await request(app).delete(`/api/v1/recipes/${recipeId}`);
+      const deleteRecipeStub = sinon
+        .stub(RecipeService.prototype, "deleteRecipe")
+        .throws(new FirebaseError("Recipe does not exist", 404));
 
-		expect(deleteRecipeStub.calledOnce).toBe(true);
-		expect(response.status).toBe(404);
-		expect(response.body).toEqual({ error: "Recipe not found" });
-	});
+      const response = await request(app)
+      .delete(`/api/v1/recipes/${recipeId}`)
+      .set('Authorization', `Bearer ${validToken}`);
 
-	it("should handle server errors", async () => {
-		const recipeId = "1";
+      assert.strictEqual(deleteRecipeStub.calledOnce, true);
+      assert.strictEqual(response.status, 404);
+      assert.deepStrictEqual(response.body, { error: "Recipe not found" });
+    });
 
-		const deleteRecipeStub = sinon
-			.stub(RecipeService.prototype, "deleteRecipe")
-			.throws(new Error("Database Error"));
+    it("should handle server errors", async () => {
+      const recipeId = "1";
 
-		const response = await request(app).delete(`/api/v1/recipes/${recipeId}`);
+      const deleteRecipeStub = sinon
+        .stub(RecipeService.prototype, "deleteRecipe")
+        .throws(new Error("Database Error"));
 
-		expect(deleteRecipeStub.calledOnce).toBe(true);
-		expect(response.status).toBe(500);
-		expect(response.body).toEqual({ error: "Failed to delete recipe" });
-	});
+      const response = await request(app)
+      .delete(`/api/v1/recipes/${recipeId}`)
+      .set('Authorization', `Bearer ${validToken}`);
+
+      assert.strictEqual(deleteRecipeStub.calledOnce, true);
+      assert.strictEqual(response.status, 500);
+      assert.deepStrictEqual(response.body, { error: "Failed to delete recipe" });
+    });
+  });
 });

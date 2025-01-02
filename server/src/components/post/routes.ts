@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { authenticateJWT } from "../../middleware/authenticateJWT";
-import { validate } from "../../middleware/validator";
 import {
 	addPost,
 	deletePost,
 	getAllPosts,
 	getPostById,
 	updatePost,
-} from "./controller";
-import { PartialPostSchema, PostSchema } from "./model";
+} from "./controller.js";
+import { PartialPostSchema, PostSchema } from "./model.js";
+import { authenticateJWT } from "#middleware/authenticateJWT.js";
+import { validate } from "#middleware/validator.js";
 
 const router: Router = Router();
 

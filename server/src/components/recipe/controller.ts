@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
-import { FirebaseError } from "../../services/firestore-error";
-import type { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from "./model";
-import RecipeService from "./service";
+import type { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from "./model.js";
+import RecipeService from "./service.js";
+import { FirebaseError } from "#services/firestore-error.js";
 
 const recipeService = new RecipeService("recipes");
 

@@ -1,7 +1,6 @@
-import * as admin from "firebase-admin";
-import { applicationDefault } from "firebase-admin/app";
+import { applicationDefault, initializeApp } from "firebase-admin/app";
 
-export const app = admin.initializeApp({
+export const app = initializeApp({
 	credential: applicationDefault(),
 	databaseURL: "https://kwame-website.firebaseio.com",
 });

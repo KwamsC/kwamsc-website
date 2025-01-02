@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { authenticateJWT } from "../../middleware/authenticateJWT";
-import { validate } from "../../middleware/validator";
 import {
 	addRecipe,
 	deleteRecipe,
 	getAllRecipes,
 	getRecipeById,
 	updateRecipe,
-} from "./controller";
-import { PartialRecipeSchema, RecipeSchema } from "./model";
+} from "./controller.js";
+import { PartialRecipeSchema, RecipeSchema } from "./model.js";
+import { authenticateJWT } from "#middleware/authenticateJWT.js";
+import { validate } from "#middleware/validator.js";
 
 const router: Router = Router();
 

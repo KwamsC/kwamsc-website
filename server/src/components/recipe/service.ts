@@ -1,11 +1,11 @@
 import {
 	addEntityToFirestore,
+	updateEntityInFirestore,
+	getEntityFromFirestore,
 	deleteEntityFromFirestore,
 	getAllEntitiesFromFirestore,
-	getEntityFromFirestore,
-	updateEntityInFirestore,
-} from "../../services/firestore-service";
-import type { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from "./model";
+} from "#services/firestore-service.js";
+import type { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from "./model.js";
 
 class RecipeService {
 	private collectionName: string;

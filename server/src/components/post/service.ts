@@ -1,11 +1,11 @@
 import {
 	addEntityToFirestore,
+	updateEntityInFirestore,
+	getEntityFromFirestore,
 	deleteEntityFromFirestore,
 	getAllEntitiesFromFirestore,
-	getEntityFromFirestore,
-	updateEntityInFirestore,
-} from "../../services/firestore-service";
-import type { CreatePostDTO, PostDTO, UpdatePostDTO } from "./model";
+} from "#services/firestore-service.js";
+import type { CreatePostDTO, PostDTO, UpdatePostDTO } from "./model.js";
 
 class PostService {
 	private collectionName: string;

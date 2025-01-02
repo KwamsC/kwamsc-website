@@ -1,3 +1,10 @@
+import { db } from "#config/db.js";
+import { firestoreConverter } from "#helpers/firestore-converter.js";
+import type {
+	FirestoreCreateDto,
+	FirestoreUpdateDto,
+	FirestoreEntity,
+} from "#helpers/firestore.js";
 import {
 	collection,
 	deleteDoc,
@@ -10,14 +17,7 @@ import {
 	setDoc,
 	updateDoc,
 } from "firebase/firestore";
-import { db } from "../config/db";
-import type {
-	FirestoreCreateDto,
-	FirestoreEntity,
-	FirestoreUpdateDto,
-} from "../helpers/firestore";
-import { firestoreConverter } from "../helpers/firestore-converter";
-import { FirebaseError } from "./firestore-error";
+import { FirebaseError } from "./firestore-error.js";
 
 export const addEntityToFirestore = async (
 	collectionName: string,
