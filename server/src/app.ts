@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
-import postRoutes from "./api/posts/routes";
-import recipeRoutes from "./api/recipes/routes";
+import postRoutes from "./api/posts/routes.js";
+import recipeRoutes from "./api/recipes/routes.js";
 import fastifyHelmet from "@fastify/helmet";
 import fastifyRateLimit from "@fastify/rate-limit";
 import fastifySwagger from "@fastify/swagger";
@@ -21,68 +21,72 @@ const envToLogger = {
   test: false,
 };
 
-const app = fastify({ logger: envToLogger[process.env.NODE_ENV ?? "default"] ?? true });
+function build(opts = {}) {
+  const app = fastify({ logger: envToLogger[process.env.NODE_ENV ?? "default"] ?? true });
 
-const swaggerOptions = {
-  openapi: {
-    openapi: "3.0.0",
-    info: {
-      title: "KwamsC website",
-      description: "KwamsC API",
-      version: "0.1.0",
-    },
-    servers: [
-      {
-        url:
-          process.env.NODE_ENV === "production"
-            ? "https://api.kwamsc.com"
-            : "http://localhost:8080",
-        description:
-          process.env.NODE_ENV === "production" ? "Production server" : "Development server",
+  const swaggerOptions = {
+    openapi: {
+      openapi: "3.0.0",
+      info: {
+        title: "KwamsC website",
+        description: "KwamsC API",
+        version: "0.1.0",
       },
-    ],
-    tags: [
-      { name: "recipes", description: "recipes related end-points" },
-      { name: "posts", description: "posts related end-points" },
-    ],
-  },
-};
-
-const swaggerUiOptions = {
-  routePrefix: "/docs",
-  exposeRoute: true,
-};
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://kwamsc.com",
-  "https://kwamsc.com/",
-  "https://www.kwamsc.com/",
-];
-
-app.register(cors, { origin: allowedOrigins });
-app.register(fastifyRateLimit, {
-  max: 100,
-  timeWindow: "1 minute",
-});
-
-app.register(fastifySwagger, swaggerOptions);
-app.register(fastifySwaggerUi, swaggerUiOptions);
-
-app.register(fastifyHelmet, {
-  contentSecurityPolicy: {
-    directives: {
-      upgradeInsecureRequests: null,
+      servers: [
+        {
+          url:
+            process.env.NODE_ENV === "production"
+              ? "https://api.kwamsc.com"
+              : "http://127.0.0.1:8080",
+          description:
+            process.env.NODE_ENV === "production" ? "Production server" : "Development server",
+        },
+      ],
+      tags: [
+        { name: "recipes", description: "recipes related end-points" },
+        { name: "posts", description: "posts related end-points" },
+      ],
     },
-  },
-});
+  };
 
-// Routes
-app.register(postRoutes, { prefix: "/api/v1/posts" });
-app.register(recipeRoutes, { prefix: "/api/v1/recipes" });
+  const swaggerUiOptions = {
+    routePrefix: "/docs",
+    exposeRoute: true,
+  };
 
-app.get("/", async (_request, reply) => {
-  return reply.send("Starting Server");
-});
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "http://kwamsc.com",
+    "https://kwamsc.com/",
+    "https://www.kwamsc.com/",
+  ];
 
-export default app;
+  app.register(cors, { origin: allowedOrigins });
+  app.register(fastifyRateLimit, {
+    max: 100,
+    timeWindow: "1 minute",
+  });
+
+  app.register(fastifySwagger, swaggerOptions);
+  app.register(fastifySwaggerUi, swaggerUiOptions);
+
+  app.register(fastifyHelmet, {
+    contentSecurityPolicy: {
+      directives: {
+        upgradeInsecureRequests: null,
+      },
+    },
+  });
+
+  // Routes
+  app.register(postRoutes, { prefix: "/api/v1/posts" });
+  app.register(recipeRoutes, { prefix: "/api/v1/recipes" });
+
+  app.get("/", async (_request, reply) => {
+    return reply.send("Starting Server");
+  });
+
+  return app;
+}
+
+export default build;

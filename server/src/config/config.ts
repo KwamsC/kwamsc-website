@@ -1,5 +1,3 @@
-import assert from "assert";
-
 const {
   PORT,
   HOST,
@@ -11,11 +9,10 @@ const {
   STORAGE_BUCKET,
   MESSAGING_SENDER_ID,
   APP_ID,
-  ADDRESS,
 } = process.env;
 
-assert(PORT, "Port is required");
-assert(HOST, "Host is required");
+// assert(PORT, "Port is required");
+// assert(HOST, "Host is required");
 
 const firebaseConfig = {
   apiKey: API_KEY,
@@ -30,7 +27,6 @@ const firebaseConfig = {
 export default {
   host: HOST,
   port: PORT,
-  address: ADDRESS,
   url: HOST_URL,
   firebaseConfig,
 };

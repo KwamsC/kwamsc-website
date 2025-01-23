@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { authenticateJWT } from "../../middleware/authenticateJWT";
-import recipeController from "./controller";
-import { getSchema, getAllSchema, AddSchema, putSchema, deleteSchema } from "./schema";
+import recipeController from "./controller.js";
+import { getSchema, getAllSchema, AddSchema, putSchema, deleteSchema } from "./schema.js";
+import { authenticateJWT } from "#middleware/authenticateJWT.js";
 
 async function recipeRoutes(fastify: FastifyInstance) {
   fastify.get("/:id", { schema: { tags: ["recipes"], ...getSchema } }, recipeController.getEntity);

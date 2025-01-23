@@ -10,10 +10,10 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
-import { db } from "../config/db";
-import { Entity, CreateDto, UpdateDto } from "../config/firestore";
-import { firestoreConverter } from "./firebaseConverters";
-import { FirebaseError } from "./firestore-error";
+import { db } from "../config/db.js";
+import { Entity, CreateDto, UpdateDto } from "../config/firestore.js";
+import { firestoreConverter } from "./firebaseConverters.js";
+import { FirebaseError } from "./firestore-error.js";
 
 export const addEntityToFirestore = async (
   collectionName: string,

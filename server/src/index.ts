@@ -1,7 +1,9 @@
-import app from "./app";
-import config from "./config/config";
+import build from "./app.js";
+import config from "./config/config.js";
 
-app.listen({ host: config.address, port: parseInt(config.port, 10) }, (err) => {
+const app = build();
+
+app.listen({ host: config.host, port: Number(config.port) }, (err) => {
   if (err) {
     app.log.error(err);
     process.exit(1);
