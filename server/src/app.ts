@@ -1,38 +1,34 @@
-import { apiDocumentation } from "#docs/apidoc.js";
-import { setCache } from "#middleware/postCache.js";
+import { apiDocumentation } from "./docs/apidoc.ts";
+import { setCache } from "./middleware/postCache.ts";
 import cors, { type CorsOptions } from "cors";
 import express, {
-	type Application,
-	type Request,
-	type Response,
+  type Application,
+  type Request,
+  type Response,
 } from "express";
 import { rateLimit } from "express-rate-limit";
 
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
-import postRoutes from "#components/post/routes.js";
-import recipeRoutes from "#components/recipe/routes.js";
+import postRoutes from "./components/post/routes.ts";
+import recipeRoutes from "./components/recipe/routes.ts";
 
 const app: Application = express();
 app.set("trust proxy", 1);
 
 // CORS
-const allowedOrigins = [
-	"http://localhost:5173",
-	"http://kwamsc.com",
-	"https://kwamsc.com",
-];
+const allowedOrigins = ["http://localhost:5173"];
 const corsOptions: CorsOptions = {
-	origin: allowedOrigins,
+  origin: allowedOrigins,
 };
 
 app.use(cors(corsOptions));
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-	standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 });
 
 // Apply the rate limiting middleware to all requests.
@@ -49,7 +45,7 @@ app.use(helmet());
 
 app.get("/ip", (request, response) => response.send(request.ip));
 app.get("/", (req: Request, res: Response) => {
-	res.send("Starting Server");
+  res.send("Starting Server");
 });
 
 export default app;

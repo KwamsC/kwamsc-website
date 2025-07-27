@@ -1,22 +1,22 @@
 import { Router } from "express";
 import {
-	addPost,
-	deletePost,
-	getAllPosts,
-	getPostById,
-	updatePost,
-} from "./controller.js";
-import { PartialPostSchema, PostSchema } from "./model.js";
-import { authenticateJWT } from "#middleware/authenticateJWT.js";
-import { validate } from "#middleware/validator.js";
+  addPost,
+  deletePost,
+  getAllPosts,
+  getPostById,
+  updatePost,
+} from "./controller.ts";
+import { PartialPostSchema, PostSchema } from "./model.ts";
+import { authenticateJWT } from "../../middleware/authenticateJWT.ts";
+import { validate } from "../../middleware/validator.ts";
 
 const router: Router = Router();
 
 router.post("/posts", [authenticateJWT, validate(PostSchema)], addPost);
 router.put(
-	"/posts/:id",
-	[authenticateJWT, validate(PartialPostSchema)],
-	updatePost,
+  "/posts/:id",
+  [authenticateJWT, validate(PartialPostSchema)],
+  updatePost
 );
 router.get("/posts/:id", getPostById);
 router.get("/posts", getAllPosts);

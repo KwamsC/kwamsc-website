@@ -1,5 +1,5 @@
 # Base stage
-FROM node:22.12-alpine3.21 as base
+FROM node:24.4.1-alpine3.21 AS base
 
 WORKDIR /app
 
@@ -12,24 +12,21 @@ RUN npm ci && npm cache clean --force
 
 COPY . .
 
-# Build stage
-FROM base as build
-
-RUN npm run build
-
 # Production stage
-FROM node:22.12-alpine3.21 as production
+FROM node:24.4.1-alpine3.21 AS production
 
 WORKDIR /app
 
 ENV PORT 8080
 ENV HOST 0.0.0.0
 
-# Copy only the necessary files from the build stage
+# Copy package files and firebase config
 COPY package*.json ./
 COPY firebase.json ./
 
 RUN npm ci --only=production && npm cache clean --force
-COPY --from=build /app/build ./build
 
-CMD ["node", "build/server.js"]
+# Copy source files directly (no build needed)
+COPY src ./src
+
+CMD ["node", "--experimental-strip-types", "src/server.ts"]
