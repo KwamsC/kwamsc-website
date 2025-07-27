@@ -1,12 +1,12 @@
-import { mock } from 'node:test';
+import { mock } from "node:test";
 import { getAuth } from "firebase-admin/auth";
-import { app } from '#config/firebase-config.ts';
+import { app } from "#config/firebase-config.ts";
 
 export const mockSuccessfulAuth = () => {
   // Mock successful authentication
-  mock.method(getAuth(app), 'verifyIdToken', async () => ({
-    uid: 'test-user-id',
-    email: 'test@example.com'
+  mock.method(getAuth(app), "verifyIdToken", async () => ({
+    uid: "test-user-id",
+    email: "test@example.com",
   }));
 };
 

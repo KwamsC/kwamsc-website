@@ -1,19 +1,19 @@
-import { mock, afterEach, describe, it } from 'node:test';
-import assert from 'node:assert';
+import { mock, afterEach, describe, it } from "node:test";
+import assert from "node:assert";
 import sinon from "sinon";
 import request from "supertest";
-import app from "#app.js";
+import app from "../src/app.ts";
 import type {
-	CreateRecipeDTO,
-	RecipeDTO,
-	UpdateRecipeDTO,
-} from "#components/recipe/model.js";
-import RecipeService from "#components/recipe/service.js";
-import { FirebaseError } from "#services/firestore-error.js";
-import { mockSuccessfulAuth } from '../__mock__/firebaseAuth.js';
+  CreateRecipeDTO,
+  RecipeDTO,
+  UpdateRecipeDTO,
+} from "../src/components/recipe/model.ts";
+import RecipeService from "../src/components/recipe/service.ts";
+import { FirebaseError } from "../src/services/firestore-error.ts";
+import { mockSuccessfulAuth } from "../__mock__/firebaseAuth.ts";
 
 describe("Recipe API Endpoints", () => {
-  const validToken = 'valid-test-token';
+  const validToken = "valid-test-token";
 
   afterEach(() => {
     sinon.restore();
@@ -21,7 +21,7 @@ describe("Recipe API Endpoints", () => {
   });
 
   describe("POST /api/v1/recipes", () => {
-    mockSuccessfulAuth()
+    mockSuccessfulAuth();
 
     it("should create a new recipe", async () => {
       const recipeData: CreateRecipeDTO = {
@@ -53,12 +53,20 @@ describe("Recipe API Endpoints", () => {
 
       const response = await request(app)
         .post("/api/v1/recipes")
-        .set('Authorization', `Bearer ${validToken}`)
+        .set("Authorization", `Bearer ${validToken}`)
         .send(recipeData);
 
-      assert.strictEqual(createRecipeStub.calledOnce, true, "createRecipeStub was not called once");
+      assert.strictEqual(
+        createRecipeStub.calledOnce,
+        true,
+        "createRecipeStub was not called once"
+      );
       assert.strictEqual(response.status, 201, "Status code is not 201");
-      assert.strictEqual(response.body.message, "Recipe created successfully", "Message is incorrect");
+      assert.strictEqual(
+        response.body.message,
+        "Recipe created successfully",
+        "Message is incorrect"
+      );
     });
 
     it("should handle validation errors", async () => {
@@ -86,7 +94,7 @@ describe("Recipe API Endpoints", () => {
 
       const response = await request(app)
         .post("/api/v1/recipes")
-        .set('Authorization', `Bearer ${validToken}`)
+        .set("Authorization", `Bearer ${validToken}`)
         .send(recipeData);
 
       assert.strictEqual(response.status, 409);
@@ -126,17 +134,19 @@ describe("Recipe API Endpoints", () => {
 
       const response = await request(app)
         .post("/api/v1/recipes")
-        .set('Authorization', `Bearer ${validToken}`)
+        .set("Authorization", `Bearer ${validToken}`)
         .send(recipeData);
-      
+
       assert.strictEqual(response.status, 500);
-      assert.deepStrictEqual(response.body, { error: "Failed to create recipe" });
+      assert.deepStrictEqual(response.body, {
+        error: "Failed to create recipe",
+      });
       assert.strictEqual(createRecipeStub.calledOnce, true);
     });
   });
 
   describe("PUT /api/v1/recipes/:id", () => {
-    mockSuccessfulAuth()
+    mockSuccessfulAuth();
 
     it("should update an existing recipe", async () => {
       const recipeId = "1";
@@ -150,13 +160,19 @@ describe("Recipe API Endpoints", () => {
 
       const response = await request(app)
         .put(`/api/v1/recipes/${recipeId}`)
-        .set('Authorization', `Bearer ${validToken}`)
+        .set("Authorization", `Bearer ${validToken}`)
         .send(recipeData);
-      
+
       assert.strictEqual(updateRecipeStub.calledOnce, true);
-      assert.strictEqual(updateRecipeStub.calledWith(recipeId, recipeData), true);
+      assert.strictEqual(
+        updateRecipeStub.calledWith(recipeId, recipeData),
+        true
+      );
       assert.strictEqual(response.status, 200);
-      assert.deepStrictEqual(response.body.message, "Recipe updated successfully");
+      assert.deepStrictEqual(
+        response.body.message,
+        "Recipe updated successfully"
+      );
     });
 
     it("should handle server errors", async () => {
@@ -171,11 +187,13 @@ describe("Recipe API Endpoints", () => {
 
       const response = await request(app)
         .put(`/api/v1/recipes/${recipeId}`)
-        .set('Authorization', `Bearer ${validToken}`)
+        .set("Authorization", `Bearer ${validToken}`)
         .send(recipeData);
 
       assert.strictEqual(response.status, 500);
-      assert.deepStrictEqual(response.body, { error: "Failed to update recipe" });
+      assert.deepStrictEqual(response.body, {
+        error: "Failed to update recipe",
+      });
       assert.strictEqual(updateRecipeStub.calledOnce, true);
     });
   });
@@ -234,7 +252,9 @@ describe("Recipe API Endpoints", () => {
         },
       ];
 
-      sinon.stub(RecipeService.prototype, "getAllRecipes").resolves(mockRecipes);
+      sinon
+        .stub(RecipeService.prototype, "getAllRecipes")
+        .resolves(mockRecipes);
 
       const response = await request(app).get("/api/v1/recipes");
 
@@ -300,7 +320,9 @@ describe("Recipe API Endpoints", () => {
       const response = await request(app).get("/api/v1/recipes/1");
 
       assert.strictEqual(response.status, 404);
-      assert.deepStrictEqual(response.body, { message: "Recipe with given ID not found" });
+      assert.deepStrictEqual(response.body, {
+        message: "Recipe with given ID not found",
+      });
     });
 
     it("should handle server errors", async () => {
@@ -316,7 +338,7 @@ describe("Recipe API Endpoints", () => {
   });
 
   describe("DELETE /api/v1/recipes/:id", () => {
-    mockSuccessfulAuth()
+    mockSuccessfulAuth();
 
     it("should delete a recipe", async () => {
       const recipeId = "1";
@@ -326,13 +348,16 @@ describe("Recipe API Endpoints", () => {
         .resolves();
 
       const response = await request(app)
-      .delete(`/api/v1/recipes/${recipeId}`)
-      .set('Authorization', `Bearer ${validToken}`);
+        .delete(`/api/v1/recipes/${recipeId}`)
+        .set("Authorization", `Bearer ${validToken}`);
 
       assert.strictEqual(deleteRecipeStub.calledOnce, true);
       assert.strictEqual(deleteRecipeStub.calledWith(recipeId), true);
       assert.strictEqual(response.status, 200);
-      assert.deepStrictEqual(response.body.message, "Recipe deleted successfully");
+      assert.deepStrictEqual(
+        response.body.message,
+        "Recipe deleted successfully"
+      );
     });
 
     it("should return 404 if recipe not found", async () => {
@@ -343,8 +368,8 @@ describe("Recipe API Endpoints", () => {
         .throws(new FirebaseError("Recipe does not exist", 404));
 
       const response = await request(app)
-      .delete(`/api/v1/recipes/${recipeId}`)
-      .set('Authorization', `Bearer ${validToken}`);
+        .delete(`/api/v1/recipes/${recipeId}`)
+        .set("Authorization", `Bearer ${validToken}`);
 
       assert.strictEqual(deleteRecipeStub.calledOnce, true);
       assert.strictEqual(response.status, 404);
@@ -359,12 +384,14 @@ describe("Recipe API Endpoints", () => {
         .throws(new Error("Database Error"));
 
       const response = await request(app)
-      .delete(`/api/v1/recipes/${recipeId}`)
-      .set('Authorization', `Bearer ${validToken}`);
+        .delete(`/api/v1/recipes/${recipeId}`)
+        .set("Authorization", `Bearer ${validToken}`);
 
       assert.strictEqual(deleteRecipeStub.calledOnce, true);
       assert.strictEqual(response.status, 500);
-      assert.deepStrictEqual(response.body, { error: "Failed to delete recipe" });
+      assert.deepStrictEqual(response.body, {
+        error: "Failed to delete recipe",
+      });
     });
   });
 });
