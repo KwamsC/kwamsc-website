@@ -1,7 +1,7 @@
 services:
   kwamsc-api:
     depends_on:
-      - firebase-tools  #adjust this based on the service name
+      - firebase-tools #adjust this based on the service name
     volumes:
       - ./:/app
       - /app/node_modules
@@ -15,12 +15,12 @@ services:
     image: andreysenov/firebase-tools
     container_name: firebase-emulator
     ports:
-      - "4000:4000"  # Adjust the port as needed for your Firebase emulator setup
-      - "4400:4400"  # Adjust the port as needed for your Firebase emulator setup
-      - "4500:4500"  # Adjust the port as needed for your Firebase emulator setup
-      - "5002:5002"  # Adjust the port as needed for your Firebase emulator setup
-      - "8081:8081"  # Adjust the port as needed for your Firebase emulator setup
-      - "9099:9099"  # Adjust the port as needed for your Firebase emulator setup
+      - "4000:4000" # Adjust the port as needed for your Firebase emulator setup
+      - "4400:4400" # Adjust the port as needed for your Firebase emulator setup
+      - "4500:4500" # Adjust the port as needed for your Firebase emulator setup
+      - "5002:5002" # Adjust the port as needed for your Firebase emulator setup
+      - "8081:8081" # Adjust the port as needed for your Firebase emulator setup
+      - "9099:9099" # Adjust the port as needed for your Firebase emulator setup
     volumes:
       - ./:/home/node
     command: npm run firebase:emulator-start
