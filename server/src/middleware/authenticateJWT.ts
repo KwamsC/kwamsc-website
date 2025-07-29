@@ -1,5 +1,5 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { app } from "#config/firebase-config.js";
+import type { FastifyRequest, FastifyReply } from "fastify";
+import { app } from "../config/firebase-config.ts";
 
 export const authenticateJWT = async (req: FastifyRequest, reply: FastifyReply) => {
   const authHeader = req.headers["authorization"];

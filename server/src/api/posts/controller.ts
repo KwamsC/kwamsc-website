@@ -1,6 +1,6 @@
-import Controller from "#controllers/controller.js";
-import { CreatePostDTO, Post, UpdatePostDTO } from "./model.js";
+import Controller from "../../controllers/controller.ts";
+import type { CreatePostDTO, PostDTO, UpdatePostDTO } from "./model.ts";
 
-const postController = new Controller<Post, CreatePostDTO, UpdatePostDTO>("posts");
+const postController = new Controller<PostDTO, CreatePostDTO, UpdatePostDTO>("posts");
 
 export default postController;

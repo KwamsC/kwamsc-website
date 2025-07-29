@@ -3,13 +3,13 @@ interface Ingredient {
   quantity: string; // Quantity of the ingredient (e.g., "1 cup", "2 tablespoons")
 }
 
-enum DifficultyLevel {
-  Easy = "Easy",
-  Medium = "Medium",
-  Hard = "Hard",
-}
+// enum DifficultyLevel {
+//   Easy = "Easy",
+//   Medium = "Medium",
+//   Hard = "Hard",
+// }
 
-export interface Recipe {
+export interface RecipeDTO {
   id: string; // Unique identifier for the recipe
   title: string; // Title of the recipe
   author: string; // Author of the recipe
@@ -20,7 +20,7 @@ export interface Recipe {
   prepTime: string; // Preparation time (e.g., "30 minutes")
   cookTime: string; // Cooking time (e.g., "1 hour")
   totalTime: string; // Total time (prepTime + cookTime)
-  difficulty: DifficultyLevel; // Difficulty level of the recipe
+  difficulty: string; // Difficulty level of the recipe
   cuisine: string; // Cuisine type (e.g., "Italian", "Mexican")
   mealType: string; // Meal type (e.g., "Breakfast", "Dinner")
   published: boolean; // Whether the recipe is published
@@ -40,7 +40,7 @@ export interface CreateRecipeDTO {
   prepTime: string; // Preparation time (e.g., "30 minutes")
   cookTime: string; // Cooking time (e.g., "1 hour")
   totalTime: string; // Total time (prepTime + cookTime)
-  difficulty: DifficultyLevel; // Difficulty level of the recipe
+  difficulty: string; // Difficulty level of the recipe
   cuisine: string; // Cuisine type (e.g., "Italian", "Mexican")
   mealType: string; // Meal type (e.g., "Breakfast", "Dinner")
   published: boolean; // Whether the recipe is published

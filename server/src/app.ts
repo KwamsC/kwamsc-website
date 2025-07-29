@@ -1,13 +1,13 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
-import postRoutes from "./api/posts/routes.js";
-import recipeRoutes from "./api/recipes/routes.js";
+import postRoutes from "./api/posts/routes.ts";
+import recipeRoutes from "./api/recipes/routes.ts";
 import fastifyHelmet from "@fastify/helmet";
 import fastifyRateLimit from "@fastify/rate-limit";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 
-const envToLogger = {
+const envToLogger: Record<"development" | "production" | "test", any> = {
   development: {
     transport: {
       target: "pino-pretty",
@@ -22,7 +22,8 @@ const envToLogger = {
 };
 
 function build(opts = {}) {
-  const app = fastify({ logger: envToLogger[process.env.NODE_ENV ?? "default"] ?? true });
+  const nodeEnv = (process.env.NODE_ENV as "development" | "production" | "test") ?? "development";
+  const app = fastify({ logger: envToLogger[nodeEnv] ?? true });
 
   const swaggerOptions = {
     openapi: {

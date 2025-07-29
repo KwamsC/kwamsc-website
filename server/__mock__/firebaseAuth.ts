@@ -1,6 +1,6 @@
 import { mock } from "node:test";
 import { getAuth } from "firebase-admin/auth";
-import { app } from "#config/firebase-config.js";
+import { app } from "../src/config/firebase-config.ts";
 
 export const setupAuthMock = {
   success: () => {

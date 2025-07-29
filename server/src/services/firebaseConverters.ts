@@ -1,5 +1,5 @@
-import { Entity } from "#config/firestore.js";
-import { FirestoreDataConverter, QueryDocumentSnapshot } from "firebase/firestore";
+import type { Entity } from "../config/firestore.ts";
+import type { FirestoreDataConverter, QueryDocumentSnapshot } from "firebase/firestore";
 
 export const firestoreConverter: FirestoreDataConverter<Entity> = {
   toFirestore: (entity: Entity) => entity,

@@ -1,6 +1,6 @@
-import Controller from "#controllers/controller.js";
-import { CreateRecipeDTO, Recipe, UpdateRecipeDTO } from "./model.js";
+import Controller from "../../controllers/controller.ts";
+import type { CreateRecipeDTO, RecipeDTO, UpdateRecipeDTO } from "./model.ts";
 
-const recipeController = new Controller<Recipe, CreateRecipeDTO, UpdateRecipeDTO>("recipes");
+const recipeController = new Controller<RecipeDTO, CreateRecipeDTO, UpdateRecipeDTO>("recipes");
 
 export default recipeController;

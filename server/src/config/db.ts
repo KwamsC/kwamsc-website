@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { Firestore, connectFirestoreEmulator, getFirestore } from "firebase/firestore";
-import config from "./config.js";
+import config from "./config.ts";
 
 const app = initializeApp(config.firebaseConfig);
 let db: Firestore;

@@ -40,7 +40,7 @@ const baseRecipeSchema = {
     prepTime: { type: "string" },
     cookTime: { type: "string" },
     totalTime: { type: "string" },
-    difficulty: { type: "string", enum: ["Easy", "Medium", "Hard"] },
+    difficulty: { type: "string" },
     cuisine: { type: "string" },
     mealType: { type: "string" },
     published: { type: "boolean" },

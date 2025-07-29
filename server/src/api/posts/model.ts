@@ -1,4 +1,4 @@
-export interface Post {
+export interface PostDTO {
   id: string; // Unique identifier for the blog post
   title: string; // Title of the blog post
   content: string; // Main content of the blog post (HTML or Markdown)

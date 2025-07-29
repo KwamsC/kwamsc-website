@@ -1,25 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
+    "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator", "ESNext.Promise"],
+    "module": "nodenext",
+    "target": "es2024",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "strict": true,
-    "outDir": "build",
-    "baseUrl": "src",
-    "rootDir": "src",
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false,
-    "resolveJsonModule": true,
-    "removeComments": true,
-    "newLine": "lf",
-    "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true,
-    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "lib": ["ESNext"],
-    "sourceMap": true
+    "moduleResolution": "node16"
   },
   "include": ["src/**/*.ts"]
 }
