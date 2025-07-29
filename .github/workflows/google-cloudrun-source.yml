@@ -79,6 +79,8 @@ jobs:
         working-directory: ./server # Adjust this path to your actual test directory
       - run: npm test
         working-directory: ./server # Adjust this path to your actual test directory
+        env:
+          NODE_ENV: test
 
       - name: Google Auth
         id: auth
