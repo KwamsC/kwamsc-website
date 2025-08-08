@@ -1,8 +1,8 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
-// import { VueFire, VueFireAuth } from 'vuefire'
-// import { firebaseApp } from './config/firebaseConfig'
+// import { initializeApp } from 'firebase/app'
+// import { firebaseConfig } from './config/firebaseConfig'
 
 import { createPinia } from 'pinia'
 
@@ -19,6 +19,7 @@ const app = createApp(App)
 //     VueFireAuth()
 //   ]
 // })
+// initializeApp(firebaseConfig)
 app.use(createPinia())
 app.use(router)
 

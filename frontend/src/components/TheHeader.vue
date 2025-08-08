@@ -1,34 +1,254 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { Button } from '@/components/ui/button'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import kwamsc from '@/assets/img/kwamsc.svg'
+import { gsap } from 'gsap'
+import { navigation, socialLinks } from '@/config/navigation'
+import { onMounted, onBeforeUnmount, useTemplateRef, ref, computed } from 'vue'
+import MenuButton from './MenuButton.vue'
 
-const navigation = [
-  // { name: 'Blog', href: '/blog' },
-  { name: 'Recipes', href: '/recipes' },
-  // { name: 'About', href: '/about' },
-]
+// State
+const menuIsOpen = ref(false)
+const showNav = ref(true)
+const isMobile = ref(window.innerWidth < 768)
+
+// Refs
+const headerRef = useTemplateRef('header')
+const navRef = useTemplateRef('nav')
+const logoRef = useTemplateRef('logo')
+const menuOverlayRef = useTemplateRef('menu-overlay')
+const menuLinksRef = useTemplateRef('menu-links')
+const navItemsRef = useTemplateRef('nav-items')
+const socialIconsRef = useTemplateRef('social-icons')
+
+// Router
+const route = useRoute()
+const router = useRouter()
+const isHome = computed(() => route.name === 'home')
+
+// Timelines
+let menuTimeline: gsap.core.Timeline
+
+// Utility: debounce
+const debounce = (fn: () => void, delay = 50) => {
+  let timeout: number
+  return () => {
+    clearTimeout(timeout)
+    timeout = window.setTimeout(fn, delay)
+  }
+}
+
+// Navigation visibility
+const updateNavVisibility = (shouldShow: boolean) => {
+  if (isMobile.value || showNav.value === shouldShow) return
+  showNav.value = shouldShow
+  gsap.to(navRef.value, {
+    opacity: shouldShow ? 1 : 0,
+    duration: 0.2,
+    overwrite: 'auto',
+  })
+}
+
+// Scroll handler
+const handleScroll = () => {
+  updateNavVisibility(isHome.value ? window.scrollY > 20 : true)
+}
+
+// Menu handling
+const setMenuState = (open: boolean) => {
+  if (menuIsOpen.value === open) return
+  menuIsOpen.value = open
+  document.body.style.overflow = open ? 'hidden' : ''
+  if (open) menuTimeline.play()
+  else menuTimeline.reverse()
+}
+
+const toggleMenu = () => setMenuState(!menuIsOpen.value)
+
+// Resize handler
+const handleResize = debounce(() => {
+  const wasMobile = isMobile.value
+  isMobile.value = window.innerWidth < 768
+
+  if (isMobile.value) {
+    showNav.value = true
+    gsap.set(navRef.value, { opacity: 1, clearProps: 'visibility' })
+  } else if (wasMobile && isHome.value) {
+    const shouldShow = window.scrollY > 20
+    showNav.value = shouldShow
+    gsap.set(navRef.value, { opacity: shouldShow ? 1 : 0 })
+  }
+}, 100)
+
+onMounted(() => {
+  // gsap.context ensures animations are scoped & auto-killed
+  const ctx = gsap.context(() => {
+    // Initial nav state
+    if (isHome.value && !isMobile.value) {
+      showNav.value = window.scrollY > 20
+    }
+
+    // Header animation
+    gsap
+      .timeline({ defaults: { ease: 'power2.out' } })
+      .from(logoRef.value, { y: -50, opacity: 0, duration: 0.6 })
+      .from(
+        navItemsRef.value?.children || [],
+        { y: -20, opacity: 0, duration: 0.4, stagger: 0.1 },
+        '-=0.2',
+      )
+
+    // Menu animation
+    gsap.set(menuLinksRef.value?.children || [], { y: 75 })
+    gsap.set(socialIconsRef.value?.children || [], { y: 75, opacity: 0 }) // NEW
+    menuTimeline = gsap
+      .timeline({ paused: true })
+      .to(menuOverlayRef.value, {
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+        duration: 0.5,
+        ease: 'power4.inOut',
+      })
+      .to(
+        menuLinksRef.value?.children || [],
+        {
+          y: 0,
+          duration: 1,
+          stagger: 0.1,
+          ease: 'power4.inOut',
+        },
+        '-=0.75',
+      )
+      .to(
+        socialIconsRef.value?.children || [],
+        {
+          y: 0,
+          duration: 0.75,
+          stagger: 0.1,
+          opacity: 1,
+          ease: 'power4.inOut',
+        },
+        '<',
+      )
+  }, headerRef) // scoped to header
+
+  // Event listeners
+  const debouncedScroll = debounce(handleScroll, 50)
+  window.addEventListener('resize', handleResize, { passive: true })
+  window.addEventListener('scroll', debouncedScroll, { passive: true })
+
+  // Route change handling
+  router.afterEach(() => {
+    updateNavVisibility(isHome.value ? window.scrollY > 20 : true)
+    setMenuState(false)
+  })
+
+  onBeforeUnmount(() => {
+    setMenuState(false)
+    document.body.style.overflow = ''
+    window.removeEventListener('resize', handleResize)
+    window.removeEventListener('scroll', debouncedScroll)
+    ctx.revert() // kills all GSAP animations in this context
+  })
+})
 </script>
 
 <template>
-  <header class="container inset-x-0 top-0 z-50">
-    <nav class="flex items-center justify-between py-8">
-      <router-link to="/" class="">
-        <img :src="kwamsc" width="64px" alt="Vite logo" />
+  <!-- Header -->
+  <header ref="header" class="pointer-events-none fixed top-0 z-50 w-full">
+    <nav
+      ref="nav"
+      class="container flex items-center justify-between py-8"
+      :class="{ visible: showNav, invisible: !showNav }"
+    >
+      <router-link to="/" class="pointer-events-initial" ref="logo">
+        <img :src="kwamsc" width="64" alt="KwamsC logo" />
       </router-link>
-      <div class="flex lg:flex-1"></div>
-      <div class="rounded-full px-4 py-1 lg:flex lg:gap-x-12">
-        <router-link
-          v-for="item in navigation"
-          :key="item.name"
-          :to="item.href"
-          class="text-sm font-semibold leading-6 text-gray-900"
-        >
-          <Button variant="link">
-            {{ item.name }}
-          </Button>
-        </router-link>
-      </div>
+      <MenuButton
+        :is-open="menuIsOpen"
+        @toggle="toggleMenu"
+        class="pointer-events-initial"
+      />
     </nav>
   </header>
+
+  <!-- Menu Overlay -->
+  <div
+    ref="menu-overlay"
+    class="fixed inset-0 z-40 bg-stone-200"
+    :style="{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' }"
+  >
+    <div
+      class="container flex h-full flex-col items-center justify-center py-32"
+    >
+      <div
+        class="flex flex-col items-start justify-between gap-24 md:flex-row-reverse md:items-end md:justify-end"
+      >
+        <div ref="social-icons" class="flex gap-4 pb-4 will-change-transform">
+          <a
+            v-for="(icon, idx) in socialLinks"
+            :key="idx"
+            class="group relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-[#CCCCCC] transition-all duration-700 will-change-transform"
+            :href="icon.href"
+            :title="icon.title"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div
+              class="absolute inset-0 scale-0 rounded-full bg-black transition-transform duration-700 ease-in-out group-hover:scale-100"
+            ></div>
+            <component
+              :is="icon.icon"
+              class="relative z-10 h-5 w-5 text-black transition-colors duration-700 ease-in-out group-hover:text-white"
+            />
+          </a>
+        </div>
+        <div
+          ref="menu-links"
+          class="space-y-4 [&:hover>a:not(:hover)]:opacity-50"
+        >
+          <router-link
+            v-for="item in navigation"
+            :key="item.name"
+            :to="item.href"
+            class="group block cursor-pointer overflow-hidden py-2 text-6xl font-bold transition-opacity duration-300 md:text-8xl"
+            @click="toggleMenu"
+          >
+            <span class="relative">
+              {{ item.name }}
+              <span
+                class="absolute bottom-0 left-0 h-1 w-0 bg-current transition-all duration-300 ease-out group-hover:w-full"
+              />
+            </span>
+          </router-link>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <div
+    ref="nav-items"
+    class="pointer-events-none absolute top-8 z-30 ml-[50%] px-3 md:pointer-events-auto"
+  >
+    <div
+      class="hidden md:flex md:flex-col [&:hover>div:not(:hover)]:opacity-50"
+    >
+      <div
+        v-for="item in navigation"
+        :key="item.name"
+        class="transition-opacity duration-300 ease-in-out"
+      >
+        <router-link
+          :to="item.href"
+          class="group block w-fit cursor-pointer overflow-hidden py-1 text-2xl font-bold leading-5 text-gray-900"
+        >
+          <span class="relative">
+            {{ item.name }}
+            <span
+              class="absolute bottom-0 left-0 h-[2px] w-0 bg-current transition-all duration-300 ease-out group-hover:w-full"
+            />
+          </span>
+        </router-link>
+      </div>
+    </div>
+  </div>
 </template>

@@ -24,7 +24,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section class="container">
+  <section class="container mt-40">
     <div class="relative pb-20 pt-9">
       <AnimatedTitle title="Explore my selection of curated recipes" />
     </div>
