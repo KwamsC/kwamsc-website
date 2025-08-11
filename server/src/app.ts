@@ -41,6 +41,11 @@ app.use(express.json({ limit: "300kb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(setCache);
 
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+  res.send("User-agent: *\nDisallow: /");
+});
+
 // Routes
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(apiDocumentation));
 app.use("/api/v1", postRoutes);
