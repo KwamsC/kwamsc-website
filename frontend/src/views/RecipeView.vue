@@ -33,19 +33,19 @@ onMounted(async () => {
 
 <template>
   <section v-if="!state.isLoading" class="container">
-    <div class="py-8 relative">
+    <div class="relative py-8">
       <h1
-        class="text-4xl absolute z-10 top-1/2 -left-3.5 font-bold tracking-tight text-zinc-800 sm:text-6xl dark:text-zinc-100"
+        class="absolute -left-3.5 top-1/2 z-10 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-6xl"
       >
         <span class="bg-white">{{ state.recipe.title }}</span>
       </h1>
-      <div class="overflow-hidden md:h-96 rounded-xl sm:rounded-2xl">
-        <img src="../assets/spaghetti-bake.jpg" />
+      <div class="overflow-hidden rounded-xl sm:rounded-2xl md:h-96">
+        <img src="../assets/spaghetti-bake.webp" />
       </div>
     </div>
     <div id="preparation" class="grid grid-cols-3 gap-4 py-8">
-      <div class="instructions col-span-3 md:col-span-2 py-6">
-        <h3 class="text-3xl font-serif font-bold mb-4">Instructions</h3>
+      <div class="instructions col-span-3 py-6 md:col-span-2">
+        <h3 class="mb-4 font-serif text-3xl font-bold">Instructions</h3>
         <ol
           v-for="(item, index) in state.recipe.instructions"
           :key="index"
@@ -57,9 +57,9 @@ onMounted(async () => {
         </ol>
       </div>
       <div
-        class="Ingredients col-span-3 md:col-span-1 bg-orange-100 p-6 rounded-xl"
+        class="Ingredients col-span-3 rounded-xl bg-orange-100 p-6 md:col-span-1"
       >
-        <h3 class="text-3xl font-serif font-bold mb-4">Ingredients</h3>
+        <h3 class="mb-4 font-serif text-3xl font-bold">Ingredients</h3>
         <ol
           v-for="(item, index) in state.recipe.ingredients"
           :key="index"

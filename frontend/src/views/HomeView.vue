@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import img from '@/assets/img/IMG_5661.jpg'
+import img from '@/assets/img/IMG_5661.webp'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ref, onMounted } from 'vue'
@@ -143,7 +143,7 @@ onMounted(() => {
         <div class="overflow-hidden">
           <h1
             ref="nameInnerRef"
-            class="text-5xl font-bold uppercase leading-none tracking-tighter md:text-[12vw]"
+            class="text-5xl font-bold uppercase leading-none tracking-tighter md:text-[10vw]"
           >
             Kwame <span class="font-extrabold">Carr</span>
           </h1>

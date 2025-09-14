@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import kwamsc from '@/assets/img/kwamsc.svg'
-import { gsap } from 'gsap'
+import gsap from 'gsap'
 import { navigation, socialLinks } from '@/config/navigation'
 import { onMounted, onBeforeUnmount, useTemplateRef, ref, computed } from 'vue'
 import MenuButton from './MenuButton.vue'
+import { debounce } from '@/utils/debounce'
 
 // State
 const menuIsOpen = ref(false)
@@ -14,10 +15,8 @@ const isMobile = ref(window.innerWidth < 768)
 // Refs
 const headerRef = useTemplateRef('header')
 const navRef = useTemplateRef('nav')
-const logoRef = useTemplateRef('logo')
 const menuOverlayRef = useTemplateRef('menu-overlay')
 const menuLinksRef = useTemplateRef('menu-links')
-const navItemsRef = useTemplateRef('nav-items')
 const socialIconsRef = useTemplateRef('social-icons')
 
 // Router
@@ -27,15 +26,6 @@ const isHome = computed(() => route.name === 'home')
 
 // Timelines
 let menuTimeline: gsap.core.Timeline
-
-// Utility: debounce
-const debounce = (fn: () => void, delay = 50) => {
-  let timeout: number
-  return () => {
-    clearTimeout(timeout)
-    timeout = window.setTimeout(fn, delay)
-  }
-}
 
 // Navigation visibility
 const updateNavVisibility = (shouldShow: boolean) => {
@@ -80,26 +70,22 @@ const handleResize = debounce(() => {
 }, 100)
 
 onMounted(() => {
-  // gsap.context ensures animations are scoped & auto-killed
+  if (!headerRef.value) return
+
   const ctx = gsap.context(() => {
     // Initial nav state
     if (isHome.value && !isMobile.value) {
       showNav.value = window.scrollY > 20
     }
 
-    // Header animation
-    gsap
-      .timeline({ defaults: { ease: 'power2.out' } })
-      .from(logoRef.value, { y: -50, opacity: 0, duration: 0.6 })
-      .from(
-        navItemsRef.value?.children || [],
-        { y: -20, opacity: 0, duration: 0.4, stagger: 0.1 },
-        '-=0.2',
-      )
-
     // Menu animation
-    gsap.set(menuLinksRef.value?.children || [], { y: 75 })
-    gsap.set(socialIconsRef.value?.children || [], { y: 75, opacity: 0 }) // NEW
+    if (menuLinksRef.value?.children?.length) {
+      gsap.set(menuLinksRef.value.children, { y: 75 })
+    }
+    if (socialIconsRef.value?.children?.length) {
+      gsap.set(socialIconsRef.value.children, { y: 75, opacity: 0 })
+    }
+
     menuTimeline = gsap
       .timeline({ paused: true })
       .to(menuOverlayRef.value, {
@@ -128,7 +114,7 @@ onMounted(() => {
         },
         '<',
       )
-  }, headerRef) // scoped to header
+  }, headerRef.value!) // scoped to header
 
   // Event listeners
   const debouncedScroll = debounce(handleScroll, 50)
