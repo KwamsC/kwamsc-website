@@ -2,7 +2,7 @@ import { z } from "zod";
 export const RecipeSchema = z.object({
 	title: z
 		.string({
-			required_error: "title is required",
+			error: "title is required",
 		})
 		.min(1, "title cannot be empty"),
 	ingredients: z.array(
