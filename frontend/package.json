@@ -11,6 +11,7 @@
     "test:e2e": "playwright test",
     "build-only": "vite build",
     "build:prod": "vite build --mode production",
+    "firebase:deploy-hosting": "firebase deploy --only hosting",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"

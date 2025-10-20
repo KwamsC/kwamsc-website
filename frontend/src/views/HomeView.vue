@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import img from '@/assets/img/IMG_5661.webp'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ref, onMounted } from 'vue'
@@ -156,7 +155,7 @@ onMounted(() => {
       class="absolute inset-y-0 right-0 z-0 hidden w-1/2 overflow-hidden bg-gray-100 md:block"
     >
       <img
-        :src="img"
+        src="https://cdn.kwamsc.com/IMG_5661-DwV3UeNq.webp"
         alt="Kwame Carr"
         class="relative hidden h-full w-full object-cover contrast-50 will-change-transform md:block"
       />
@@ -170,7 +169,7 @@ onMounted(() => {
   >
     <!-- Mobile image -->
     <img
-      :src="img"
+      src="https://cdn.kwamsc.com/IMG_5661-DwV3UeNq.webp"
       alt="Kwame Carr"
       class="relative min-h-screen w-full object-cover grayscale will-change-transform md:hidden"
     />

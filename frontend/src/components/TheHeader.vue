@@ -26,6 +26,7 @@ const isHome = computed(() => route.name === 'home')
 
 // Timelines
 let menuTimeline: gsap.core.Timeline
+let socialTimeline: gsap.core.Timeline
 
 // Navigation visibility
 const updateNavVisibility = (shouldShow: boolean) => {
@@ -48,8 +49,15 @@ const setMenuState = (open: boolean) => {
   if (menuIsOpen.value === open) return
   menuIsOpen.value = open
   document.body.style.overflow = open ? 'hidden' : ''
-  if (open) menuTimeline.play()
-  else menuTimeline.reverse()
+  if (open) {
+    // start social icons first so their enter feels snappier
+    socialTimeline?.play()
+    menuTimeline.play()
+  } else {
+    // reverse social icons immediately so leave animation happens at once
+    socialTimeline?.reverse()
+    menuTimeline.reverse()
+  }
 }
 
 const toggleMenu = () => setMenuState(!menuIsOpen.value)
@@ -86,6 +94,7 @@ onMounted(() => {
       gsap.set(socialIconsRef.value.children, { y: 75, opacity: 0 })
     }
 
+    // Main menu timeline (overlay + links)
     menuTimeline = gsap
       .timeline({ paused: true })
       .to(menuOverlayRef.value, {
@@ -98,22 +107,24 @@ onMounted(() => {
         {
           y: 0,
           duration: 1,
-          stagger: 0.1,
+          stagger: 0.08,
           ease: 'power4.inOut',
         },
         '-=0.75',
       )
-      .to(
-        socialIconsRef.value?.children || [],
-        {
-          y: 0,
-          duration: 0.75,
-          stagger: 0.1,
-          opacity: 1,
-          ease: 'power4.inOut',
-        },
-        '<',
-      )
+
+    // Separate timeline for social icons so enter can be advanced independently
+    socialTimeline = gsap.timeline({ paused: true }).to(
+      socialIconsRef.value?.children || [],
+      {
+        y: 0,
+        duration: 0.3,
+        stagger: 0.08,
+        opacity: 1,
+        ease: 'power4.inOut',
+      },
+      '-=0.1',
+    )
   }, headerRef.value!) // scoped to header
 
   // Event listeners
