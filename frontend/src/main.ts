@@ -1,26 +1,25 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
-// import { initializeApp } from 'firebase/app'
-// import { firebaseConfig } from './config/firebaseConfig'
 
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { useAuthStore } from './stores/auth'
+import { vImageFade } from './directives/vImageFade'
 
 const app = createApp(App)
 
-// app.use(VueFire, {
-//   // imported above but could also just be created here
-//   firebaseApp,
-//   modules: [
-//     // we will see other modules later on
-//     VueFireAuth()
-//   ]
-// })
-// initializeApp(firebaseConfig)
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
 app.use(router)
+
+// Register custom directives
+app.directive('image-fade', vImageFade)
+
+// Initialize auth store to track authentication state
+const authStore = useAuthStore()
+authStore.init()
 
 app.mount('#app')

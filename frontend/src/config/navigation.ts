@@ -9,7 +9,7 @@ export const navigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   // { name: 'Blog', href: '/blog' },
-  { name: 'Recipes', href: '/recipes' },
+  // { name: 'Recipes', href: '/recipes' },
 ]
 
 export const socialLinks = [

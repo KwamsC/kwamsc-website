@@ -9,28 +9,44 @@ import PostService from "./service.ts";
 const router = new Hono();
 const postService = new PostService("posts");
 
-router.post("/posts", authenticateJWT, zValidator('json', PostSchema), async (c) => {
-  const postData: CreatePostDTO = c.req.valid("json");
+router.post(
+  "/posts",
+  authenticateJWT,
+  zValidator("json", PostSchema),
+  async (c) => {
+    c.header("Cache-Control", "no-store");
+    const postData: CreatePostDTO = c.req.valid("json");
 
-  try {
-    await postService.addPost(postData);
-    return c.json({ message: "Post created successfully" }, 201);
-  } catch (error) {
-    return c.json({ error: "Failed to create post" }, 500);
-  }
-});
-router.put("/posts/:id", authenticateJWT, zValidator('json', PartialPostSchema),  async (c) => {
-  const postId = c.req.param("id");
-  const postData: UpdatePostDTO = c.req.valid("json");
+    try {
+      await postService.addPost(postData);
+      return c.json({ message: "Post created successfully" }, 201);
+    } catch (error) {
+      return c.json({ error: "Failed to create post" }, 500);
+    }
+  },
+);
+router.put(
+  "/posts/:id",
+  authenticateJWT,
+  zValidator("json", PartialPostSchema),
+  async (c) => {
+    c.header("Cache-Control", "no-store");
+    const postId = c.req.param("id");
+    const postData: UpdatePostDTO = c.req.valid("json");
 
-  try {
-    await postService.updatePost(postId, postData);
-    return c.json({ message: "Post updated successfully" }, 200);
-  } catch (error) {
-    return c.json({ error: "Failed to update post" }, 500);
-  }
-});
+    try {
+      await postService.updatePost(postId, postData);
+      return c.json({ message: "Post updated successfully" }, 200);
+    } catch (error) {
+      return c.json({ error: "Failed to update post" }, 500);
+    }
+  },
+);
 router.get("/posts/:id", async (c) => {
+  c.header(
+    "Cache-Control",
+    "public, max-age=600, s-maxage=3600, stale-while-revalidate=86400",
+  );
   const postId = c.req.param("id");
 
   try {
@@ -45,6 +61,10 @@ router.get("/posts/:id", async (c) => {
   }
 });
 router.get("/posts", async (c) => {
+  c.header(
+    "Cache-Control",
+    "public, max-age=600, s-maxage=3600, stale-while-revalidate=86400",
+  );
   const count: number = Number.parseInt(c.req.query("count") || "10", 10); // Default to 10 if count is not provided
 
   try {
@@ -56,6 +76,7 @@ router.get("/posts", async (c) => {
 });
 
 router.delete("/posts/:id", authenticateJWT, async (c) => {
+  c.header("Cache-Control", "no-store");
   const postId = c.req.param("id");
 
   try {

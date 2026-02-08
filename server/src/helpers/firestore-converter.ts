@@ -1,7 +1,7 @@
 import type {
   FirestoreDataConverter,
   QueryDocumentSnapshot,
-} from "firebase/firestore";
+} from "firebase-admin/firestore";
 import type { FirestoreEntity } from "./firestore.ts";
 
 export const firestoreConverter: FirestoreDataConverter<FirestoreEntity> = {

@@ -1,53 +1,58 @@
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
-import type { RecipeDTO } from '@/services/recipes/types'
+import { useRecipeStore } from '@/stores/recipe'
 
 const route = useRoute()
+const recipeStore = useRecipeStore()
 
-const state = reactive<{
-  recipe: Partial<RecipeDTO>
-  isLoading: boolean
-}>({
-  recipe: {},
-  isLoading: true,
-})
+const isLoading = ref(true)
+const recipeId = route.params.id as string
 
-const recepeId = route.params.id
+// Get recipe from store (computed for reactivity)
+const recipe = computed(() => recipeStore.getRecipeById(recipeId))
 
 onMounted(async () => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_ENDPOINT}/recipes/${recepeId}`,
-    )
-    state.recipe = response.data
-  } catch (error) {
-    console.error('Error fetching job', error)
-  } finally {
-    state.isLoading = false
+  // Check if recipe already exists in store
+  if (recipe.value) {
+    isLoading.value = false
+    return
   }
+
+  // Fetch recipe if not in store
+  const { success } = await recipeStore.dispatchGetRecipe(recipeId)
+
+  if (!success) {
+    console.error('Failed to fetch recipe')
+  }
+
+  isLoading.value = false
 })
 </script>
 
 <template>
-  <section v-if="!state.isLoading" class="container">
+  <section v-if="!isLoading && recipe" class="container">
     <div class="relative py-8">
       <h1
         class="absolute -left-3.5 top-1/2 z-10 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-6xl"
       >
-        <span class="bg-white">{{ state.recipe.title }}</span>
+        <span class="bg-white">{{ recipe.title }}</span>
       </h1>
       <div class="overflow-hidden rounded-xl sm:rounded-2xl md:h-96">
-        <img src="../assets/spaghetti-bake.webp" />
+        <img
+          src="../assets/spaghetti-bake.webp"
+          alt="Recipe image"
+          v-image-fade
+        />
       </div>
     </div>
     <div id="preparation" class="grid grid-cols-3 gap-4 py-8">
       <div class="instructions col-span-3 py-6 md:col-span-2">
         <h3 class="mb-4 font-serif text-3xl font-bold">Instructions</h3>
         <ol
-          v-for="(item, index) in state.recipe.instructions"
+          v-for="(item, index) in recipe.instructions"
           :key="index"
           class="instructions text-sm font-semibold leading-6 text-gray-900"
         >
@@ -61,7 +66,7 @@ onMounted(async () => {
       >
         <h3 class="mb-4 font-serif text-3xl font-bold">Ingredients</h3>
         <ol
-          v-for="(item, index) in state.recipe.ingredients"
+          v-for="(item, index) in recipe.ingredients"
           :key="index"
           class="instructions text-sm font-semibold leading-6 text-gray-900"
         >

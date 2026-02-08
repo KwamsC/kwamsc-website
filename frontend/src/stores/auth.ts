@@ -1,6 +1,9 @@
-// import type { CityWeather } from '@/types/CityWeather'
 import { auth } from '@/config/firebaseConfig'
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth'
 import { defineStore } from 'pinia'
 // Import axios to make HTTP requests
 // import axios from 'axios'
@@ -8,26 +11,25 @@ import { defineStore } from 'pinia'
 export const useAuthStore = defineStore('user', {
   state: () => {
     return {
-      // for initially empty lists
-      // cityList: [] as CityWeather[]
       user: {
         loggedIn: false || window.localStorage.getItem('auth') === 'true',
-        token: null as string | null
-      }
+        token: null as string | null,
+      },
     }
   },
   getters: {
-    getUser: (state) => state.user
+    getUser: state => state.user,
   },
   actions: {
     async login(email: string, password: string) {
-      await signInWithEmailAndPassword(auth, email, password).then((userCredentials) => {
-        if (userCredentials) {
-          this.user.loggedIn = true
-          window.localStorage.setItem('auth', 'true')
-          console.log(userCredentials)
-        }
-      })
+      await signInWithEmailAndPassword(auth, email, password).then(
+        userCredentials => {
+          if (userCredentials) {
+            this.user.loggedIn = true
+            window.localStorage.setItem('auth', 'true')
+          }
+        },
+      )
     },
 
     async logout() {
@@ -37,11 +39,10 @@ export const useAuthStore = defineStore('user', {
     },
 
     init() {
-      onAuthStateChanged(auth, (userCredentials) => {
+      onAuthStateChanged(auth, userCredentials => {
         if (userCredentials) {
-          userCredentials.getIdToken().then((idToken) => {
+          userCredentials.getIdToken().then(idToken => {
             window.localStorage.setItem('auth', 'true')
-            console.log(idToken)
             this.user.token = idToken
           })
           this.user.loggedIn = true
@@ -52,6 +53,6 @@ export const useAuthStore = defineStore('user', {
           window.localStorage.removeItem('auth')
         }
       })
-    }
-  }
+    },
+  },
 })

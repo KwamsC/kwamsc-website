@@ -6,6 +6,15 @@ import { navigation, socialLinks } from '@/config/navigation'
 import { onMounted, onBeforeUnmount, useTemplateRef, ref, computed } from 'vue'
 import MenuButton from './MenuButton.vue'
 import { debounce } from '@/utils/debounce'
+import { useAuthStore } from '@/stores/auth'
+
+// Auth
+const authStore = useAuthStore()
+
+const handleLogout = async () => {
+  await authStore.logout()
+  router.push('/')
+}
 
 // State
 const menuIsOpen = ref(false)
@@ -159,11 +168,20 @@ onMounted(() => {
       <router-link to="/" class="pointer-events-initial" ref="logo">
         <img :src="kwamsc" width="64" alt="KwamsC logo" />
       </router-link>
-      <MenuButton
-        :is-open="menuIsOpen"
-        @toggle="toggleMenu"
-        class="pointer-events-initial"
-      />
+      <div class="flex items-center gap-4">
+        <button
+          v-if="authStore.user.loggedIn"
+          @click="handleLogout"
+          class="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors pointer-events-initial hover:bg-stone-700"
+        >
+          Logout
+        </button>
+        <MenuButton
+          :is-open="menuIsOpen"
+          @toggle="toggleMenu"
+          class="pointer-events-initial"
+        />
+      </div>
     </nav>
   </header>
 

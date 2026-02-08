@@ -1,7 +1,7 @@
-import { useAuthStore } from '@/stores/auth'
 import http from '../api'
 import type { APIResponse } from '../types'
-import type { RecipeDTO, createRecipeDTO } from './types'
+import type { PostDTO, CreatePostDTO, UpdatePostDTO } from './types'
+import { useAuthStore } from '@/stores/auth'
 
 /**
  * Get authorization header with Firebase ID token
@@ -24,40 +24,40 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
   return { Authorization: `Bearer ${idToken}` }
 }
 
-async function getRecipes(count?: number) {
+async function getAllPosts(count?: number) {
   const query = count ? `?count=${count}` : ''
-  return await http.get<RecipeDTO[]>(`api/v1/recipes${query}`)
+  return await http.get<PostDTO[]>(`api/v1/posts${query}`)
 }
 
-async function getRecipe(id: string) {
-  return await http.get<RecipeDTO>(`api/v1/recipes/${id}`)
+async function getPost(id: string) {
+  return await http.get<PostDTO>(`api/v1/posts/${id}`)
 }
 
-async function deleteRecipes(id: number) {
+async function deletePost(id: string) {
   const headers = await getAuthHeaders()
-  return await http.delete<APIResponse<boolean>>(`api/v1/recipes/${id}`, {
+  return await http.delete<APIResponse<boolean>>(`api/v1/posts/${id}`, {
     headers,
   })
 }
 
-async function createRecipes(input: createRecipeDTO) {
+async function createPost(input: CreatePostDTO) {
   const headers = await getAuthHeaders()
-  return await http.post<APIResponse<RecipeDTO>>('api/v1/recipes', input, {
+  return await http.post<APIResponse<PostDTO>>('api/v1/posts', input, {
     headers,
   })
 }
 
-async function updateRecipes(input: Partial<createRecipeDTO>) {
+async function updatePost(id: string, input: Partial<UpdatePostDTO>) {
   const headers = await getAuthHeaders()
-  return await http.put<APIResponse<boolean>>('api/v1/recipes', input, {
+  return await http.put<APIResponse<boolean>>(`api/v1/posts/${id}`, input, {
     headers,
   })
 }
 
 export default {
-  getRecipes,
-  getRecipe,
-  deleteRecipes,
-  createRecipes,
-  updateRecipes,
+  getAllPosts,
+  getPost,
+  deletePost,
+  createPost,
+  updatePost,
 }

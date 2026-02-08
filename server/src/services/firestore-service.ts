@@ -5,28 +5,17 @@ import type {
   FirestoreUpdateDto,
   FirestoreEntity,
 } from "../helpers/firestore.ts";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { FirebaseError } from "./firestore-error.ts";
+import type { Timestamp } from "firebase-admin/firestore";
 
 export const addEntityToFirestore = async (
   collectionName: string,
-  entityData: FirestoreCreateDto
+  entityData: FirestoreCreateDto,
 ): Promise<void> => {
   const timestamp = Date.now();
-  const entityRef = doc(collection(db, collectionName));
+  const entityRef = db.collection(collectionName).doc();
 
-  await setDoc(entityRef, {
+  await entityRef.set({
     id: entityRef.id,
     ...entityData,
     createdAt: timestamp,
@@ -37,12 +26,12 @@ export const addEntityToFirestore = async (
 export const updateEntityInFirestore = async (
   collectionName: string,
   id: string,
-  entityData: FirestoreUpdateDto
+  entityData: FirestoreUpdateDto,
 ): Promise<void> => {
   const timestamp = Date.now();
-  const entityRef = doc(db, collectionName, id);
+  const entityRef = db.collection(collectionName).doc(id);
 
-  await updateDoc(entityRef, {
+  await entityRef.update({
     ...entityData,
     updatedAt: timestamp,
   });
@@ -50,49 +39,48 @@ export const updateEntityInFirestore = async (
 
 export const getEntityFromFirestore = async <T extends FirestoreEntity>(
   collectionName: string,
-  id: string
+  id: string,
 ): Promise<T | null> => {
-  const entityRef = doc(db, collectionName, id).withConverter(
-    firestoreConverter
-  );
-  const docSnap = await getDoc(entityRef);
+  const entityRef = db
+    .collection(collectionName)
+    .doc(id)
+    .withConverter(firestoreConverter);
+  const docSnap = await entityRef.get();
 
-  return docSnap.exists() ? (docSnap.data() as T) : null;
+  return docSnap.exists ? (docSnap.data() as T) : null;
 };
 
 export const deleteEntityFromFirestore = async (
   collectionName: string,
-  id: string
+  id: string,
 ): Promise<void> => {
-  const docRef = doc(db, collectionName, id);
-  const docDoc = await getDoc(docRef);
+  const docRef = db.collection(collectionName).doc(id);
+  const docSnap = await docRef.get();
 
-  if (!docDoc.exists())
+  if (!docSnap.exists)
     throw new FirebaseError(`${collectionName} does not exist`, 404);
 
-  await deleteDoc(doc(db, collectionName, id));
+  await docRef.delete();
 };
 
 export const getAllEntitiesFromFirestore = async <T extends FirestoreEntity>(
   collectionName: string,
-  count: number
+  count: number,
 ): Promise<T[]> => {
   const entities: T[] = [];
-  const first = query(
-    collection(db, collectionName).withConverter(firestoreConverter),
-    orderBy("createdAt", "asc"),
-    limit(count)
-  );
-
-  const querySnapshot = await getDocs(first);
+  const querySnapshot = await db
+    .collection(collectionName)
+    .withConverter(firestoreConverter)
+    .orderBy("createdAt", "asc")
+    .limit(count)
+    .get();
 
   if (querySnapshot.empty) {
     throw new Error(`No ${collectionName.toLowerCase()}s found`);
   }
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
   querySnapshot.forEach((doc) => {
-    if (doc.exists()) {
+    if (doc.exists) {
       console.log(doc.data());
       entities.push(doc.data() as T);
     }

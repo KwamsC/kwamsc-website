@@ -1,19 +1,16 @@
-import { initializeApp } from "firebase/app";
-import {
-  type Firestore,
-  connectFirestoreEmulator,
-  getFirestore,
-} from "firebase/firestore";
-import config from "./config.ts";
+import { getFirestore } from "firebase-admin/firestore";
+import { app } from "./firebase-config.ts";
 
-const app = initializeApp(config.firebaseConfig);
-let db: Firestore;
+// Get Firestore instance from Firebase Admin SDK
+const db = getFirestore(app);
 
+// Connect to Firestore Emulator in development
 if (process.env.NODE_ENV === "development") {
-  db = getFirestore();
-  connectFirestoreEmulator(db, "host.docker.internal", 8081);
-} else {
-  db = getFirestore(app);
+  const firestoreEmulatorHost =
+    process.env.FIRESTORE_EMULATOR_HOST || "firebase-tools:8081";
+  // Set the emulator host for Admin SDK
+  process.env.FIRESTORE_EMULATOR_HOST = firestoreEmulatorHost;
+  console.log(`🔥 Firestore Emulator enabled: ${firestoreEmulatorHost}`);
 }
 
 export { db };

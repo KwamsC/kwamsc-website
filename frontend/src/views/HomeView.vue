@@ -158,6 +158,7 @@ onMounted(() => {
         src="https://cdn.kwamsc.com/IMG_5661-DwV3UeNq.webp"
         alt="Kwame Carr"
         class="relative hidden h-full w-full object-cover contrast-50 will-change-transform md:block"
+        v-image-fade
       />
     </div>
   </section>
@@ -172,6 +173,7 @@ onMounted(() => {
       src="https://cdn.kwamsc.com/IMG_5661-DwV3UeNq.webp"
       alt="Kwame Carr"
       class="relative min-h-screen w-full object-cover grayscale will-change-transform md:hidden"
+      v-image-fade
     />
 
     <!-- Intro text -->
