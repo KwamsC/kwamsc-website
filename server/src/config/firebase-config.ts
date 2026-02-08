@@ -13,14 +13,6 @@ if (process.env.NODE_ENV === "development") {
 
 // Production: Uses Application Default Credentials (ADC) from Cloud Run
 // Development: Uses emulators (FIREBASE_AUTH_EMULATOR_HOST set above)
-// export const app = initializeApp({
-//   credential:
-//     process.env.NODE_ENV === "production"
-//       ? applicationDefault() // Cloud Run service account
-//       : undefined, // Emulator doesn't need credentials
-//   projectId: process.env.PROJECT_ID || "kwame-website",
-// });
-
 export const app =
   process.env.NODE_ENV === "production"
     ? initializeApp({
