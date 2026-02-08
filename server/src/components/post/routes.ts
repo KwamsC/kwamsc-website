@@ -23,6 +23,7 @@ router.post(
       process.env.NODE_ENV === "production" &&
         (await purgeCloudflareCache([
           `https://api.kwamsc.com/api/v1/posts`, // List endpoint
+          `https://api.kwamsc.com/api/v1/posts?count=50`,
         ]));
       return c.json({ message: "Post created successfully" }, 201);
     } catch (error) {
@@ -44,6 +45,7 @@ router.put(
       process.env.NODE_ENV === "production" &&
         (await purgeCloudflareCache([
           `https://api.kwamsc.com/api/v1/posts`, // List endpoint
+          `https://api.kwamsc.com/api/v1/posts?count=50`,
         ]));
       return c.json({ message: "Post updated successfully" }, 200);
     } catch (error) {
@@ -93,6 +95,7 @@ router.delete("/posts/:id", authenticateJWT, async (c) => {
     process.env.NODE_ENV === "production" &&
       (await purgeCloudflareCache([
         `https://api.kwamsc.com/api/v1/posts`, // List endpoint
+        `https://api.kwamsc.com/api/v1/posts?count=50`, // Deleted post endpoint
       ]));
     return c.json({ message: "Post deleted successfully" }, 200);
   } catch (error) {
