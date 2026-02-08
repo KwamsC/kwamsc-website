@@ -20,11 +20,7 @@ router.post(
 
     try {
       await postService.addPost(postData);
-      process.env.NODE_ENV === "production" &&
-        (await purgeCloudflareCache([
-          `https://api.kwamsc.com/api/v1/posts`, // List endpoint
-          `https://api.kwamsc.com/api/v1/posts?count=50`,
-        ]));
+      await purgeCloudflareCache();
       return c.json({ message: "Post created successfully" }, 201);
     } catch (error) {
       return c.json({ error: "Failed to create post" }, 500);
@@ -42,11 +38,7 @@ router.put(
 
     try {
       await postService.updatePost(postId, postData);
-      process.env.NODE_ENV === "production" &&
-        (await purgeCloudflareCache([
-          `https://api.kwamsc.com/api/v1/posts`, // List endpoint
-          `https://api.kwamsc.com/api/v1/posts?count=50`,
-        ]));
+      await purgeCloudflareCache();
       return c.json({ message: "Post updated successfully" }, 200);
     } catch (error) {
       return c.json({ error: "Failed to update post" }, 500);
@@ -92,11 +84,7 @@ router.delete("/posts/:id", authenticateJWT, async (c) => {
 
   try {
     await postService.deletePost(postId);
-    process.env.NODE_ENV === "production" &&
-      (await purgeCloudflareCache([
-        `https://api.kwamsc.com/api/v1/posts`, // List endpoint
-        `https://api.kwamsc.com/api/v1/posts?count=50`, // Deleted post endpoint
-      ]));
+    await purgeCloudflareCache();
     return c.json({ message: "Post deleted successfully" }, 200);
   } catch (error) {
     if (error instanceof FirebaseError && error.code === 404) {

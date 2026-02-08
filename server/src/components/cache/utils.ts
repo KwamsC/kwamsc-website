@@ -1,4 +1,4 @@
-const purgeCloudflareCache = async (urls: string[]) => {
+const purgeCloudflareCache = async () => {
   const CLOUDFLARE_ZONE_ID = process.env.CLOUDFLARE_ZONE_ID;
   const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 
@@ -16,7 +16,7 @@ const purgeCloudflareCache = async (urls: string[]) => {
           Authorization: `Bearer ${CLOUDFLARE_API_TOKEN}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ files: urls }),
+        body: JSON.stringify({ purge_everything: true }),
       },
     );
 
@@ -25,7 +25,7 @@ const purgeCloudflareCache = async (urls: string[]) => {
     if (!result.success) {
       console.error("Cloudflare purge failed:", result.errors);
     } else {
-      console.log("Cache purged successfully:", urls);
+      console.log("Cache purged successfully");
     }
   } catch (error) {
     console.error("Cache purge error:", error);
