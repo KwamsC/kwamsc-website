@@ -21,7 +21,6 @@ const apiDocumentation = {
     description: "Backend API application for the kwamsc.com website",
     contact: {
       name: "Kwame Carr",
-      email: "kwamsc91@gmail.com",
       url: "https://kwamsc.com",
     },
   },

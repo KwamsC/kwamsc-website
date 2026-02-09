@@ -166,7 +166,7 @@ onMounted(() => {
       :class="{ visible: showNav, invisible: !showNav }"
     >
       <router-link to="/" class="pointer-events-initial" ref="logo">
-        <img :src="kwamsc" width="64" alt="KwamsC logo" />
+        <img :src="kwamsc" width="54" alt="KwamsC logo" />
       </router-link>
       <div class="flex items-center gap-4">
         <button

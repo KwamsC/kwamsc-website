@@ -12,32 +12,32 @@ const app = new Hono();
 
 // Trust proxy for rate limiting
 app.use("*", async (c, next) => {
-  c.req.raw.headers.set(
-    "x-forwarded-for",
-    c.req.header("x-forwarded-for") || "",
-  );
-  await next();
+	c.req.raw.headers.set(
+		"x-forwarded-for",
+		c.req.header("x-forwarded-for") || "",
+	);
+	await next();
 });
 
 // CORS
 const allowedOrigins = [
-  "http://localhost:5173",
-  "http://kwamsc.com",
-  "https://kwamsc.com",
+	"http://localhost:5173",
+	"http://kwamsc.com",
+	"https://kwamsc.com",
 ];
 
 app.use("/api/*", cors({ origin: allowedOrigins }));
 
 // Pretty JSON and logger for development
 if (process.env.NODE_ENV !== "production") {
-  app.use("*", prettyJSON());
-  app.use("*", logger());
+	app.use("*", prettyJSON());
+	app.use("*", logger());
 }
 
 app.get("/ip", (c) => {
-  return c.text(
-    c.req.header("x-forwarded-for") || c.req.header("x-real-ip") || "unknown",
-  );
+	return c.text(
+		c.req.header("x-forwarded-for") || c.req.header("x-real-ip") || "unknown",
+	);
 });
 
 // app.get("/signed-url", async (c) => {
@@ -76,7 +76,7 @@ app.get("/docs", swaggerUI({ url: "/open-api-doc" }));
 
 app.get("/health", (c) => c.text("OK"));
 app.get("/", (c) => {
-  return c.text("Starting Server");
+	return c.text("Starting Server");
 });
 
 // API Routes

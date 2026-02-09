@@ -91,6 +91,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import type { FirebaseError } from 'firebase/app'
 
 const router = useRouter()
 const route = useRoute()
@@ -135,24 +136,24 @@ async function handleLogin() {
     setTimeout(() => {
       router.push(returnTo)
     }, 500)
-  } catch (err: any) {
+  } catch (err) {
     console.error('Login error:', err)
 
     // Handle Firebase Auth errors
     let errorMessage = 'Failed to sign in. Please check your credentials.'
 
-    if (err.code === 'auth/user-not-found') {
+    if ((err as FirebaseError).code === 'auth/user-not-found') {
       errorMessage = 'No account found with this email address.'
-    } else if (err.code === 'auth/wrong-password') {
+    } else if ((err as FirebaseError).code === 'auth/wrong-password') {
       errorMessage = 'Incorrect password. Please try again.'
-    } else if (err.code === 'auth/invalid-email') {
+    } else if ((err as FirebaseError).code === 'auth/invalid-email') {
       errorMessage = 'Invalid email address.'
-    } else if (err.code === 'auth/user-disabled') {
+    } else if ((err as FirebaseError).code === 'auth/user-disabled') {
       errorMessage = 'This account has been disabled.'
-    } else if (err.code === 'auth/too-many-requests') {
+    } else if ((err as FirebaseError).code === 'auth/too-many-requests') {
       errorMessage = 'Too many failed login attempts. Please try again later.'
-    } else if (err.message) {
-      errorMessage = err.message
+    } else if ((err as FirebaseError).message) {
+      errorMessage = (err as FirebaseError).message
     }
 
     error.value = errorMessage
