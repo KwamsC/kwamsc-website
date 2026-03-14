@@ -1,5 +1,5 @@
 # Base stage
-FROM node:24.4.1-alpine3.21 AS base
+FROM node:24.14.0-alpine3.21 AS base
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN npm ci && npm cache clean --force
 COPY . .
 
 # Production stage
-FROM node:24.4.1-alpine3.21 AS production
+FROM node:24.14.0-alpine3.21 AS production
 
 WORKDIR /app
 
